@@ -1,7 +1,4 @@
 import { useState } from 'react'
-import heroImg from './imagenes/hero.png'
-import reactLogo from './imagenes/react.svg'
-import viteLogo from './imagenes/vite.svg'
 import { Encabezado } from './componentes/encabezado'
 
 import './App.css'
@@ -11,6 +8,7 @@ function App() {
 
   return (
     <>
+    <Encabezado/>
     <Routes>
       <Route path="/" element={<Pagina_inicio />} />
     </Routes>

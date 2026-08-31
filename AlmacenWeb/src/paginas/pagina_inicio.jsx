@@ -1,6 +1,6 @@
-import pagina_inicio from 'react'
+import { Link, useNavigate } from "react-router-dom";
 
-function pagina_inicio() {
+function Pagina_inicio() {
   return (
     <html lang="es">
     <head>
@@ -9,14 +9,11 @@ function pagina_inicio() {
         <title>Pagina Inicio</title>
     </head>
     <body>
-
-        <header>
-            
-        </header>
+      <h1>HOLA MUNDO</h1>
 
     </body>
     </html>
   )
 }
 
-export default pagina_inicio
+export default Pagina_inicio;

@@ -1,4 +1,6 @@
-export default function Encabezado() {
+import { Link, useNavigate } from "react-router-dom";
+
+function Encabezado() {
   return (
     <header className='encabezado-contenedor'>
       <div className='encabezado-logo'>
@@ -21,3 +23,6 @@ export default function Encabezado() {
     </header>
   );
 }
+
+
+export default Encabezado;

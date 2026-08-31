@@ -1,21 +1,18 @@
-export function Encabezado() {
+export default function Encabezado() {
   return (
     <header className='encabezado-contenedor'>
       <div className='encabezado-logo'>
-        <a href='/'>
+        <Link to='/'>
           <img src='' alt='Logo del almacén' />
-        </a>
+        </Link>
       </div>
 
       <div className='busqueda-contenedor'>
-        <input
-          type='text'
-          className='busqueda'
-          placeholder='¿Qué quieres buscar?'
-        />
+        <input type='text' className='busqueda' placeholder='¿Qué quieres buscar?'/>
 
         <button type='button' className='busqueda-boton' aria-label='Buscar'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' className='lucide lucide-search-icon lucide-search'>
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' className='lucide lucide-search-icon lucide-search'
+>
             <path d='m21 21-4.34-4.34' />
             <circle cx='11' cy='11' r='8' />
           </svg>

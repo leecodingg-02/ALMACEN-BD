@@ -4,7 +4,7 @@
 }
 /* VAR COLORES */
 :root {
-  --primario: yellow;
+  --primario: #FFC107;
   --secundario: black;
   --blanco: white;
   --gris: #00000056;
@@ -216,26 +216,40 @@
 
 .btn-productos.activo{
   font-weight: bold;
+  transform: translate(0, -3px);
+  transition: transform 220ms ease-out;
+}
+
+
+.btn-productos.activo svg{
+  transform: scale(1.2);
+  color: var(--primario);
+  transform: rotate(180deg);
+  transition: transform 320ms ease-out;
+
 }
 
 
 /* Contenido dentro del boton desplegable*/
+
+.btn-desplegable-conte{
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  transition: opacity 0.6s ease;
+}
 
 .btn-desplegable-conte.mostrar{
   display: flex;
   flex-direction: column;
 }
 
-.btn-desplegable-conte{
-  background-color: #fcfcfc;
-}
 
 .btn-desplegable-conte a{
   text-decoration: none;
   color: var(--secundario);
-  padding: 10px 0;
+  padding: 12px 8px;
 }
 
 .btn-desplegable-conte a:hover{
-  background-color: #00000005;
+  background-color: #00000010;
 }
+

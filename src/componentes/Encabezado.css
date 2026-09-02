@@ -1,0 +1,10 @@
+* {
+    margin: 0;
+}
+
+:root {
+    --primario: yellow;
+    --secundario: black;
+    --blanco: white;
+    --gris: gray;
+}

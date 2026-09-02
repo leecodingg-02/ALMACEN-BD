@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
-import Encabezado from './componentes/encabezado'
-import Pagina_inicio from './paginas/pagina_inicio'
+import Encabezado from './componentes/Encabezado'
+import Pagina_inicio from './paginas/Pagina_inicio'
 
 function App() {
   return (

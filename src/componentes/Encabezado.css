@@ -7,7 +7,7 @@
   --primario: yellow;
   --secundario: black;
   --blanco: white;
-  --gris: gray;
+  --gris: #00000038;
 }
 
 
@@ -140,14 +140,14 @@
 /* Estilos navegacion botones */
 
 
-a.active {
-  color: #000; /* Azul */
+.navegacion.active {
+  color: #000;
   font-weight: bold;
   transform: translate(0, -3px);
   transition: transform 220ms ease-out;
 }
 
-a.active::after{
+.navegacion.active::after{
   content: '';
   position: absolute;
   bottom: -12px;
@@ -187,9 +187,7 @@ a.active::after{
 
 .btn-desplegable{
   position: relative;
-  display: inline-block;
 }
-
 
 
 .btn-desplegable svg{
@@ -212,4 +210,23 @@ a.active::after{
   display: none;
   position: absolute;
   z-index: 1;
+}
+
+/* Contenido dentro del boton desplegable*/
+
+.btn-desplegable-conte.mostrar{
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-desplegable-conte{
+  border: #000 1px solid;
+}
+
+.btn-desplegable-conte a{
+  text-decoration: none;
+  color: #000;
+  padding: 10px 0;
+ 
+  border-radius: 10px;
 }

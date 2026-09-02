@@ -7,7 +7,7 @@
   --primario: yellow;
   --secundario: black;
   --blanco: white;
-  --gris: #00000038;
+  --gris: #00000056;
 }
 
 
@@ -182,7 +182,7 @@
   color: var(--secundario);
 }
 
-/* Boton desplegable */
+/* Estilos Boton desplegable */
 
 
 .btn-desplegable{
@@ -201,9 +201,11 @@
   cursor: pointer;
 }
 
+
 .btn-productos{
  display: flex;
  gap: 4px;
+ padding: 10px 0px;
 }
 
 .btn-desplegable-conte{
@@ -211,6 +213,11 @@
   position: absolute;
   z-index: 1;
 }
+
+.btn-productos.activo{
+  font-weight: bold;
+}
+
 
 /* Contenido dentro del boton desplegable*/
 
@@ -220,13 +227,15 @@
 }
 
 .btn-desplegable-conte{
-  border: #000 1px solid;
+  background-color: #fcfcfc;
 }
 
 .btn-desplegable-conte a{
   text-decoration: none;
-  color: #000;
+  color: var(--secundario);
   padding: 10px 0;
- 
-  border-radius: 10px;
+}
+
+.btn-desplegable-conte a:hover{
+  background-color: #00000005;
 }

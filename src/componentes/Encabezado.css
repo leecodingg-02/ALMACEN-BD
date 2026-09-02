@@ -1,10 +1,153 @@
 * {
-    margin: 0;
+  margin: 0;
+  padding: 0;
+}
+/* VAR COLORES */
+:root {
+  --primario: yellow;
+  --secundario: black;
+  --blanco: white;
+  --gris: gray;
 }
 
-:root {
-    --primario: yellow;
-    --secundario: black;
-    --blanco: white;
-    --gris: gray;
+
+
+/* Estilos Contenedor Barra superior navegacion general */
+
+.encabezado-barra-sup {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--secundario);
+  padding: 8px 6vh;
+}
+
+/* Contenedor elementos lado izquiero barra superior */
+.contenedor-barra-supizq {
+  display: flex;
+  flex-direction: row;
+  color: var(--blanco);
+  gap: 6vh;
+}
+
+.item-barrasup-izq {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2vh;
+}
+
+.icono-barra-supizq {
+  color: var(--primario);
+  width: 25px;
+  height: 25px;
+}
+
+.item-barrasup-izq {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos barra superior lado derecho*/
+
+.contenedor-barra-supder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8vh;
+}
+
+.item-barrasup-der {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.icono-barra-supder {
+  width: 25px;
+  height: 25px;
+  color: var(--blanco);
+}
+
+/* Botones lado derecho barra superior*/
+
+.botones-barra-sup {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--blanco);
+  gap: 2vh;
+}
+
+/* Estilo btn Iniciar sesion / Registro */
+.separador-sesion {
+  color: var(--blanco);
+  opacity: 0.8;
+}
+
+.barra-sup-regini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blanco);
+}
+
+/* Encabezado */
+
+.encabezado-logo img {
+  width: auto;
+  height: 100px;
+}
+
+.contenedor-encabezado-pri {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  min-height: 120px;
+}
+
+/* Busqueda estilos y configuracion */
+.busqueda {
+  border: none;
+  background: transparent;
+  outline: none;
+  margin-left: 15px;
+}
+
+.buscar-btn {
+  border: none;
+  background-color: transparent;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.busqueda-contenedor {
+  display: flex;
+  align-items: center;
+  border: 2px solid;
+  border-radius: 30px;
+}
+
+/* Iconos Encabezado principal */
+
+.icono-pri {
+  width: 32px;
+  height: 32px;
+  color: var(--secundario);
+}
+
+/* Botones encabezado principal */
+
+.encabezado-botones {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8vh;
+  margin-left: 10vh;
+}
+
+.navegacion {
+  text-decoration: none;
+  color: var(--secundario);
 }

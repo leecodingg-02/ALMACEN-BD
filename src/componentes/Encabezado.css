@@ -96,6 +96,7 @@
 .encabezado-logo img {
   width: auto;
   height: 100px;
+  
 }
 
 .contenedor-encabezado-pri {
@@ -103,9 +104,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding: 0 10vh;
   min-height: 12vh;
-  padding: 0 12vh;
-  border: red 2px solid;
+  gap: 2%;
 }
 
 /* Busqueda estilos y configuracion */
@@ -131,7 +132,9 @@
   align-items: center;
   border: 2px #00000046 solid;
   border-radius: 30px;
-  width: 25%;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
 }
 
 /* Estilos navegacion botones */
@@ -169,8 +172,9 @@ a.active::after{
 .encabezado-botones {
   display: flex;
   flex-direction: row;
+  justify-self: flex-start;
   align-items: center;
-
+  gap: 5vh;
 }
 
 .navegacion {
@@ -182,9 +186,11 @@ a.active::after{
 
 
 .btn-desplegable{
-  display: flex;
-  flex-direction: row;
+  position: relative;
+  display: inline-block;
 }
+
+
 
 .btn-desplegable svg{
   width: 16px;
@@ -200,4 +206,10 @@ a.active::after{
 .btn-productos{
  display: flex;
  gap: 4px;
+}
+
+.btn-desplegable-conte{
+  display: none;
+  position: absolute;
+  z-index: 1;
 }

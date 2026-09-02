@@ -128,7 +128,7 @@ function Encabezado() {
           <div className='btn-desplegable'>
             <button className='btn-productos'>
               {" "}
-              Productos
+              Categorias
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -144,6 +144,14 @@ function Encabezado() {
                 />
               </svg>
             </button>
+
+            <div className='btn-desplegable-conte'>
+              <p> Categorias </p>
+
+                <NavLink to='/categorias'>Hogar</NavLink>
+                <NavLink to='/categorias'>Ropa</NavLink>
+
+            </div>
           </div>
 
           <NavLink to='/ofertas' className='navegacion'>
@@ -153,7 +161,7 @@ function Encabezado() {
 
           <NavLink to='/categorias' className='navegacion'>
             {" "}
-            Categorias{" "}
+            Productos{" "}
           </NavLink>
 
           <NavLink to='/nosotros' className='navegacion'>

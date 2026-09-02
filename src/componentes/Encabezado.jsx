@@ -166,22 +166,20 @@ function Encabezado() {
               >
                 Muebles
               </NavLink>
-              
-               <NavLink
+
+              <NavLink
                 to='/categorias'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Decoracion
               </NavLink>
 
-               <NavLink
+              <NavLink
                 to='/categorias'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Iluminacion
               </NavLink>
-
-
             </div>
           </div>
 

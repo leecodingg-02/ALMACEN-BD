@@ -1,0 +1,237 @@
+import { useState } from 'react';
+import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+
+const datosIniciales = [
+  { id: 1, fecha: '2026-09-01', proveedor: 'DeWalt Colombia', total: 1850000, items: 15, estado: 'Recibida', factura: 'FC-0024' },
+  { id: 2, fecha: '2026-08-28', proveedor: 'Bosch Distribuidora', total: 3200000, items: 28, estado: 'En Tránsito', factura: 'FC-0023' },
+  { id: 3, fecha: '2026-08-25', proveedor: 'HomeStyle S.A.S', total: 5400000, items: 6, estado: 'Recibida', factura: 'FC-0022' },
+  { id: 4, fecha: '2026-08-20', proveedor: 'LumEx México', total: 980000, items: 12, estado: 'Pendiente', factura: 'FC-0021' },
+  { id: 5, fecha: '2026-08-15', proveedor: 'GreenHome', total: 420000, items: 30, estado: 'Suspendida', factura: 'FC-0020' },
+];
+
+const formularioVacio = { fecha: '', proveedor: '', total: '', items: '', estado: 'Pendiente', factura: '' };
+
+export default function Compras() {
+  const [datos, setDatos] = useState(() => {
+    try {
+      const guardadas = localStorage.getItem('novacasa_compras');
+      return guardadas ? JSON.parse(guardadas) : datosIniciales;
+    } catch {
+      return datosIniciales;
+    }
+  });
+  const [busqueda, setBusqueda] = useState('');
+  const [modal, setModal] = useState(null);
+  const [actual, setActual] = useState(null);
+  const [formulario, setFormulario] = useState(formularioVacio);
+
+  const guardarEnStorage = (nuevas) => {
+    try {
+      localStorage.setItem('novacasa_compras', JSON.stringify(nuevas));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const filtrados = datos.filter(
+    (c) =>
+      c.proveedor.toLowerCase().includes(busqueda.toLowerCase()) ||
+      c.factura.toLowerCase().includes(busqueda.toLowerCase()) ||
+      c.estado.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const abrirCrear = () => {
+    setFormulario({ ...formularioVacio, fecha: new Date().toISOString().split('T')[0] });
+    setActual(null);
+    setModal('crear');
+  };
+  const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
+  const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
+
+  const guardar = () => {
+    if (!formulario.proveedor.trim()) return;
+    let actualizadas;
+    if (modal === 'crear') {
+      actualizadas = [
+        ...datos,
+        { ...formulario, id: Date.now(), total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 },
+      ];
+    } else {
+      actualizadas = datos.map((c) =>
+        c.id === actual.id
+          ? { ...formulario, id: actual.id, total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 }
+          : c
+      );
+    }
+    setDatos(actualizadas);
+    guardarEnStorage(actualizadas);
+    setModal(null);
+  };
+
+  const suspender = () => {
+    const actualizadas = datos.map((c) => {
+      if (c.id === actual.id) {
+        const nuevoEstado = c.estado === 'Suspendida' ? (c.estadoAnterior || 'Pendiente') : 'Suspendida';
+        return {
+          ...c,
+          estado: nuevoEstado,
+          estadoAnterior: c.estado !== 'Suspendida' ? c.estado : c.estadoAnterior,
+        };
+      }
+      return c;
+    });
+    setDatos(actualizadas);
+    guardarEnStorage(actualizadas);
+    setModal(null);
+  };
+
+  const insigniaEstado = {
+    Recibida: 'completado',
+    'En Tránsito': 'proceso',
+    Pendiente: 'pendiente',
+    Suspendida: 'cancelado',
+    Cancelada: 'cancelado',
+  };
+
+  return (
+    <>
+      <div className="crud-encabezado">
+        <div className="crud-encabezado-izq">
+          <h2>Compras</h2>
+          <p>Gestión de órdenes de compra a proveedores (Gestión de suspensión)</p>
+        </div>
+        <div className="crud-acciones">
+          <button className="btn-primario" onClick={abrirCrear}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
+              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Nueva Compra
+          </button>
+        </div>
+      </div>
+
+      <div className="barra-herramientas">
+        <div className="campo-busqueda">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#71717A" strokeWidth="2" width="15" height="15">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Buscar por proveedor, factura, estado..." />
+        </div>
+      </div>
+
+      <div className="tabla-contenedor">
+        <table className="tabla-panel">
+          <thead>
+            <tr>
+              <th>No. Factura</th>
+              <th>Fecha</th>
+              <th>Proveedor</th>
+              <th>Ítems</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtrados.length === 0 ? (
+              <tr>
+                <td colSpan={7}>
+                  <div className="estado-vacio">
+                    <IconoCarritoSVG width="42" height="42" style={{ color: '#A1A1AA', marginBottom: 12 }} />
+                    <h3>Sin compras</h3>
+                    <p>Registra la primera orden de compra</p>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              filtrados.map((c) => (
+                <tr key={c.id}>
+                  <td style={{ fontWeight: 700, color: 'var(--texto-principal)' }}>{c.factura}</td>
+                  <td style={{ color: 'var(--texto-secundario)', fontSize: 13 }}>{c.fecha}</td>
+                  <td style={{ fontWeight: 700 }}>{c.proveedor}</td>
+                  <td style={{ color: 'var(--texto-secundario)' }}>{c.items} uds.</td>
+                  <td style={{ fontWeight: 800 }}>${Number(c.total).toLocaleString('es-CO')}</td>
+                  <td>
+                    <span className={`insignia-estado ${insigniaEstado[c.estado] || 'proceso'}`}>{c.estado}</span>
+                  </td>
+                  <td>
+                    <div className="acciones-tabla">
+                      <button className="btn-accion editar" onClick={() => abrirEditar(c)} title="Editar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                      </button>
+                      <button
+                        className={`btn-accion ${c.estado === 'Suspendida' ? 'reactivar' : 'suspender'}`}
+                        onClick={() => abrirSuspender(c)}
+                        title={c.estado === 'Suspendida' ? 'Reactivar compra' : 'Suspender/Anular compra'}
+                      >
+                        {c.estado === 'Suspendida' ? (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" /></svg>
+                        )}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        <div className="crud-paginacion">
+          <span className="paginacion-info">Mostrando {filtrados.length} de {datos.length} compras</span>
+        </div>
+      </div>
+
+      {(modal === 'crear' || modal === 'editar') && (
+        <Modal titulo={modal === 'crear' ? 'Nueva Compra' : 'Editar Compra'} alCerrar={() => setModal(null)} alGuardar={guardar}>
+          <div className="fila-campos">
+            <div className="grupo-campo">
+              <label>No. Factura</label>
+              <input value={formulario.factura} onChange={(e) => setFormulario({ ...formulario, factura: e.target.value })} placeholder="FC-0025" />
+            </div>
+            <div className="grupo-campo">
+              <label>Fecha</label>
+              <input type="date" value={formulario.fecha} onChange={(e) => setFormulario({ ...formulario, fecha: e.target.value })} />
+            </div>
+          </div>
+          <div className="grupo-campo">
+            <label>Proveedor *</label>
+            <input value={formulario.proveedor} onChange={(e) => setFormulario({ ...formulario, proveedor: e.target.value })} placeholder="Nombre del proveedor" />
+          </div>
+          <div className="fila-campos">
+            <div className="grupo-campo">
+              <label>Total (COP)</label>
+              <input type="number" value={formulario.total} onChange={(e) => setFormulario({ ...formulario, total: e.target.value })} placeholder="0" />
+            </div>
+            <div className="grupo-campo">
+              <label>Cantidad de Ítems</label>
+              <input type="number" value={formulario.items} onChange={(e) => setFormulario({ ...formulario, items: e.target.value })} placeholder="0" min="1" />
+            </div>
+          </div>
+          <div className="grupo-campo">
+            <label>Estado</label>
+            <select value={formulario.estado} onChange={(e) => setFormulario({ ...formulario, estado: e.target.value })}>
+              <option>Pendiente</option>
+              <option>En Tránsito</option>
+              <option>Recibida</option>
+              <option>Suspendida</option>
+            </select>
+          </div>
+        </Modal>
+      )}
+
+      {modal === 'suspender' && (
+        <ConfirmarSuspender
+          nombreElemento={`Orden de Compra ${actual?.factura} (${actual?.proveedor})`}
+          estadoActual={actual?.estado}
+          alCerrar={() => setModal(null)}
+          alConfirmar={suspender}
+        />
+      )}
+    </>
+  );
+}
+
+function IconoCarritoSVG(props) {
+  return <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>;
+}

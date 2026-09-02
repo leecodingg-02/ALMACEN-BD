@@ -127,7 +127,6 @@ function Encabezado() {
 
           <div className='btn-desplegable'>
             <button className='btn-productos'>
-
               {" "}
               Productos
               <svg
@@ -144,9 +143,7 @@ function Encabezado() {
                   d='m19.5 8.25-7.5 7.5-7.5-7.5'
                 />
               </svg>
-
             </button>
-            
           </div>
 
           <NavLink to='/ofertas' className='navegacion'>

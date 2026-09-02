@@ -104,7 +104,8 @@
   align-items: center;
   justify-content: space-between;
   min-height: 12vh;
-  
+  padding: 0 12vh;
+  border: red 2px solid;
 }
 
 /* Busqueda estilos y configuracion */
@@ -113,7 +114,7 @@
   background: transparent;
   outline: none;
   margin-left: 1.5vh;
-  width: 50vh;
+  width: 100%;
 }
 
 .buscar-btn {
@@ -130,6 +131,7 @@
   align-items: center;
   border: 2px #00000046 solid;
   border-radius: 30px;
+  width: 25%;
 }
 
 /* Estilos navegacion botones */
@@ -168,8 +170,7 @@ a.active::after{
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 3.8vh;
-  margin-left: 5vh;
+
 }
 
 .navegacion {

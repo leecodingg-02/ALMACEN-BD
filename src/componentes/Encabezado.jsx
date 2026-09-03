@@ -80,7 +80,7 @@ function Encabezado({
             </Link>
           </div>
 
-          <Link to='/usuario?tab=configuracion' className='botones-barra-sup'>
+          <Link to='/ayuda' className='botones-barra-sup'>
             <p className='bara-sup-texto-ayu'> Ayuda </p>
           </Link>
 

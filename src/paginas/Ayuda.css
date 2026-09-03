@@ -1,0 +1,708 @@
+/* =========================================================
+   PÁGINA DE AYUDA Y SOPORTE - NOVACASA
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --color-primario: #FFC107;
+  --color-secundario: #000000;
+  --color-terciario: #FFFFFF;
+  --color-neutral: #F5F5F5;
+  --fuente-principal: 'Montserrat', sans-serif;
+}
+
+.ayuda-pagina {
+  width: 100%;
+  min-height: 85vh;
+  background-color: #f8f9fa;
+  color: var(--color-secundario);
+  font-family: var(--fuente-principal);
+  padding-bottom: 70px;
+}
+
+/* ---------------------------------------------------------
+   HERO DISRUPTIVO
+   --------------------------------------------------------- */
+.ayuda-hero-disruptivo {
+  position: relative;
+  background-color: var(--color-secundario);
+  color: var(--color-terciario);
+  padding: 60px 40px;
+  border-radius: 0 0 24px 24px;
+  overflow: hidden;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ayuda-hero-contenido {
+  position: relative;
+  z-index: 5;
+  max-width: 850px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ayuda-caja-busqueda {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-terciario);
+  border-radius: 12px;
+  padding: 6px 18px;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 2px solid transparent;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ayuda-caja-busqueda:focus-within {
+  border-color: var(--color-primario);
+  box-shadow: 0 12px 35px rgba(255, 193, 7, 0.4);
+}
+
+/* ---------------------------------------------------------
+   PESTAÑAS DE NAVEGACIÓN CON HEROICONS
+   --------------------------------------------------------- */
+.ayuda-navegacion-contenedor {
+  max-width: 1380px;
+  margin: 0 auto 32px auto;
+  padding: 0 40px;
+}
+
+.ayuda-pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: var(--color-terciario);
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.ayuda-pestana-btn {
+  background-color: transparent;
+  border: none;
+  color: #555555;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ayuda-heroicon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.ayuda-pestana-btn:hover {
+  background-color: var(--color-neutral);
+  color: var(--color-secundario);
+}
+
+.ayuda-pestana-btn:hover .ayuda-heroicon {
+  transform: scale(1.15);
+}
+
+.ayuda-pestana-btn.activo {
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  box-shadow: 0 4px 14px rgba(255, 193, 7, 0.35);
+}
+
+.ayuda-pestana-btn.activo .ayuda-heroicon {
+  color: var(--color-secundario);
+}
+
+/* ---------------------------------------------------------
+   CUERPO DE SECCIÓN
+   --------------------------------------------------------- */
+.ayuda-cuerpo-contenedor {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.ayuda-seccion-card {
+  background-color: var(--color-terciario);
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.seccion-cabecera {
+  margin-bottom: 32px;
+}
+
+.badge-seccion {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-secundario);
+  background-color: var(--color-primario);
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.seccion-cabecera h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  margin-bottom: 8px;
+}
+
+.seccion-bajada {
+  font-size: 1.05rem;
+  color: #666666;
+}
+
+/* ---------------------------------------------------------
+   ANIMACIÓN ESTÉTICA DE TARJETAS SOBRE NOVACASA
+   --------------------------------------------------------- */
+.nosotros-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.nosotros-tarjeta {
+  position: relative;
+  background-color: var(--color-neutral);
+  border-radius: 16px;
+  padding: 32px;
+  border: 2px solid #e5e5e5;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nosotros-tarjeta-brillo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--color-primario), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.nosotros-icono-header {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.icono-nosotros-svg {
+  width: 26px;
+  height: 26px;
+  color: var(--color-secundario);
+  transition: all 0.3s ease;
+}
+
+.nosotros-tarjeta h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  margin-bottom: 12px;
+}
+
+.nosotros-tarjeta p {
+  font-size: 0.95rem;
+  color: #444444;
+  line-height: 1.6;
+}
+
+.nosotros-tarjeta ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #333333;
+  font-weight: 600;
+}
+
+/* EFECTO HOVER DISRUPTIVO Y ESTÉTICO */
+.nosotros-tarjeta.animada-hover:hover {
+  transform: translateY(-8px) scale(1.015);
+  border-color: var(--color-primario);
+  background-color: #ffffff;
+  box-shadow: 0 16px 35px rgba(255, 193, 7, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.nosotros-tarjeta.animada-hover:hover .nosotros-tarjeta-brillo {
+  opacity: 1;
+}
+
+.nosotros-tarjeta.animada-hover:hover .nosotros-icono-header {
+  background-color: var(--color-secundario);
+  border-color: var(--color-primario);
+  transform: scale(1.1) rotate(-4deg);
+}
+
+.nosotros-tarjeta.animada-hover:hover .icono-nosotros-svg {
+  color: var(--color-primario);
+}
+
+.destacado-nosotros {
+  background-color: #fffdf5;
+  border-color: rgba(255, 193, 7, 0.5);
+}
+
+/* ---------------------------------------------------------
+   LEGAL (TÉRMINOS Y PRIVACIDAD)
+   --------------------------------------------------------- */
+.legal-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.bloque-legal {
+  background-color: var(--color-neutral);
+  padding: 24px;
+  border-radius: 12px;
+  border-left: 4px solid var(--color-primario);
+}
+
+.bloque-legal h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  margin-bottom: 8px;
+}
+
+.bloque-legal p {
+  font-size: 0.95rem;
+  color: #444444;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   PREGUNTAS FRECUENTES (FAQ) CON HEROICONS
+   --------------------------------------------------------- */
+.faq-categorias-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.btn-faq-cat {
+  background-color: var(--color-neutral);
+  border: 1px solid #dcdcdc;
+  color: var(--color-secundario);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cat-heroicon-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-faq-cat.activo {
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+  border-color: var(--color-secundario);
+}
+
+.faq-acordeon-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-terciario);
+  transition: border-color 0.2s ease;
+}
+
+.faq-item.abierta {
+  border-color: var(--color-primario);
+}
+
+.faq-pregunta-btn {
+  width: 100%;
+  padding: 18px 24px;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.faq-pregunta-txt {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.faq-icono-flecha {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-primario);
+}
+
+.faq-respuesta-cuerpo {
+  padding: 0 24px 20px 24px;
+  font-size: 0.95rem;
+  color: #444444;
+  line-height: 1.65;
+  border-top: 1px dashed #efefef;
+  padding-top: 14px;
+}
+
+/* ---------------------------------------------------------
+   GARANTÍAS CON HEROICONS
+   --------------------------------------------------------- */
+.garantias-cobertura-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.garantia-card {
+  background-color: var(--color-neutral);
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.garantia-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.garantia-icono-svg-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.garantia-svg-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.garantia-card h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  margin-bottom: 8px;
+}
+
+.garantia-tiempo {
+  display: inline-block;
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.garantia-card p {
+  font-size: 0.88rem;
+  color: #555555;
+  line-height: 1.5;
+}
+
+.pasos-garantia-contenedor {
+  background-color: #fffdf5;
+  border: 1px solid var(--color-primario);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+/* ---------------------------------------------------------
+   CONTACTO Y VALIDACIONES DE FORMULARIO
+   --------------------------------------------------------- */
+.contacto-contenedor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.contacto-info-tarjeta {
+  background-color: var(--color-secundario);
+  color: var(--color-terciario);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.icono-contacto-svg-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contacto-svg-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.contacto-item-linea {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.contacto-item-linea strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.contacto-item-linea span {
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.link-sucursales-contacto {
+  color: var(--color-primario);
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.link-sucursales-contacto:hover {
+  text-decoration: underline;
+}
+
+/* FORMULARIO Y VALIDACIONES */
+.contacto-formulario-caja {
+  background-color: var(--color-neutral);
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-grupo-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-campo label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+}
+
+.form-campo input,
+.form-campo select,
+.form-campo textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-campo input:focus,
+.form-campo select:focus,
+.form-campo textarea:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
+/* ESTILOS DE ERROR DE VALIDACIÓN */
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.03) !important;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+}
+
+.msg-error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 2px;
+  animation: errorFadeIn 0.2s ease-out;
+}
+
+@keyframes errorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-block {
+  width: 100%;
+  padding: 14px !important;
+  font-size: 1rem !important;
+}
+
+/* Ticket de Éxito con SVG */
+.ticket-exito-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.icono-check-exito {
+  width: 60px;
+  height: 60px;
+  background-color: #22c55e;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+}
+
+.check-svg {
+  width: 36px;
+  height: 36px;
+}
+
+.codigo-ticket {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  background-color: var(--color-primario);
+  padding: 8px 20px;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 12px 0 16px 0;
+  letter-spacing: 1px;
+}
+
+/* =========================================================
+   RESPONSIVIDAD
+   ========================================================= */
+@media (max-width: 1024px) {
+  .nosotros-grid,
+  .garantias-cobertura-grid,
+  .contacto-contenedor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ayuda-cuerpo-contenedor,
+  .ayuda-navegacion-contenedor {
+    padding: 0 20px;
+  }
+
+  .ayuda-seccion-card {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-grupo-doble {
+    grid-template-columns: 1fr;
+  }
+
+  .ayuda-pestana-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* =========================================================
+   ALTO CONTRASTE
+   ========================================================= */
+html.modo-alto-contraste .ayuda-pagina {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.modo-alto-contraste .ayuda-seccion-card,
+html.modo-alto-contraste .nosotros-tarjeta,
+html.modo-alto-contraste .contacto-formulario-caja {
+  background-color: #111111 !important;
+  border-color: #ffc107 !important;
+  color: #ffffff !important;
+}
+
+html.modo-alto-contraste h2,
+html.modo-alto-contraste h3,
+html.modo-alto-contraste label {
+  color: #ffffff !important;
+}

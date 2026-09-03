@@ -131,27 +131,27 @@ function PiePagina() {
           <h4 className="pie-col-titulo">Información</h4>
           <ul className="pie-enlaces-lista">
             <li>
-              <Link to="/" className="pie-enlace">
+              <Link to="/ayuda?seccion=nosotros" className="pie-enlace">
                 Nosotros
               </Link>
             </li>
             <li>
-              <Link to="/usuario?tab=configuracion" className="pie-enlace">
+              <Link to="/ayuda?seccion=terminos" className="pie-enlace">
                 Términos y condiciones
               </Link>
             </li>
             <li>
-              <Link to="/usuario?tab=configuracion" className="pie-enlace">
+              <Link to="/ayuda?seccion=privacidad" className="pie-enlace">
                 Política de privacidad
               </Link>
             </li>
             <li>
-              <Link to="/usuario?tab=configuracion" className="pie-enlace">
+              <Link to="/ayuda?seccion=faq" className="pie-enlace">
                 Preguntas frecuentes
               </Link>
             </li>
             <li>
-              <Link to="/usuario?tab=configuracion" className="pie-enlace">
+              <Link to="/ayuda?seccion=garantias" className="pie-enlace">
                 Garantías
               </Link>
             </li>
@@ -163,17 +163,17 @@ function PiePagina() {
           <h4 className="pie-col-titulo">Ayuda</h4>
           <ul className="pie-enlaces-lista">
             <li>
-              <Link to="/usuario?tab=direccion" className="pie-enlace">
+              <Link to="/ayuda?seccion=faq" className="pie-enlace">
                 Envíos y entregas
               </Link>
             </li>
             <li>
-              <Link to="/usuario?tab=pedidos" className="pie-enlace">
+              <Link to="/ayuda?seccion=garantias" className="pie-enlace">
                 Cambios y devoluciones
               </Link>
             </li>
             <li>
-              <Link to="/carrito" className="pie-enlace">
+              <Link to="/ayuda?seccion=faq" className="pie-enlace">
                 Métodos de pago
               </Link>
             </li>
@@ -183,7 +183,7 @@ function PiePagina() {
               </Link>
             </li>
             <li>
-              <Link to="/usuario" className="pie-enlace">
+              <Link to="/ayuda?seccion=contacto" className="pie-enlace">
                 Contáctanos
               </Link>
             </li>

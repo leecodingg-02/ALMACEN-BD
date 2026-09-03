@@ -10,6 +10,7 @@ import Checkout from "./paginas/Checkout";
 import Confirmacion from "./paginas/Confirmacion";
 import Usuario from "./paginas/Usuario";
 import Ubicaciones from "./paginas/Ubicaciones";
+import Ayuda from "./paginas/Ayuda";
 import {
   agregarLineaCarrito,
   leerCarrito,
@@ -181,6 +182,7 @@ function App() {
           }
         />
         <Route path='/ubicaciones' element={<Ubicaciones />} />
+        <Route path='/ayuda' element={<Ayuda />} />
 
         {/* Panel de Administración */}
         <Route path='/admin' element={<AdminLayout />}>
@@ -211,5 +213,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;

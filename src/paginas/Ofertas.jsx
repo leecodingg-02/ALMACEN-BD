@@ -1,5 +1,4 @@
 import './Ofertas.css';
-import Encabezado from '../componentes/Encabezado';
 import { PRODUCTOS_DATA, TarjetaProducto } from './Productos';
 
 const Ofertas = () => {
@@ -28,7 +27,6 @@ const Ofertas = () => {
 
     return (
         <>
-            <Encabezado />
             <div className="contenedor">
                 {/* Sección Portada Principal Ofertas */}
                 <main className="portada-ofertas">

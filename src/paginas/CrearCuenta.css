@@ -337,6 +337,25 @@
   font-weight: 400;
 }
 
+/* ================================================ */
+/* Validaciones y errores                           */
+/* ================================================ */
+
+/* Estado de error en el campo */
+.campo-error {
+  border-color: #c0392b !important;
+  background-color: #fef5f5;
+}
+
+/* Mensaje de error */
+.error-msg {
+  display: block;
+  color: #c0392b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
 /* Adaptación para pantallas pequeñas */
 @media (max-width: 960px) {
   .crear-cuenta-container {

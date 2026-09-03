@@ -116,9 +116,6 @@ function App() {
     setCarrito((c) => removerLinea(c, idProducto));
   };
 
-  /* Vaciar el carrito después de una compra exitosa */
-  const vaciarCarrito = () => setCarrito([]);
-
   /* Alternar inicio/cierre de sesión demo */
   const handleAlternarSesion = () => {
     const nuevoUsuario = alternarEstadoSesion();

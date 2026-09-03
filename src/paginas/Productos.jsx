@@ -10,6 +10,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 1,
     categoria: "HERRAMIENTAS",
+    imagen: "https://admin.wurth.co/uploads/ec5f5dc6_8a5c_45c1_8630_f7dc139a3e30_7b732362fb.jpg",
     subcategoria: "Taladros",
     titulo: "Taladro Inalámbrico 20V",
     precio: 299900,
@@ -33,6 +34,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 2,
     categoria: "MUEBLES",
+    imagen: "https://media.falabella.com/falabellaCO/882302946_1/w=1500,h=1500,fit=cover.jpg",
     subcategoria: "Sala",
     titulo: "Sofá Modular 3 Puestos Tela Premium",
     precio: 1299900,
@@ -56,6 +58,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 3,
     categoria: "ILUMINACIÓN",
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0zyS-OfOA_seyODC6gh--NwFNypD3jIkMHj44tWgvEMYvSQYXujM_58Ay&s=10.jpg",
     subcategoria: "Colgantes",
     titulo: "Lámpara Colgante Minimalista Negra",
     precio: 159900,
@@ -79,6 +82,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 4,
     categoria: "MUEBLES",
+    imagen: "https://media.falabella.com/sodimacCO/777829_03/w=1500,h=1500,fit=cover.jpg",
     subcategoria: "Almacenamiento",
     titulo: "Estantería Industrial 5 Niveles",
     precio: 219900,
@@ -102,6 +106,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 5,
     categoria: "MUEBLES",
+    imagen: "https://media.falabella.com/sodimacCO/777866_03/w=1500,h=1500,fit=cover.jpg",
     subcategoria: "Sala",
     titulo: "Mesa de Centro Industrial",
     precio: 189900,
@@ -125,6 +130,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 6,
     categoria: "MUEBLES",
+    imagen: "https://mueblesbaena.com/wp-content/uploads/2021/02/0002530020001-1-full.jpg",
     subcategoria: "Sillas",
     titulo: "Silla Nórdica Gris",
     precio: 145000,
@@ -147,6 +153,7 @@ export const PRODUCTOS_DATA = [
   },
   {
     id: 7,
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMO6FStb9MJZOoRWmrPmG3DKtRqJvJMmjXhZzy0Q4eA&s=10.jpg",
     categoria: "ILUMINACIÓN",
     subcategoria: "Pie",
     titulo: "Lámpara de Pie Cromo",
@@ -171,6 +178,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 8,
     categoria: "HERRAMIENTAS",
+    imagen: "https://exitocol.vtexassets.com/arquivos/ids/28863566/kit-herramientas-manuales-50-pzs-maxtools-mt-hmk50ng-estuche.jpg?v=638857130643170000.jpg",
     subcategoria: "Kits",
     titulo: "Set de Herramientas 50 pzas",
     precio: 95900,
@@ -194,6 +202,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 9,
     categoria: "DECORACIÓN",
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg-HUf_fwQ411z1JTNzYFdARpExjHe5K6YxwabIesaXXpBF6ycaImpil8&s=10.jpg",
     subcategoria: "Espejos",
     titulo: "Espejo Decorativo Redondo",
     precio: 120000,
@@ -217,6 +226,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 10,
     categoria: "DECORACIÓN",
+    imagen: "https://kudeko.com/cdn/shop/products/cuadro-decorativo-minimalista-y-nordico-salon-botanico-de-tinta_1600x.jpg?v=1779897845.jpg",
     subcategoria: "Arte",
     titulo: "Cuadro Minimalista Botánico",
     precio: 85000,
@@ -240,6 +250,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 11,
     categoria: "HERRAMIENTAS",
+    imagen: "https://olimpica.vtexassets.com/arquivos/ids/1117965/image-4f668111288e458caa2f0db8a7968846.jpg?v=638233978340770000.jpg",
     subcategoria: "Eléctricas",
     titulo: "Sierra Circular 1500W",
     precio: 345000,
@@ -263,6 +274,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 12,
     categoria: "ILUMINACIÓN",
+    imagen: "https://www.steren.com.co/media/catalog/product/cache/0236bbabe616ddcff749ccbc14f38bf2/image/20475fce0/bombillo-led-wi-fi-rgb-w-multicolor-de-10-w.jpg",
     subcategoria: "Smart",
     titulo: "Foco Inteligente LED RGB",
     precio: 45000,
@@ -283,7 +295,8 @@ export const PRODUCTOS_DATA = [
     },
     relacionados: [3, 7, 16, 9],
   },
-  {
+  {imagen: "https://mueblesdixie.com/wp-content/uploads/2024/11/Copia-de-29-20700-Alto-80-Largo-140-Fondo-60JPG.jpg",
+    
     id: 13,
     categoria: "MUEBLES",
     subcategoria: "Oficina",
@@ -309,6 +322,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 14,
     categoria: "DECORACIÓN",
+    imagen: "https://image.made-in-china.com/2f0j00NnfklyFWLRbY/Nordic-Ceramic-Creative-Little-Figure-Meaty-Plant-Flower-Pot-Decoration-Office-Simple-Craft-Decoration.jpg",
     subcategoria: "Plantas",
     titulo: "Maceta de Cerámica Nórdica",
     precio: 35000,
@@ -332,6 +346,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 15,
     categoria: "HERRAMIENTAS",
+    imagen: "https://jensa.vtexassets.com/arquivos/ids/159679/130052000_BDHT51396-Martillo-de-u%C3%B1a-curva-mango-fibra-de-vidrio-16-Onz-B-D-1.jpg?v=638157154171400000.jpg",
     subcategoria: "Básicas",
     titulo: "Martillo de Uña Curva",
     precio: 25000,
@@ -355,6 +370,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 16,
     categoria: "ILUMINACIÓN",
+    imagen: "https://media.falabella.com/falabellaCO/154456140_01/w=1004,h=1500,fit=pad.jpg",
     subcategoria: "Escritorio",
     titulo: "Lámpara de Escritorio Ajustable",
     precio: 95000,
@@ -378,6 +394,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 17,
     categoria: "MUEBLES",
+    imagen: "https://exitocol.vtexassets.com/arquivos/ids/28308642/silla-de-oficina-gerencial-con-brazos-ajustables-en-altura-negro.jpg?v=638852761928070000.jpg",
     subcategoria: "Oficina",
     titulo: "Silla de Oficina Ergonómica",
     precio: 450000,
@@ -401,6 +418,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 18,
     categoria: "DECORACIÓN",
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFx6cF7jzS2zf9mdg_HadBiVqZrBFV5Ss5akC-BLkjqg&s=10.jpg",
     subcategoria: "Relojes",
     titulo: "Reloj de Pared Vintage",
     precio: 110000,
@@ -424,6 +442,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 19,
     categoria: "HERRAMIENTAS",
+    imagen: "https://ferreteriaonlinelevallejoaz.com/wp-content/uploads/2024/05/80005.jpg",
     subcategoria: "Almacenamiento",
     titulo: "Caja de Herramientas Metálica",
     precio: 135000,
@@ -447,6 +466,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 20,
     categoria: "MUEBLES",
+    imagen: "https://exitocol.vtexassets.com/arquivos/ids/29132516/mueble-para-tv-70-pulgadas-mind-en-mdp-4-puertas-blanco.jpg?v=638882190402370000.jpg",
     subcategoria: "Sala",
     titulo: "Mueble para TV Moderno",
     precio: 320000,
@@ -499,31 +519,33 @@ export const renderizarEstrellas = (calificacion) => {
 // ============================================================
 // COMPONENTE TARJETA (reutilizable + clicable)
 // ============================================================
-export const TarjetaProducto = ({ producto, onAgregarCarrito }) => (
-  <Link to={`/productos/${producto.id}`} className='tarjeta-producto-link'>
-    <div className='tarjeta-producto'>
-      {producto.etiqueta && (
-        <span className={`etiqueta ${producto.etiqueta.toLowerCase()}`}>
-          {producto.etiqueta}
-        </span>
-      )}
-      <button className='producto-favorito' onClick={(e) => e.preventDefault()}>
-        &#9825;
-      </button>
-      <div className='producto-imagen-marcador'>
-        <span
-          style={{
-            display: "flex",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#aaa",
-            fontSize: "0.8rem",
-          }}
-        >
-          Img {producto.id}
-        </span>
-      </div>
+export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
+  const [imagenDisponible, setImagenDisponible] = useState(true);
+
+  return (
+    <Link to={`/productos/${producto.id}`} className='tarjeta-producto-link'>
+      <div className='tarjeta-producto'>
+        {producto.etiqueta && (
+          <span className={`etiqueta ${producto.etiqueta.toLowerCase()}`}>
+            {producto.etiqueta}
+          </span>
+        )}
+        <button className='producto-favorito' onClick={(e) => e.preventDefault()}>
+          &#9825;
+        </button>
+        <div className='producto-imagen-marcador'>
+          {imagenDisponible ? (
+            <img
+              className='producto-imagen'
+              src={producto.imagen}
+              alt={producto.titulo}
+              loading='lazy'
+              onError={() => setImagenDisponible(false)}
+            />
+          ) : (
+            <span className='producto-imagen-fallback'>Imagen no disponible</span>
+          )}
+        </div>
       <div className='producto-info'>
         <span className='producto-categoria'>{producto.categoria}</span>
         <h4 className='producto-titulo'>{producto.titulo}</h4>
@@ -551,9 +573,10 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => (
           Agregar al carrito
         </button>
       </div>
-    </div>
-  </Link>
-);
+      </div>
+    </Link>
+  );
+};
 
 // ============================================================
 // PÁGINA PRINCIPAL DE PRODUCTOS

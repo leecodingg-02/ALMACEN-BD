@@ -17,7 +17,7 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
   const [acordeonAbierto, setAcordeonAbierto] = useState("specs");
   const [imagenActiva, setImagenActiva] = useState(0);
 
-  // Imagen activa (simuladas con colores de fondo)
+  // Se conserva el fondo para que el espacio no cambie si una URL externa falla.
   const fondosGaleria = ["#e0e0e0", "#d0d0d0", "#c8c8c8", "#bebebe"];
 
   if (!producto) {
@@ -68,7 +68,7 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
                   style={{ backgroundColor: fondo }}
                   onClick={() => setImagenActiva(i)}
                 >
-                  <span>Vista {i + 1}</span>
+                  <img src={producto.imagen} alt={`${producto.titulo} vista ${i + 1}`} />
                 </div>
               ))}
             </div>
@@ -85,9 +85,7 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
                 className='imagen-principal'
                 style={{ backgroundColor: fondosGaleria[imagenActiva] }}
               >
-                <span className='imagen-placeholder-texto'>
-                  {producto.titulo} — Vista {imagenActiva + 1}
-                </span>
+                <img src={producto.imagen} alt={producto.titulo} />
               </div>
             </div>
           </div>

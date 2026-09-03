@@ -1,23 +1,56 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Encabezado from '../componentes/Encabezado';
 import './InicioSesion.css';
 
 const InicioSesion = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [errores, setErrores] = useState({});
+
+  /* Validaciones */
+  const correoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+
+  const validarFormulario = () => {
+    const nuevosErrores = {};
+
+    /* Email — obligatorio, formato válido */
+    if (!email.trim()) {
+      nuevosErrores.email = "El correo es obligatorio.";
+    } else if (!correoValido(email)) {
+      nuevosErrores.email = "Ingresa un correo válido.";
+    }
+
+    /* Contraseña — obligatoria, mínimo 6 caracteres */
+    if (!password.trim()) {
+      nuevosErrores.password = "La contraseña es obligatoria.";
+    } else if (password.length < 6) {
+      nuevosErrores.password = "La contraseña debe tener al menos 6 caracteres.";
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'email') setEmail(value);
+    if (name === 'password') setPassword(value);
+
+    /* Limpiar error al editar */
+    if (errores[name]) {
+      setErrores((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validarFormulario()) return;
     console.log('Intento de Inicio de Sesión:', { email, password });
   };
 
   return (
     <div className="login-pagina-wrapper">
-      {/* Encabezado general del sitio */}
-      <Encabezado />
-
       <main className="login-main-container">
         {/* Enlace superior Volver a Inicio */}
         <div className="login-header-nav">
@@ -47,18 +80,20 @@ const InicioSesion = () => {
               Ingresa a tu cuenta para continuar transformando tu hogar.
             </p>
 
-            <form onSubmit={handleSubmit} className="login-form">
+            <form onSubmit={handleSubmit} className="login-form" noValidate>
               {/* Campo Correo Electrónico */}
               <div className="login-field-group">
                 <input
                   type="email"
                   id="email"
-                  className="login-input"
+                  name="email"
+                  className={`login-input ${errores.email ? "campo-error" : ""}`}
                   placeholder="CORREO ELECTRÓNICO"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleChange}
                   required
                 />
+                {errores.email && <span className="error-msg">{errores.email}</span>}
               </div>
 
               {/* Campo Contraseña */}
@@ -66,12 +101,14 @@ const InicioSesion = () => {
                 <input
                   type={mostrarPassword ? 'text' : 'password'}
                   id="password"
-                  className="login-input"
+                  name="password"
+                  className={`login-input ${errores.password ? "campo-error" : ""}`}
                   placeholder="CONTRASEÑA"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handleChange}
                   required
                 />
+                {errores.password && <span className="error-msg">{errores.password}</span>}
                 <button
                   type="button"
                   className="btn-toggle-password"

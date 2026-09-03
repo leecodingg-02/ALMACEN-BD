@@ -1,10 +1,8 @@
 import './Nosotros.css';
-import Encabezado from '../componentes/Encabezado';
 
 const Nosotros = () => {
     return (
         <>
-            <Encabezado />
             <div className="contenedor">
                 {/* Hero Section */}
                 <section className="portada">

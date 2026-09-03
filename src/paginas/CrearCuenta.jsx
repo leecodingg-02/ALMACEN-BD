@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Encabezado from '../componentes/Encabezado';
 import './CrearCuenta.css';
 
 const CrearCuenta = () => {
@@ -16,6 +15,65 @@ const CrearCuenta = () => {
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [errores, setErrores] = useState({});
+
+  /* Validaciones */
+  const soloLetras = (valor) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(valor);
+  const soloDigitos = (valor) => /^\d+$/.test(valor);
+  const correoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+  const contraseñaValida = (valor) => {
+    // Mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(valor);
+  };
+
+  const validarFormulario = () => {
+    const nuevosErrores = {};
+
+    /* Nombre — obligatorio, solo letras */
+    if (!formData.nombre.trim()) {
+      nuevosErrores.nombre = "El nombre es obligatorio.";
+    } else if (!soloLetras(formData.nombre)) {
+      nuevosErrores.nombre = "El nombre solo puede contener letras.";
+    }
+
+    /* Apellido — obligatorio, solo letras */
+    if (!formData.apellido.trim()) {
+      nuevosErrores.apellido = "El apellido es obligatorio.";
+    } else if (!soloLetras(formData.apellido)) {
+      nuevosErrores.apellido = "El apellido solo puede contener letras.";
+    }
+
+    /* Tipo de documento — obligatorio */
+    if (!formData.tipoDocumento) {
+      nuevosErrores.tipoDocumento = "Selecciona un tipo de documento.";
+    }
+
+    /* Documento — obligatorio, solo dígitos */
+    if (!formData.documento.trim()) {
+      nuevosErrores.documento = "El documento es obligatorio.";
+    } else if (!soloDigitos(formData.documento)) {
+      nuevosErrores.documento = "Solo se permiten dígitos.";
+    }
+
+    /* Email — obligatorio, formato válido */
+    if (!formData.email.trim()) {
+      nuevosErrores.email = "El correo es obligatorio.";
+    } else if (!correoValido(formData.email)) {
+      nuevosErrores.email = "Ingresa un correo válido.";
+    }
+
+    /* Contraseña — obligatoria, con requisitos de seguridad */
+    if (!formData.password.trim()) {
+      nuevosErrores.password = "La contraseña es obligatoria.";
+    } else if (formData.password.length < 8) {
+      nuevosErrores.password = "La contraseña debe tener al menos 8 caracteres.";
+    } else if (!contraseñaValida(formData.password)) {
+      nuevosErrores.password = "Debe tener mayúscula, minúscula, número y carácter especial (@$!%*?&).";
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,18 +81,21 @@ const CrearCuenta = () => {
       ...prev,
       [name]: value
     }));
+
+    /* Limpiar error al editar */
+    if (errores[name]) {
+      setErrores((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validarFormulario()) return;
     console.log('Datos de Registro:', formData);
   };
 
   return (
     <div className="crear-cuenta-page">
-      {/* Root de inicio: Encabezado principal del sitio */}
-      <Encabezado />
-
       {/* Seccion principal de registro */}
       <main className="crear-cuenta-container">
         {/* Panel Izquierdo: Formulario */}
@@ -73,7 +134,7 @@ const CrearCuenta = () => {
           </div>
 
           {/* Formulario de Registro */}
-          <form onSubmit={handleSubmit} className="crear-cuenta-form">
+          <form onSubmit={handleSubmit} className="crear-cuenta-form" noValidate>
             {/* Fila 1: Nombre y Apellido */}
             <div className="form-row two-columns">
               <div className="form-group">
@@ -83,11 +144,12 @@ const CrearCuenta = () => {
                 <input
                   type="text"
                   name="nombre"
-                  className="form-input"
+                  className={`form-input ${errores.nombre ? "campo-error" : ""}`}
                   value={formData.nombre}
                   onChange={handleChange}
                   required
                 />
+                {errores.nombre && <span className="error-msg">{errores.nombre}</span>}
               </div>
 
               <div className="form-group">
@@ -97,11 +159,12 @@ const CrearCuenta = () => {
                 <input
                   type="text"
                   name="apellido"
-                  className="form-input"
+                  className={`form-input ${errores.apellido ? "campo-error" : ""}`}
                   value={formData.apellido}
                   onChange={handleChange}
                   required
                 />
+                {errores.apellido && <span className="error-msg">{errores.apellido}</span>}
               </div>
             </div>
 
@@ -114,7 +177,7 @@ const CrearCuenta = () => {
                 <div className="select-wrapper">
                   <select
                     name="tipoDocumento"
-                    className="form-select"
+                    className={`form-select ${errores.tipoDocumento ? "campo-error" : ""}`}
                     value={formData.tipoDocumento}
                     onChange={handleChange}
                     required
@@ -139,6 +202,7 @@ const CrearCuenta = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                   </svg>
                 </div>
+                {errores.tipoDocumento && <span className="error-msg">{errores.tipoDocumento}</span>}
               </div>
 
               <div className="form-group">
@@ -148,11 +212,13 @@ const CrearCuenta = () => {
                 <input
                   type="text"
                   name="documento"
-                  className="form-input"
+                  inputMode="numeric"
+                  className={`form-input ${errores.documento ? "campo-error" : ""}`}
                   value={formData.documento}
                   onChange={handleChange}
                   required
                 />
+                {errores.documento && <span className="error-msg">{errores.documento}</span>}
               </div>
             </div>
 
@@ -164,11 +230,12 @@ const CrearCuenta = () => {
               <input
                 type="email"
                 name="email"
-                className="form-input"
+                className={`form-input ${errores.email ? "campo-error" : ""}`}
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
+              {errores.email && <span className="error-msg">{errores.email}</span>}
             </div>
 
             {/* Fila 4: Contraseña */}
@@ -180,11 +247,12 @@ const CrearCuenta = () => {
                 <input
                   type={mostrarPassword ? 'text' : 'password'}
                   name="password"
-                  className="form-input"
+                  className={`form-input ${errores.password ? "campo-error" : ""}`}
                   value={formData.password}
                   onChange={handleChange}
                   required
                 />
+                {errores.password && <span className="error-msg">{errores.password}</span>}
                 <button
                   type="button"
                   className="btn-toggle-eye"

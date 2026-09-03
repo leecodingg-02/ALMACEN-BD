@@ -253,7 +253,37 @@
 .login-register-prompt {
   text-align: center;
   font-size: 13px;
-  color: #444444;
+  color: #666;
+}
+
+.login-register-prompt .login-register-link {
+  text-decoration: none;
+  color: #A66021;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-register-prompt .login-register-link:hover {
+  color: #8b4e1a;
+}
+
+/* ================================================ */
+/* Validaciones y errores                           */
+/* ================================================ */
+
+/* Estado de error en el campo */
+.campo-error {
+  border-color: #c0392b !important;
+  background-color: #fef5f5;
+}
+
+/* Mensaje de error */
+.error-msg {
+  display: block;
+  color: #c0392b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 6px;
 }
 
 .login-register-link {

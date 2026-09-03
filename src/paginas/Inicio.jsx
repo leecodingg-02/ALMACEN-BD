@@ -20,7 +20,7 @@ const Inicio = () => {
                 </div>
                 <div className="portada-imagen">
                     <div className="portada-imagen-marcador">
-                        {/* Marcador de área de imagen para la sala de estar */}
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDOONCYVxDQqUN4nUyqkkrnmBt9wX71toBwxkBJhXsfQRROzBYZuPMsSPt&s=10.jpg" alt="Imagen de portada" />
                     </div>
                 </div>
             </main>
@@ -30,6 +30,7 @@ const Inicio = () => {
                 <div className="tarjeta-categoria destacado">
                     <div className="categoria-imagen-marcador">
                         {/* Marcador de imagen de taladro */}
+                        <img src="https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-1024x682.jpg" alt="Herramientas" />
                     </div>
                     <div className="categoria-informacion">
                         <h3>Herramientas</h3>
@@ -39,7 +40,7 @@ const Inicio = () => {
                 </div>
                 <div className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
-                        {/* Marcador de imagen de silla */}
+                        <img src="https://blog.jamar.com/wp-content/uploads/Juego-sala-Gris-1200x900.jpg" alt="Muebles" />
                     </div>
                     <div className="categoria-informacion">
                         <h3>Muebles</h3>
@@ -49,7 +50,7 @@ const Inicio = () => {
                 </div>
                 <div className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
-                        {/* Marcador de imagen de plantas */}
+                        <img src="https://www.tuoagency.com/uploads/blog/c%C3%B3mo%20decorar%20paredes%20con%20telas/como-decorar-con-telas2.jpg?1646062174189.jpg" alt="Decoración" />
                     </div>
                     <div className="categoria-informacion">
                         <h3>Decoración</h3>
@@ -59,7 +60,7 @@ const Inicio = () => {
                 </div>
                 <div className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
-                        {/* Marcador de imagen de lámpara */}
+                        <img src="https://www.eglo.com/media/wysiwyg/Iluminaci_n_Vintage_Que_es_y_que_estilos_hay_5.jpg" alt="Iluminación" />
                     </div>
                     <div className="categoria-informacion">
                         <h3>Iluminación</h3>
@@ -69,7 +70,7 @@ const Inicio = () => {
                 </div>
                 <div className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
-                        {/* Marcador de imagen de grifo de baño */}
+                        <img src="https://dugal.es/wp-content/uploads/2024/05/Tendencias-en-diseno-de-interiores-2024.jpg" alt="Baño y Cocina" />
                     </div>
                     <div className="categoria-informacion">
                         <h3>Baño y Cocina</h3>

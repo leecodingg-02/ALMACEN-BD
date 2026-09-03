@@ -1,8 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import "./Encabezado.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-function Encabezado() {
+function Encabezado({ cantidadCarrito }) {
   const [desplegableAbierto, setDesplegableAbierto] = useState(false);
 
   return (
@@ -216,6 +216,8 @@ function Encabezado() {
           </Link>
 
           <Link to='btn-carrito'>
+            {/* El contador permanece visible para mostrar tambien el estado inicial. */}
+            <span className='contador-carrito'>{cantidadCarrito}</span>
             <svg
               className='icono-pri'
               xmlns='http://www.w3.org/2000/svg'

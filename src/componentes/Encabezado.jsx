@@ -115,15 +115,11 @@ function Encabezado({
               </>
             ) : (
               <>
-                <button
-                  className='btn-texto-sesion'
-                  onClick={onAlternarSesion}
-                  title='Iniciar Sesión de prueba'
-                >
+                <Link to='/inicio-sesion' className='botones-barra-sup'>
                   Iniciar Sesión
-                </button>
+                </Link>
                 <span className='separador-sesion'>/</span>
-                <Link to='/usuario' className='botones-barra-sup'>
+                <Link to='/crear-cuenta' className='botones-barra-sup'>
                   Registrarse
                 </Link>
               </>
@@ -224,7 +220,7 @@ function Encabezado({
             </div>
           </div>
 
-          <NavLink to='/productos' className='navegacion'>
+          <NavLink to='/ofertas' className='navegacion'>
             {" "}
             Ofertas
           </NavLink>
@@ -234,7 +230,7 @@ function Encabezado({
             Productos{" "}
           </NavLink>
 
-          <NavLink to='/' className='navegacion'>
+          <NavLink to='/nosotros' className='navegacion'>
             {" "}
             Nosotros{" "}
           </NavLink>

@@ -11,6 +11,10 @@ import Confirmacion from "./paginas/Confirmacion";
 import Usuario from "./paginas/Usuario";
 import Ubicaciones from "./paginas/Ubicaciones";
 import Ayuda from "./paginas/Ayuda";
+import InicioSesion from "./paginas/InicioSesion";
+import CrearCuenta from "./paginas/CrearCuenta";
+import Nosotros from "./paginas/Nosotros";
+import Ofertas from "./paginas/Ofertas";
 import {
   agregarLineaCarrito,
   leerCarrito,
@@ -166,21 +170,11 @@ function App() {
           path='/confirmacion'
           element={<Confirmacion />}
         />
-        <Route
-          path='/usuario'
-          element={
-            <Usuario
-              usuario={usuario}
-              favoritos={favoritos}
-              configuracion={configuracion}
-              onAlternarFavorito={handleAlternarFavorito}
-              onAgregarCarrito={agregarAlCarrito}
-              onActualizarUsuario={setUsuario}
-              onActualizarConfig={setConfiguracion}
-              onAlternarSesion={handleAlternarSesion}
-            />
-          }
-        />
+        <Route path='/usuario' element={<Usuario usuario={usuario} favoritos={favoritos} configuracion={configuracion} onAlternarFavorito={handleAlternarFavorito} onAgregarCarrito={agregarAlCarrito} onActualizarUsuario={setUsuario} onActualizarConfig={setConfiguracion} onAlternarSesion={handleAlternarSesion} />} />
+        <Route path='/inicio-sesion' element={<InicioSesion />} />
+        <Route path='/crear-cuenta' element={<CrearCuenta />} />
+        <Route path='/nosotros' element={<Nosotros />} />
+        <Route path='/ofertas' element={<Ofertas />} />
         <Route path='/ubicaciones' element={<Ubicaciones />} />
         <Route path='/ayuda' element={<Ayuda />} />
 

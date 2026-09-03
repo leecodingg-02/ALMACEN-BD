@@ -1,0 +1,232 @@
+/* Nosotros.css */
+
+/* Hero Section */
+.nosotros-hero {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 100px;
+    padding-top: 20px;
+}
+
+.nosotros-hero-contenido {
+    flex: 1;
+}
+
+.etiqueta-historia {
+    background-color: #f1c40f;
+    color: #1a1a1a;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.nosotros-hero-contenido h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+}
+
+.subrayado-amarillo {
+    position: relative;
+    display: inline-block;
+}
+
+.subrayado-amarillo::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: #f1c40f;
+    z-index: -1;
+}
+
+.nosotros-hero-contenido p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: #666;
+    max-width: 90%;
+}
+
+.nosotros-hero-imagen {
+    flex: 1;
+    position: relative;
+}
+
+.nosotros-hero-imagen::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    bottom: 15px;
+    left: 15px;
+    border: 1px solid #e0e0e0;
+    z-index: -1;
+}
+
+.imagen-placeholder-tienda {
+    width: 100%;
+    height: 450px;
+    background-color: #ddd;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50px;
+}
+
+/* Mision y Vision */
+.nosotros-mision-vision {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 120px;
+}
+
+.tarjeta-mv {
+    flex: 1;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.icono-mv {
+    width: 40px;
+    height: 40px;
+    color: #888;
+    margin-bottom: 25px;
+}
+
+.tarjeta-mv h2 {
+    font-size: 2.2rem;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.tarjeta-mv p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+}
+
+.etiqueta-mv {
+    color: #8e6b3e;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-top: auto;
+}
+
+/* El Motor */
+.nosotros-motor {
+    margin-bottom: 100px;
+}
+
+.titulo-motor {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.titulo-motor::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #8e6b3e;
+    margin: 15px auto 0;
+}
+
+.motor-contenido {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.motor-imagen-container {
+    flex: 1.2;
+    position: relative;
+}
+
+.imagen-placeholder-equipo {
+    width: 100%;
+    height: 500px;
+    background-color: #ddd;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+}
+
+.caja-flotante {
+    position: absolute;
+    bottom: 0;
+    right: -20px;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 25px 35px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.caja-flotante h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.texto-amarillo {
+    color: #f1c40f;
+}
+
+.motor-texto {
+    flex: 1;
+    padding: 20px 0;
+}
+
+.texto-principal {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.cita-motor {
+    border-left: 3px solid #f1c40f;
+    padding-left: 20px;
+    margin: 0 0 40px 0;
+}
+
+.cita-motor p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #777;
+    font-style: italic;
+    margin: 0;
+}
+
+.boton-sucursales {
+    display: inline-block;
+    background-color: #f1c40f;
+    color: #1a1a1a;
+    padding: 12px 25px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s;
+}
+
+.boton-sucursales:hover {
+    background-color: #f39c12;
+}

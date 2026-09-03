@@ -4,14 +4,124 @@
     box-sizing: border-box;
 }
 
-
-/* PROVISIONAL BORRAR DESPUES */
-svg {
-  width: 100px;
-  height: 100px;
+/* Accesibilidad: Escala global del tamaño de fuente */
+html.fuente-normal {
+    font-size: 16px;
 }
-/* /////////////////////////////// */
 
+html.fuente-grande {
+    font-size: 19px;
+}
+
+html.fuente-extra-grande {
+    font-size: 22px;
+}
+
+/* Accesibilidad: Modo Alto Contraste Global */
+html.modo-alto-contraste,
+html.modo-alto-contraste body {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Encabezado en Modo Alto Contraste */
+html.modo-alto-contraste .encabezado-contenedor,
+html.modo-alto-contraste .encabezado-barra-sup {
+    background-color: #000000 !important;
+    border-bottom: 2px solid #ffc107 !important;
+}
+
+html.modo-alto-contraste .encabezado-barra-sup *,
+html.modo-alto-contraste .contenedor-encabezado-pri *,
+html.modo-alto-contraste .navegacion {
+    color: #ffffff !important;
+}
+
+html.modo-alto-contraste .busqueda-contenedor {
+    border-color: #ffc107 !important;
+    background-color: #111111 !important;
+}
+
+html.modo-alto-contraste .busqueda {
+    color: #ffffff !important;
+}
+
+/* Contenedores de páginas en Alto Contraste */
+html.modo-alto-contraste .pagina-usuario,
+html.modo-alto-contraste .pagina-carrito,
+html.modo-alto-contraste .pagina-checkout,
+html.modo-alto-contraste .pagina-confirmacion {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Tarjetas y secciones de usuario en Alto Contraste */
+html.modo-alto-contraste .usuario-cabecera,
+html.modo-alto-contraste .usuario-seccion,
+html.modo-alto-contraste .tarjeta-pedido,
+html.modo-alto-contraste .tarjeta-favorito,
+html.modo-alto-contraste .tarjeta-direccion,
+html.modo-alto-contraste .form-usuario-direccion,
+html.modo-alto-contraste .usuario-tarjeta-alerta {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #ffc107 !important;
+}
+
+/* Textos e íconos en Alto Contraste para garantizar visibilidad legibilidad */
+html.modo-alto-contraste h1,
+html.modo-alto-contraste h2,
+html.modo-alto-contraste h3,
+html.modo-alto-contraste h4,
+html.modo-alto-contraste strong,
+html.modo-alto-contraste label {
+    color: #ffffff !important;
+}
+
+html.modo-alto-contraste p,
+html.modo-alto-contraste span,
+html.modo-alto-contraste li,
+html.modo-alto-contraste .descripcion-seccion,
+html.modo-alto-contraste .pedido-fecha,
+html.modo-alto-contraste .favorito-categoria,
+html.modo-alto-contraste .direccion-info p {
+    color: #e0e0e0 !important;
+}
+
+html.modo-alto-contraste .usuario-kicker,
+html.modo-alto-contraste .favorito-precio,
+html.modo-alto-contraste .pedido-id {
+    color: #ffc107 !important;
+}
+
+/* Entradas de formulario (inputs y selects) en Alto Contraste */
+html.modo-alto-contraste input,
+html.modo-alto-contraste select {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border-color: #ffc107 !important;
+}
+
+html.modo-alto-contraste input:focus,
+html.modo-alto-contraste select:focus {
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.4) !important;
+}
+
+/* Pestañas (tabs) en Alto Contraste */
+html.modo-alto-contraste .tab-btn {
+    color: #dddddd !important;
+}
+
+html.modo-alto-contraste .tab-btn.activo {
+    color: #ffc107 !important;
+    border-bottom-color: #ffc107 !important;
+}
+
+html.modo-alto-contraste code {
+    background-color: #222222 !important;
+    color: #ffc107 !important;
+    border: 1px solid #444444;
+}
 
 h1,
 h2 {
@@ -21,21 +131,21 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 3.5rem;
   letter-spacing: -1.68px;
   margin: 32px 0;
   @media (max-width: 1024px) {
-    font-size: 36px;
+    font-size: 2.25rem;
     margin: 20px 0;
   }
 }
 h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
   @media (max-width: 1024px) {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 }
 p {

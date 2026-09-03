@@ -1,0 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --color-primario: #FFC107;
+    --color-secundario: #000000;
+    --color-terciario: #FFFFFF;
+    --color-neutral: #F5F5F5;
+
+    --fuente-principal: 'Montserrat', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-terciario);
+    color: var(--color-secundario);
+    line-height: 1.6;
+}
+
+/* El contenedor ahora ocupa el 100% del ancho para quitar las columnas blancas */
+.contenedor {
+    width: 100%;
+    padding: 0 40px;
+}
+
+/* Botones */
+.boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    gap: 8px;
+}
+
+.boton-primario {
+    background-color: var(--color-primario);
+    color: var(--color-secundario);
+}
+
+.boton-primario:hover {
+    background-color: #e6ae06;
+}
+
+.boton-contorno {
+    background-color: transparent;
+    border: 2px solid var(--color-secundario);
+    color: var(--color-secundario);
+}
+
+.boton-contorno:hover {
+    background-color: var(--color-neutral);
+}
+
+/* Sección Portada */
+.portada {
+    display: flex;
+    position: relative;
+    padding: 60px 40px;
+    background-color: var(--color-neutral);
+    border-radius: 20px;
+    margin: 20px 0;
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.portada-contenido {
+    flex: 1;
+    z-index: 2;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.portada h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--color-secundario);
+}
+
+.portada h1 span {
+    position: relative;
+    display: inline-block;
+}
+
+.portada h1 span::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: var(--color-primario);
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.portada p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #555;
+    max-width: 400px;
+}
+
+.portada-botones {
+    display: flex;
+    gap: 15px;
+}
+
+.portada-imagen {
+    flex: 1;
+    position: relative;
+    min-height: 100%;
+}
+
+.portada-imagen-marcador {
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    /* Ajustado para el padding */
+    bottom: -60px;
+    left: 0;
+    background-color: #ddd;
+    border-radius: 0 20px 20px 0;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Sección Categorías */
+.categorias {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+}
+
+.tarjeta-categoria {
+    background-color: var(--color-neutral);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    min-height: 180px;
+}
+
+.tarjeta-categoria:hover {
+    transform: translateY(-5px);
+}
+
+.tarjeta-categoria.destacado {
+    background-color: var(--color-primario);
+}
+
+.categoria-informacion h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.categoria-informacion p {
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.tarjeta-categoria.destacado .categoria-informacion p {
+    color: var(--color-secundario);
+}
+
+.categoria-icono {
+    align-self: flex-start;
+}
+
+.categoria-imagen-marcador {
+    height: 80px;
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Sección Características */
+.caracteristicas {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--color-secundario);
+    color: var(--color-terciario);
+    padding: 30px 40px;
+    border-radius: 16px;
+    margin-bottom: 60px;
+}
+
+.caracteristica-elemento {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.caracteristica-icono-marcador {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 2px solid var(--color-primario);
+    border-radius: 50%;
+}
+
+.caracteristica-texto h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.caracteristica-texto p {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin: 0;
+}
+
+/* Sección Productos */
+.productos-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.productos-encabezado h2 {
+    font-size: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.productos-encabezado h2::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-primario);
+}
+
+.ver-todos {
+    color: var(--color-secundario);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.productos-cuadricula {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+}
+
+.tarjeta-producto-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.tarjeta-producto {
+    background-color: var(--color-neutral);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+}
+
+.producto-favorito {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.producto-imagen-marcador {
+    width: 100%;
+    height: 150px;
+    background-color: #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.producto-categoria {
+    font-size: 0.75rem;
+    color: #666;
+    background-color: #e0e0e0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.producto-titulo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.producto-precio {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.producto-calificacion {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.estrellas {
+    color: var(--color-primario);
+}
+
+/* Secciones Inferiores (Por qué elegirnos e Inspiración) */
+.secciones-inferiores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.por-que-elegirnos h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.beneficios-cuadricula {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.beneficio-elemento {
+    text-align: center;
+    padding: 20px;
+}
+
+.beneficio-icono-marcador {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 15px;
+    border: 2px solid var(--color-primario);
+    border-radius: 12px;
+}
+
+.beneficio-elemento h4 {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.beneficio-elemento p {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.banner-inspiracion {
+    background-color: var(--color-neutral);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.inspiracion-fondo-marcador {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d0d0d0;
+    z-index: 1;
+}
+
+.inspiracion-contenido {
+    position: relative;
+    z-index: 2;
+    color: var(--color-terciario);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    border-radius: 16px;
+}
+
+.inspiracion-contenido h2 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+/* Responsividad básica para pantallas más pequeñas (opcional, pero buena práctica) */
+@media (max-width: 1200px) {
+
+    .categorias,
+    .productos-cuadricula {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .portada {
+        flex-direction: column;
+    }
+
+    .secciones-inferiores {
+        grid-template-columns: 1fr;
+    }
+
+    .categorias,
+    .productos-cuadricula {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .caracteristicas {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .categorias,
+    .productos-cuadricula,
+    .beneficios-cuadricula {
+        grid-template-columns: 1fr;
+    }
+}

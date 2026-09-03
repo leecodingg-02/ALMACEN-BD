@@ -1,0 +1,266 @@
+/* ================================================ */
+/* Página Confirmación — estilos del pedido         */
+/* ================================================ */
+
+.pagina-confirmacion {
+  min-height: 100vh;
+  padding: 56px 6vw 96px;
+  background: #f7f7f5;
+  color: #171717;
+}
+
+/* ================================================ */
+/* Cabecera de éxito                                 */
+/* ================================================ */
+
+.confirmacion-cabecera {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+/* Icono de check */
+.confirmacion-icono {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  background: #171717;
+  color: #ffc107;
+  font-size: 2rem;
+  font-weight: 800;
+  border-radius: 50%;
+}
+
+/* Kicker superior */
+.confirmacion-kicker {
+  color: #a66021;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.confirmacion-cabecera h1 {
+  margin: 10px 0 8px;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #171717;
+}
+
+/* ID de la orden */
+.confirmacion-id {
+  color: #666660;
+  font-size: 0.95rem;
+}
+
+.confirmacion-id strong {
+  color: #a66021;
+}
+
+/* ================================================ */
+/* Contenido principal                               */
+/* ================================================ */
+
+.confirmacion-contenido {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Sección genérica (datos, resumen, estado) */
+.confirmacion-seccion {
+  background: #fff;
+  border: 1px solid #e0e0da;
+  padding: 24px;
+}
+
+.confirmacion-seccion h2 {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+  color: #171717;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e8e8e3;
+}
+
+/* ================================================ */
+/* Datos del cliente                                 */
+/* ================================================ */
+
+.confirmacion-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Fila dato: label + valor */
+.dato-fila {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.dato-label {
+  min-width: 110px;
+  color: #888;
+  font-weight: 600;
+}
+
+/* ================================================ */
+/* Lista de productos comprados                      */
+/* ================================================ */
+
+.confirmacion-productos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.confirmacion-productos li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #ececec;
+  font-size: 0.9rem;
+}
+
+.confirmacion-productos li:last-child {
+  border-bottom: none;
+}
+
+/* Info del producto */
+.confirmacion-producto-info {
+  display: flex;
+  gap: 6px;
+}
+
+.confirmacion-producto-nombre {
+  font-weight: 600;
+  color: #171717;
+}
+
+.confirmacion-producto-cant {
+  color: #888;
+}
+
+.confirmacion-producto-precio {
+  font-weight: 700;
+  color: #171717;
+}
+
+/* Total */
+.confirmacion-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 18px 0 0;
+  margin-top: 8px;
+  border-top: 1px solid #e8e8e3;
+}
+
+.confirmacion-total strong {
+  color: #a66021;
+  font-size: 1.25rem;
+}
+
+/* ================================================ */
+/* Estado de la orden                                */
+/* ================================================ */
+
+.confirmacion-estado {
+  text-align: center;
+}
+
+.confirmacion-estado h2 {
+  text-align: left;
+}
+
+/* Badge del estado */
+.estado-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: #171717;
+  color: #ffc107;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* Nota informativa */
+.confirmacion-nota {
+  margin-top: 14px;
+  color: #777770;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* ================================================ */
+/* Botones de acción                                 */
+/* ================================================ */
+
+.confirmacion-acciones {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Botón secundario (contorno) */
+.boton-secundario {
+  background: transparent !important;
+  color: #171717 !important;
+  border: 2px solid #171717 !important;
+}
+
+.boton-secundario:hover {
+  background: #f0f0ed !important;
+}
+
+/* ================================================ */
+/* Estado vacío (sin orden)                          */
+/* ================================================ */
+
+.confirmacion-vacio {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.confirmacion-vacio h1 {
+  margin: 0;
+  color: #171717;
+}
+
+.confirmacion-vacio p {
+  color: #666660;
+}
+
+/* ================================================ */
+/* Responsivo                                        */
+/* ================================================ */
+
+@media (max-width: 760px) {
+  .pagina-confirmacion {
+    padding: 36px 18px 64px;
+  }
+
+  .confirmacion-seccion {
+    padding: 18px;
+  }
+
+  /* Datos en columna */
+  .dato-fila {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* Botones apilados */
+  .confirmacion-acciones {
+    flex-direction: column;
+  }
+}

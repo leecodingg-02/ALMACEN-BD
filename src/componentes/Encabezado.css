@@ -4,13 +4,11 @@
 }
 /* VAR COLORES */
 :root {
-  --primario: yellow;
+  --primario: #ffc107;
   --secundario: black;
   --blanco: white;
-  --gris: gray;
+  --gris: #00000056;
 }
-
-
 
 /* Estilos Contenedor Barra superior navegacion general */
 
@@ -102,50 +100,77 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  min-height: 120px;
+  justify-content: space-between;
+  padding: 0 10vh;
+  min-height: 12vh;
+  gap: 2%;
 }
 
 /* Busqueda estilos y configuracion */
+.busqueda-contenedor {
+  display: flex;
+  align-items: center;
+  border: 2px solid #00000030;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 420px;
+  padding: 4px 12px 4px 16px;
+  background-color: #fafaf8;
+  transition: all 0.25s ease;
+  margin-left: auto;
+}
+
+.busqueda-contenedor:focus-within {
+  border-color: var(--primario);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
 .busqueda {
   border: none;
   background: transparent;
   outline: none;
-  margin-left: 15px;
-  width: 50vh;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--secundario);
+}
+
+.busqueda::placeholder {
+  color: #888888;
 }
 
 .buscar-btn {
   border: none;
   background-color: transparent;
-  width: 40px;
-  height: 32px;
-  border-radius: 50%;
+  display: grid;
+  place-items: center;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
 }
 
-.busqueda-contenedor {
-  display: flex;
-  align-items: center;
-  width: 50vh;
-  border: 2px #00000046 solid;
-  border-radius: 30px;
+.buscar-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Todos los botones del encabezado respetan la fuente principal del proyecto. */
+.encabezado-contenedor button {
+  font-family: var(--fuente-principal);
 }
 
 /* Estilos navegacion botones */
 
-.contenedor-encabezado-pri a{
-  padding: 2px 13px;
-}
-
-a.active {
-  color: #000; /* Azul */
+.navegacion.active {
+  color: #000;
   font-weight: bold;
   transform: translate(0, -3px);
   transition: transform 220ms ease-out;
 }
 
-a.active::after{
-  content: '';
+.navegacion.active::after {
+  content: "";
   position: absolute;
   bottom: -12px;
   left: 0;
@@ -155,7 +180,6 @@ a.active::after{
   background-color: var(--primario);
 }
 
-
 /* Iconos Encabezado principal */
 
 .icono-pri {
@@ -164,14 +188,37 @@ a.active::after{
   color: var(--secundario);
 }
 
+/* El numero queda sobre el carrito sin mover el resto de la navegacion. */
+.encabezado-botones > a:last-child {
+  position: relative;
+}
+
+.contador-carrito {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--primario);
+  color: var(--secundario);
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+}
+
 /* Botones encabezado principal */
 
 .encabezado-botones {
   display: flex;
   flex-direction: row;
+  justify-self: flex-start;
   align-items: center;
-  gap: 3.8vh;
-  margin-left: 5vh;
+  gap: 5vh;
 }
 
 .navegacion {
@@ -179,20 +226,95 @@ a.active::after{
   color: var(--secundario);
 }
 
-/* Boton desplegable */
+/* Estilos Boton desplegable */
 
-.btn-desplegable svg{
+.btn-desplegable {
+  position: relative;
+}
+
+.btn-desplegable svg {
   width: 16px;
   height: 16px;
 }
 
-.btn-desplegable button{
+.btn-desplegable button {
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
-
-.btn-desplegable{
- border: 2px solid red;
+.btn-productos {
+  display: flex;
+  gap: 4px;
+  padding: 10px 0px;
+  font-size: 1rem;
 }
+
+.btn-desplegable-conte {
+  display: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.btn-productos.activo {
+  font-weight: bold;
+  transform: translate(0, -3px);
+  transition: transform 220ms ease-out;
+}
+
+.btn-productos.activo svg {
+  transform: scale(1.2);
+  color: var(--primario);
+  transform: rotate(180deg);
+  transition: transform 320ms ease-out;
+}
+
+/* Contenido dentro del boton desplegable*/
+
+.btn-desplegable-conte {
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.btn-desplegable-conte.mostrar {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-desplegable-conte a {
+  text-decoration: none;
+  color: var(--secundario);
+  padding: 12px 8px;
+}
+
+.btn-desplegable-conte a:hover {
+  background-color: #00000010;
+}
+
+/* Estilo para botón de iniciar/cerrar sesión en la barra superior */
+.btn-texto-sesion {
+  background: transparent;
+  border: none;
+  color: var(--blanco);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-texto-sesion:hover {
+  text-decoration: underline;
+  color: var(--primario);
+}
+
+/* Posicionamiento para badge en icono de favoritos */
+.enlace-favoritos {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.contador-favoritos {
+  top: -8px;
+  right: -10px;
+}
+

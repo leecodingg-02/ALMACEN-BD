@@ -135,7 +135,7 @@ function Encabezado() {
                 viewBox='0 0 24 24'
                 stroke-width='1.5'
                 stroke='currentColor'
-                class='size-6'
+                className='size-6'
               >
                 <path
                   stroke-linecap='round'
@@ -159,7 +159,7 @@ function Encabezado() {
             Ofertas
           </NavLink>
 
-          <NavLink to='/categorias' className='navegacion'>
+          <NavLink to='/productos' className='navegacion'>
             {" "}
             Productos{" "}
           </NavLink>

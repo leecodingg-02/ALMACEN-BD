@@ -5,14 +5,6 @@
 }
 
 
-/* PROVISIONAL BORRAR DESPUES */
-svg {
-  width: 100px;
-  height: 100px;
-}
-/* /////////////////////////////// */
-
-
 h1,
 h2 {
   font-family: var(--heading);

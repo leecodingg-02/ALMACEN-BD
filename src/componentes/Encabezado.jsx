@@ -1,7 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
 import "./Encabezado.css";
+import { useState, useEffect } from "react";
 
 function Encabezado() {
+  const [desplegableAbierto, setDesplegableAbierto] = useState(false);
+
   return (
     <header className='encabezado-contenedor'>
       <div className='encabezado-barra-sup'>
@@ -126,8 +129,10 @@ function Encabezado() {
           </NavLink>
 
           <div className='btn-desplegable'>
-            <button className='btn-productos'>
-              {" "}
+            <button
+              className={`btn-productos${desplegableAbierto ? " activo" : ""}`}
+              onClick={() => setDesplegableAbierto(!desplegableAbierto)}
+            >
               Categorias
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -145,12 +150,36 @@ function Encabezado() {
               </svg>
             </button>
 
-            <div className='btn-desplegable-conte'>
-              <p> Categorias </p>
+            <div
+              className={`btn-desplegable-conte${desplegableAbierto ? " mostrar" : ""}`}
+            >
+              <NavLink
+                to='/categorias'
+                onClick={() => setDesplegableAbierto(false)}
+              >
+                Herramientas
+              </NavLink>
 
-                <NavLink to='/categorias'>Hogar</NavLink>
-                <NavLink to='/categorias'>Ropa</NavLink>
+              <NavLink
+                to='/categorias'
+                onClick={() => setDesplegableAbierto(false)}
+              >
+                Muebles
+              </NavLink>
 
+              <NavLink
+                to='/categorias'
+                onClick={() => setDesplegableAbierto(false)}
+              >
+                Decoracion
+              </NavLink>
+
+              <NavLink
+                to='/categorias'
+                onClick={() => setDesplegableAbierto(false)}
+              >
+                Iluminacion
+              </NavLink>
             </div>
           </div>
 

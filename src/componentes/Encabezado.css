@@ -291,6 +291,7 @@
 }
 
 /* Estilo para botón de iniciar/cerrar sesión en la barra superior */
+
 .btn-texto-sesion {
   background: transparent;
   border: none;
@@ -317,4 +318,3 @@
   top: -8px;
   right: -10px;
 }
-

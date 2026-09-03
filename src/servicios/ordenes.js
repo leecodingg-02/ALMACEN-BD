@@ -10,17 +10,16 @@ let ordenesRegistradas = [];
 const generarIdOrden = () =>
   "ORD-" + Date.now().toString(36).toUpperCase();
 
-/**
- * crearOrden
- * Arma el payload con la misma forma que la tabla `venta` + `detalle_venta`.
- * Cuando exista la API real, este método hará un POST al backend.
- *
- * Campos de la tabla venta:
- *   id_venta, id_cli, id_suc, fecha_venta, estado, total
- *
- * Campos de la tabla detalle_venta:
- *   id_detventa, id_venta, id_pro, cantidad, precio_unitario, subtotal
+/* crearOrden
+ Arma el payload con la misma forma que la tabla `venta` + `detalle_venta`.
+ Cuando exista la API real, este método hará un POST al backend.
+ 
+ Campos de la tabla venta:
+   id_venta, id_cli, id_suc, fecha_venta, estado, total
+ Campos de la tabla detalle_venta:
+ id_detventa, id_venta, id_pro, cantidad, precio_unitario, subtotal
  */
+
 export const crearOrden = async ({ carrito, cliente }) => {
   /* Simular latencia de red */
   await new Promise((r) => setTimeout(r, 400));

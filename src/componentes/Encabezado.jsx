@@ -76,12 +76,12 @@ function Encabezado({
                 />
               </svg>
 
-              <p className='barra-sup-texto-izq'> Ubicacion </p>
+              <p className='barra-sup-texto-izq'> Ubicaciones </p>
             </Link>
           </div>
 
           <Link to='/usuario?tab=configuracion' className='botones-barra-sup'>
-            <p className='bara-sup-texto-ayu'> Ayuda & Config </p>
+            <p className='bara-sup-texto-ayu'> Ayuda </p>
           </Link>
 
           <div className='barra-sup-regini'>
@@ -242,7 +242,7 @@ function Encabezado({
           {/* Enlace de Favoritos conectado a la pestaña de usuario registrado */}
           <Link
             to={usuario ? "/usuario?tab=favoritos" : "/usuario"}
-            className="enlace-favoritos"
+            className='enlace-favoritos'
             title={
               usuario
                 ? "Ver mis productos favoritos"
@@ -250,7 +250,7 @@ function Encabezado({
             }
           >
             {usuario && cantidadFavoritos > 0 && (
-              <span className="contador-carrito contador-favoritos">
+              <span className='contador-carrito contador-favoritos'>
                 {cantidadFavoritos}
               </span>
             )}

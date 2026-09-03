@@ -9,6 +9,7 @@ import Carrito from "./paginas/Carrito";
 import Checkout from "./paginas/Checkout";
 import Confirmacion from "./paginas/Confirmacion";
 import Usuario from "./paginas/Usuario";
+import Ubicaciones from "./paginas/Ubicaciones";
 import {
   agregarLineaCarrito,
   leerCarrito,
@@ -170,6 +171,7 @@ function App() {
             />
           }
         />
+        <Route path='/ubicaciones' element={<Ubicaciones />} />
 
         {/* Panel de Administración */}
         <Route path='/admin' element={<AdminLayout />}>

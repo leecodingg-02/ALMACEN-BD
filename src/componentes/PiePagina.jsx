@@ -178,6 +178,11 @@ function PiePagina() {
               </Link>
             </li>
             <li>
+              <Link to="/ubicaciones" className="pie-enlace">
+                Nuestras Sucursales
+              </Link>
+            </li>
+            <li>
               <Link to="/usuario" className="pie-enlace">
                 Contáctanos
               </Link>

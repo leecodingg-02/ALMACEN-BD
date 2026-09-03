@@ -60,7 +60,7 @@ function Encabezado({
 
         <div className='contenedor-barra-supder'>
           <div className='item-barrasup-der'>
-            <Link to='/usuario?tab=direccion' className='botones-barra-sup'>
+            <Link to='/ubicaciones' className='botones-barra-sup'>
               <svg
                 className='icono-barra-supder'
                 xmlns='http://www.w3.org/2000/svg'

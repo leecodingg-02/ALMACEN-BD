@@ -1,0 +1,619 @@
+/* =========================================================
+   PÁGINA DE UBICACIONES / SUCURSALES - NOVACASA
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --color-primario: #ffc107;
+  --color-secundario: #000000;
+  --color-terciario: #ffffff;
+  --color-neutral: #f5f5f5;
+  --fuente-principal: "Montserrat", sans-serif;
+}
+
+.ubicaciones-pagina {
+  width: 100%;
+  min-height: 85vh;
+  background-color: #f8f9fa;
+  color: var(--color-secundario);
+  font-family: var(--fuente-principal);
+  padding-bottom: 60px;
+}
+
+/* Hero */
+.ubicaciones-hero-disruptivo {
+  position: relative;
+  background-color: var(--color-secundario);
+  color: var(--color-terciario);
+  padding: 60px 40px;
+  border-radius: 0 0 24px 24px;
+  overflow: hidden;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.hero-disruptivo-contenido {
+  position: relative;
+  z-index: 5;
+  max-width: 850px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-kicker {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.badge-kicker {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-kicker-destacado {
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-disruptivo-titulo {
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--color-terciario);
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.hero-disruptivo-titulo span {
+  position: relative;
+  display: inline-block;
+  color: var(--color-terciario);
+}
+
+.hero-disruptivo-titulo span::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background-color: var(--color-primario);
+  z-index: -1;
+  border-radius: 4px;
+}
+
+.hero-disruptivo-subtitulo {
+  font-size: 1.1rem;
+  color: #cccccc;
+  max-width: 650px;
+  margin: 0 auto 30px auto;
+  line-height: 1.55;
+}
+
+/* Buscador & Filtros Disruptivos */
+.hero-disruptivo-controles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.caja-busqueda-disruptiva {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-terciario);
+  border-radius: 12px;
+  padding: 6px 18px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 2px solid transparent;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.caja-busqueda-disruptiva:focus-within {
+  border-color: var(--color-primario);
+  box-shadow: 0 12px 35px rgba(255, 193, 7, 0.4);
+}
+
+.icono-lupa {
+  width: 22px;
+  height: 22px;
+  color: #666666;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.input-disruptivo {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-secundario);
+  padding: 10px 0;
+  background: transparent;
+  font-weight: 500;
+}
+
+.input-disruptivo::placeholder {
+  color: #999999;
+}
+
+.btn-limpiar-disruptivo {
+  background: transparent;
+  border: none;
+  color: #999999;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.btn-limpiar-disruptivo:hover {
+  color: var(--color-secundario);
+}
+
+.filtros-ciudad-disruptivos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-ciudad-pill {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.btn-ciudad-pill:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.btn-ciudad-pill.activo {
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  border-color: var(--color-primario);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255, 193, 7, 0.35);
+}
+
+/* Fondo visual abstracto disruptivo */
+.hero-disruptivo-decoracion {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.poligono-decorativo {
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  width: 50%;
+  height: 140%;
+  background-color: rgba(255, 193, 7, 0.12);
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.circulo-decorativo {
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 350px;
+  height: 350px;
+  border: 40px solid rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+}
+
+/* ---------------------------------------------------------
+   CUERPO PRINCIPAL & MAPA CON LÍMITE FIJO DE ALTURA
+   --------------------------------------------------------- */
+.ubicaciones-contenedor-cuerpo {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.ubicaciones-contador h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+  margin-bottom: 20px;
+}
+
+.ubicaciones-contador span {
+  color: #d97706;
+}
+
+.ubicaciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tarjeta Sucursal */
+.tarjeta-sucursal {
+  background-color: var(--color-terciario);
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.tarjeta-sucursal:hover {
+  border-color: var(--color-primario);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.tarjeta-sucursal.seleccionada {
+  border: 2px solid var(--color-primario);
+  background-color: #fffdf5;
+  box-shadow: 0 10px 28px rgba(255, 193, 7, 0.18);
+}
+
+.tarjeta-sucursal-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.badge-ciudad-inicio {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-secundario);
+  background-color: var(--color-primario);
+  padding: 3px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.sucursal-nombre {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-secundario);
+  line-height: 1.25;
+}
+
+/* ESTILO DE REFERENCIA PROYECTO INICIO.CSS PARA "ABIERTO AHORA" */
+.btn-abierto-ahora {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.punto-verde-inicio {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4);
+  animation: pulsoVerde 2s infinite;
+}
+
+@keyframes pulsoVerde {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.6;
+  }
+}
+
+/* Detalles */
+.tarjeta-sucursal-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.item-detalle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.93rem;
+  color: #444444;
+}
+
+.icono-detalle {
+  width: 20px;
+  height: 20px;
+  color: #b45309;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.item-detalle strong {
+  color: var(--color-secundario);
+  display: block;
+}
+
+.txt-referencia {
+  font-size: 0.84rem;
+  color: #666666;
+  display: block;
+  margin-top: 2px;
+}
+
+.txt-secundario {
+  font-size: 0.85rem;
+  color: #666666;
+  display: block;
+}
+
+/* Servicios */
+.tarjeta-sucursal-servicios {
+  border-top: 1px dashed #e0e0e0;
+  padding-top: 14px;
+  margin-bottom: 20px;
+}
+
+.servicios-titulo {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.servicios-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-servicio {
+  font-size: 0.8rem;
+  background-color: var(--color-neutral);
+  color: var(--color-secundario);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* Acciones estilo Inicio.css */
+.tarjeta-sucursal-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-sucursal-accion {
+  padding: 10px 18px !important;
+  font-size: 0.88rem !important;
+  border-radius: 8px !important;
+}
+
+/* MAPA ALINEADO HORIZONTALMENTE */
+.ubicaciones-mapa-panel {
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  margin-top: 0;
+  z-index: 10;
+}
+
+.mapa-tarjeta-fija {
+  background-color: var(--color-terciario);
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mapa-cabecera {
+  padding: 20px;
+  background-color: var(--color-secundario);
+  color: var(--color-terciario);
+}
+
+.mapa-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-primario);
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.mapa-cabecera h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-terciario);
+  margin-bottom: 4px;
+}
+
+.mapa-direccion-txt {
+  font-size: 0.88rem;
+  color: #bbbbbb;
+}
+
+.mapa-iframe-contenedor {
+  width: 100%;
+  height: 310px;
+  background-color: #dddddd;
+}
+
+.mapa-banner-ayuda {
+  padding: 20px;
+  background: linear-gradient(135deg, #fffdf5 0%, #fef3c7 100%);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border-top: 1px solid #fde68a;
+}
+
+.banner-icono-casa {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner-icono-casa svg {
+  width: 24px;
+  height: 24px;
+}
+
+.banner-texto h4 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.banner-texto p {
+  font-size: 0.86rem;
+  color: #78350f;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.btn-banner-catalogo {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #b45309;
+  text-decoration: none;
+}
+
+.btn-banner-catalogo:hover {
+  text-decoration: underline;
+}
+
+/* Sin Resultados */
+.ubicaciones-sin-resultados {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--color-terciario);
+  border-radius: 16px;
+  border: 2px dashed #cccccc;
+}
+
+.btn-primario-inicio {
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  border: none;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primario-inicio:hover {
+  background-color: #e6ae06;
+}
+
+/* =========================================================
+   RESPONSIVIDAD
+   ========================================================= */
+@media (max-width: 1024px) {
+  .ubicaciones-contenedor-cuerpo {
+    grid-template-columns: 1fr;
+    padding: 0 24px;
+  }
+
+  .ubicaciones-mapa-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-disruptivo-titulo {
+    font-size: 2.5rem;
+  }
+
+  .ubicaciones-hero-disruptivo {
+    padding: 40px 20px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .caja-busqueda-disruptiva {
+    border-radius: 10px;
+  }
+}
+
+/* =========================================================
+   ALTO CONTRASTE
+   ========================================================= */
+html.modo-alto-contraste .ubicaciones-pagina {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.modo-alto-contraste .tarjeta-sucursal,
+html.modo-alto-contraste .mapa-tarjeta-fija {
+  background-color: #111111 !important;
+  border-color: #ffc107 !important;
+  color: #ffffff !important;
+}
+
+html.modo-alto-contraste .sucursal-nombre,
+html.modo-alto-contraste .item-detalle strong,
+html.modo-alto-contraste .ubicaciones-contador h2 {
+  color: #ffffff !important;
+}

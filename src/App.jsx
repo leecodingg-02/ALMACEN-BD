@@ -46,7 +46,6 @@ function RestaurarScroll() {
 
   return null;
 }
-}
 
 function App() {
   /* Estado del carrito */

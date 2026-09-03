@@ -48,6 +48,9 @@ function RestaurarScroll() {
 }
 
 function App() {
+  const { pathname } = useLocation();
+  const esAdmin = pathname.startsWith('/admin');
+
   /* Estado del carrito */
   const [carrito, setCarrito] = useState(leerCarrito);
 
@@ -114,12 +117,14 @@ function App() {
 
   return (
     <>
-      <Encabezado
-        cantidadCarrito={obtenerCantidadTotal(carrito)}
-        usuario={usuario}
-        cantidadFavoritos={favoritos.length}
-        onAlternarSesion={handleAlternarSesion}
-      />
+      {!esAdmin && (
+        <Encabezado
+          cantidadCarrito={obtenerCantidadTotal(carrito)}
+          usuario={usuario}
+          cantidadFavoritos={favoritos.length}
+          onAlternarSesion={handleAlternarSesion}
+        />
+      )}
       <RestaurarScroll />
       <Routes>
         <Route path='/' element={<Inicio />} />
@@ -164,6 +169,21 @@ function App() {
             />
           }
         />
+
+        {/* Panel de Administración */}
+        <Route path='/admin' element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path='productos' element={<AdminProductos />} />
+          <Route path='categorias' element={<AdminCategorias />} />
+          <Route path='marcas' element={<AdminMarcas />} />
+          <Route path='inventario' element={<AdminInventario />} />
+          <Route path='ventas' element={<AdminVentas />} />
+          <Route path='compras' element={<AdminCompras />} />
+          <Route path='usuarios' element={<AdminUsuarios />} />
+          <Route path='roles' element={<AdminRoles />} />
+          <Route path='sucursales' element={<AdminSucursales />} />
+          <Route path='ubicaciones' element={<AdminUbicaciones />} />
+        </Route>
       </Routes>
     </>
   );

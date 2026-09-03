@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import logoImg from '../imagenes/logo.png';
 import logoBlancoImg from '../imagenes/logo_blanco.png';
 
@@ -41,22 +41,48 @@ const secciones = [
 ];
 
 export default function PanelLayout() {
+  const location = useLocation();
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [editandoPerfil, setEditandoPerfil] = useState(false);
-  const [nombreAdmin, setNombreAdmin] = useState('Admin Almacén');
+  const [nombreAdmin, setNombreAdmin] = useState(() => {
+    return localStorage.getItem('almacen_admin_nombre') || 'Admin Almacén';
+  });
   const [rolAdmin] = useState('Administrador');
-  const [fotoAdmin, setFotoAdmin] = useState(null);
+  const [fotoAdmin, setFotoAdmin] = useState(() => {
+    return localStorage.getItem('almacen_admin_foto') || null;
+  });
   const [nombreTemporal, setNombreTemporal] = useState('');
 
   const [modoOscuro, setModoOscuro] = useState(() => {
     return localStorage.getItem('modo-oscuro') === 'true';
   });
 
+  // Estado para la animación del martillo al hacer clic
+  const [golpeandoRuta, setGolpeandoRuta] = useState(null);
+
+  const handleGolpeMartillo = (ruta, esActiva) => {
+    if (esActiva) return; // Si ya está activa, no hace el golpe
+    setGolpeandoRuta(ruta);
+    setTimeout(() => {
+      setGolpeandoRuta(null);
+    }, 420);
+  };
+
   const inputFotoRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem('modo-oscuro', modoOscuro);
   }, [modoOscuro]);
+
+  useEffect(() => {
+    localStorage.setItem('almacen_admin_nombre', nombreAdmin);
+  }, [nombreAdmin]);
+
+  useEffect(() => {
+    if (fotoAdmin) {
+      localStorage.setItem('almacen_admin_foto', fotoAdmin);
+    }
+  }, [fotoAdmin]);
 
   const toggleModoOscuro = () => {
     setModoOscuro((prev) => !prev);
@@ -70,6 +96,7 @@ export default function PanelLayout() {
   const guardarPerfil = () => {
     if (nombreTemporal.trim()) {
       setNombreAdmin(nombreTemporal.trim());
+      localStorage.setItem('almacen_admin_nombre', nombreTemporal.trim());
     }
     setEditandoPerfil(false);
   };
@@ -82,7 +109,11 @@ export default function PanelLayout() {
     const archivo = e.target.files[0];
     if (archivo) {
       const lector = new FileReader();
-      lector.onload = (ev) => setFotoAdmin(ev.target.result);
+      lector.onload = (ev) => {
+        const resultado = ev.target.result;
+        setFotoAdmin(resultado);
+        localStorage.setItem('almacen_admin_foto', resultado);
+      };
       lector.readAsDataURL(archivo);
     }
   };
@@ -131,12 +162,35 @@ export default function PanelLayout() {
                     key={elem.ruta}
                     to={elem.ruta}
                     end={elem.exacto}
+                    onClick={() => {
+                      const esActiva = elem.exacto
+                        ? location.pathname === elem.ruta
+                        : location.pathname.startsWith(elem.ruta);
+                      handleGolpeMartillo(elem.ruta, esActiva);
+                    }}
                     className={({ isActive }) =>
-                      `barra-lat-elemento ${isActive ? 'activo' : ''}`
+                      `barra-lat-elemento ${isActive ? 'activo' : ''} ${golpeandoRuta === elem.ruta ? 'golpeando-martillo' : ''}`
                     }
                   >
+                    <div className="barra-lat-elemento-brillo" aria-hidden="true" />
                     <elem.icono className="barra-lat-elemento-icono" />
-                    <span>{elem.etiqueta}</span>
+                    <span className="barra-lat-elemento-texto">{elem.etiqueta}</span>
+
+                    {/* MARTILLO: SOLO APARECE EN PESTAÑAS NO SELECCIONADAS (O DURANTE EL GOLPE) */}
+                    <div className="contenedor-martillo-interactivo" aria-hidden="true">
+                      <IconoMartillo className="icono-martillo-svg" />
+                      {golpeandoRuta === elem.ruta && (
+                        <div className="chispas-impacto-martillo">
+                          <span className="chispa c-1" />
+                          <span className="chispa c-2" />
+                          <span className="chispa c-3" />
+                          <span className="chispa c-4" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* PUNTO INDICADOR: APARECE POST-GOLPE O EN HOVER SOBRE LA PESTAÑA ACTIVA */}
+                    <span className="barra-lat-punto-activo" aria-hidden="true" />
                   </NavLink>
                 ))}
               </div>
@@ -290,9 +344,13 @@ export default function PanelLayout() {
             </div>
           </div>
 
-          {/* CONTENIDO DE PÁGINA */}
-          <div className="panel-contenido">
-            <Outlet />
+          {/* CONTENIDO DE PÁGINA CON ANIMACIÓN TRANSICIONAL */}
+          <div className="panel-contenido-contenedor" key={location.pathname}>
+            {/* LUZ DE NAVEGACIÓN PROGRESS BAR GOLDEN */}
+            <div className="transicion-haz-superior" aria-hidden="true" />
+            <div className="panel-contenido vista-transicion-animada">
+              <Outlet context={{ nombreAdmin, fotoAdmin, rolAdmin }} />
+            </div>
           </div>
         </main>
       </div>
@@ -359,4 +417,113 @@ function IconoLuna() {
 function IconoSol() {
   return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>;
 }
+
+function IconoMartillo({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        {/* Acero cromado de la cabeza del martillo */}
+        <linearGradient id="aceroCabeza" x1="10" y1="4" x2="32" y2="18" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#CBD5E1" />
+          <stop offset="60%" stopColor="#64748B" />
+          <stop offset="100%" stopColor="#334155" />
+        </linearGradient>
+
+        {/* Reflejo dorado / bisel metálico */}
+        <linearGradient id="oroBisel" x1="14" y1="4" x2="32" y2="14" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFF9C4" />
+          <stop offset="45%" stopColor="#FFC107" />
+          <stop offset="100%" stopColor="#D97706" />
+        </linearGradient>
+
+        {/* Mango de madera pulida */}
+        <linearGradient id="maderaMango" x1="4" y1="32" x2="22" y2="14" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#78350F" />
+          <stop offset="35%" stopColor="#B45309" />
+          <stop offset="70%" stopColor="#D97706" />
+          <stop offset="100%" stopColor="#92400E" />
+        </linearGradient>
+
+        {/* Empuñadura de goma antideslizante */}
+        <linearGradient id="gomaGrip" x1="2" y1="34" x2="14" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#090D16" />
+          <stop offset="50%" stopColor="#1E293B" />
+          <stop offset="100%" stopColor="#090D16" />
+        </linearGradient>
+
+        {/* Sombra de relieve */}
+        <filter id="sombraMartilloHD" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.5" />
+        </filter>
+      </defs>
+
+      <g filter="url(#sombraMartilloHD)">
+        {/* 1. MANGO DE MADERA */}
+        <path
+          d="M7 29L20.5 15.5C21.3 14.7 22.7 14.7 23.5 15.5C24.3 16.3 24.3 17.7 23.5 18.5L10 32C9.2 32.8 7.8 32.8 7 32C6.2 31.2 6.2 29.8 7 29Z"
+          fill="url(#maderaMango)"
+          stroke="#451A03"
+          strokeWidth="0.8"
+        />
+
+        {/* 2. EMPUÑADURA DE GOMA (GRIP EN LA BASE) */}
+        <path
+          d="M5.5 30.5L12.5 23.5C13.1 22.9 14.1 22.9 14.7 23.5L15.5 24.3C16.1 24.9 16.1 25.9 15.5 26.5L8.5 33.5C7.9 34.1 6.9 34.1 6.3 33.5L5.5 32.7C4.9 32.1 4.9 31.1 5.5 30.5Z"
+          fill="url(#gomaGrip)"
+          stroke="#0F172A"
+          strokeWidth="0.8"
+        />
+        {/* Ranuras doradas de agarre */}
+        <line x1="8" y1="29.5" x2="10" y2="31.5" stroke="#F59E0B" strokeWidth="1" strokeLinecap="round" opacity="0.9" />
+        <line x1="10" y1="27.5" x2="12" y2="29.5" stroke="#F59E0B" strokeWidth="1" strokeLinecap="round" opacity="0.9" />
+        <line x1="12" y1="25.5" x2="14" y2="27.5" stroke="#F59E0B" strokeWidth="1" strokeLinecap="round" opacity="0.9" />
+
+        {/* 3. CUELLO METÁLICO DE ACOPLE */}
+        <path
+          d="M19 17L22 14L24 16L21 19Z"
+          fill="url(#aceroCabeza)"
+          stroke="#1E293B"
+          strokeWidth="0.8"
+        />
+
+        {/* 4. CABEZA DE IMPACTO (CILINDRO METÁLICO DE GOLPEO) */}
+        <path
+          d="M21.5 14.5L27.5 8.5C28.2 7.8 29.5 8.2 30 9L30.5 9.5C31.3 10.3 31.3 11.5 30.5 12.3L24.5 18.3L21.5 14.5Z"
+          fill="url(#aceroCabeza)"
+          stroke="#0F172A"
+          strokeWidth="0.9"
+        />
+        {/* Cara frontal plana de choque (Boca de golpeo) */}
+        <path
+          d="M28.5 7.5L31.5 10.5C31.9 10.9 31.9 11.5 31.5 11.9L30.5 12.9L27.5 9.9L28.5 8.9C28.9 8.5 28.9 7.9 28.5 7.5Z"
+          fill="url(#oroBisel)"
+          stroke="#B45309"
+          strokeWidth="0.8"
+        />
+
+        {/* 5. UÑA / GARRA CURVA TRASERA PARA SACAR CLAVOS */}
+        <path
+          d="M20 12C17.5 6.5 12.5 5 7.5 6.5C11.5 8.5 14.5 12 15.5 16.5L20 12Z"
+          fill="url(#aceroCabeza)"
+          stroke="#0F172A"
+          strokeWidth="0.9"
+        />
+        {/* Borde brillante de la garra */}
+        <path
+          d="M19.5 11.5C17.2 6.8 12.8 5.4 7.8 6.8C12 8.5 15.2 11.8 16 16"
+          stroke="url(#oroBisel)"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+        />
+      </g>
+    </svg>
+  );
+}
+
 

@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 export default function Tablero() {
+  const context = useOutletContext();
+  const nombreAdmin = context?.nombreAdmin || localStorage.getItem('almacen_admin_nombre') || 'Admin';
   const [filtroTiempo, setFiltroTiempo] = useState('Hoy');
 
   const estadisticas = [
@@ -82,7 +84,7 @@ export default function Tablero() {
             <IconoInicio className="banner-svg-icon" />
           </div>
           <div className="banner-bienvenida-texto">
-            <h2>¡Bienvenido, Admin!</h2>
+            <h2>¡Bienvenido, {nombreAdmin}!</h2>
             <p>Gestiona tu tienda, analiza el rendimiento y haz crecer tu negocio.</p>
           </div>
         </div>

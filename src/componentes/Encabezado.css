@@ -107,36 +107,57 @@
 }
 
 /* Busqueda estilos y configuracion */
+.busqueda-contenedor {
+  display: flex;
+  align-items: center;
+  border: 2px solid #00000030;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 420px;
+  padding: 4px 12px 4px 16px;
+  background-color: #fafaf8;
+  transition: all 0.25s ease;
+  margin-left: auto;
+}
+
+.busqueda-contenedor:focus-within {
+  border-color: var(--primario);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
 .busqueda {
   border: none;
   background: transparent;
   outline: none;
-  margin-left: 1.5vh;
   width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--secundario);
+}
+
+.busqueda::placeholder {
+  color: #888888;
 }
 
 .buscar-btn {
   border: none;
   background-color: transparent;
-  width: 4vh;
-  height: 32px;
-  border-radius: 50%;
+  display: grid;
+  place-items: center;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.buscar-btn:hover {
+  transform: scale(1.1);
 }
 
 /* Todos los botones del encabezado respetan la fuente principal del proyecto. */
 .encabezado-contenedor button {
   font-family: var(--fuente-principal);
-}
-
-.busqueda-contenedor {
-  display: flex;
-  align-items: center;
-  border: 2px #00000046 solid;
-  border-radius: 30px;
-  width: 100%;
-  max-width: 400px;
-  margin-left: auto;
 }
 
 /* Estilos navegacion botones */
@@ -268,3 +289,32 @@
 .btn-desplegable-conte a:hover {
   background-color: #00000010;
 }
+
+/* Estilo para botón de iniciar/cerrar sesión en la barra superior */
+.btn-texto-sesion {
+  background: transparent;
+  border: none;
+  color: var(--blanco);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-texto-sesion:hover {
+  text-decoration: underline;
+  color: var(--primario);
+}
+
+/* Posicionamiento para badge en icono de favoritos */
+.enlace-favoritos {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.contador-favoritos {
+  top: -8px;
+  right: -10px;
+}
+

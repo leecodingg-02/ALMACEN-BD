@@ -6,16 +6,7 @@ import {
 import { formatearPrecio } from "./Productos";
 import "./Carrito.css";
 
-/**
- * Carrito
- * Muestra los productos agregados con controles para modificar cantidad
- * y eliminar líneas. El botón "Ir al checkout" navega a /checkout.
- *
- * Props:
- *  - carrito           : array de líneas del carrito
- *  - onActualizarCant  : (idProducto, nuevaCantidad) => void
- *  - onRemoverLinea    : (idProducto) => void
- */
+/*  Carrito  */
 const Carrito = ({ carrito, onActualizarCant, onRemoverLinea }) => {
   const navigate = useNavigate();
   const total = obtenerTotalCarrito(carrito);

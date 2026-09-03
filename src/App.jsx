@@ -7,6 +7,7 @@ import DetalleProducto from "./paginas/DetalleProducto";
 import Carrito from "./paginas/Carrito";
 import Checkout from "./paginas/Checkout";
 import Confirmacion from "./paginas/Confirmacion";
+import Usuario from "./paginas/Usuario";
 import {
   agregarLineaCarrito,
   leerCarrito,
@@ -14,6 +15,13 @@ import {
   actualizarCantidad,
   removerLinea,
 } from "./servicios/carrito";
+import {
+  obtenerUsuarioSesion,
+  alternarEstadoSesion,
+  obtenerFavoritosUsuario,
+  alternarFavoritoUsuario,
+  obtenerConfiguracionUsuario,
+} from "./servicios/usuario";
 
 function RestaurarScroll() {
   const { pathname } = useLocation();
@@ -26,12 +34,35 @@ function RestaurarScroll() {
 }
 
 function App() {
+  /* Estado del carrito */
   const [carrito, setCarrito] = useState(leerCarrito);
+
+  /* Estado de sesión de usuario y preferencias */
+  const [usuario, setUsuario] = useState(obtenerUsuarioSesion);
+  const [favoritos, setFavoritos] = useState(obtenerFavoritosUsuario);
+  const [configuracion, setConfiguracion] = useState(obtenerConfiguracionUsuario);
 
   useEffect(() => {
     localStorage.setItem("almacenweb_carrito", JSON.stringify(carrito));
   }, [carrito]);
 
+  /* Aplicar preferencias globales de accesibilidad (Alto contraste y escala de fuente) */
+  useEffect(() => {
+    const root = document.documentElement;
+
+    /* Activar o desactivar alto contraste globalmente */
+    if (configuracion?.altoContraste) {
+      root.classList.add("modo-alto-contraste");
+    } else {
+      root.classList.remove("modo-alto-contraste");
+    }
+
+    /* Aplicar tamaño de fuente global en la raíz HTML */
+    root.classList.remove("fuente-normal", "fuente-grande", "fuente-extra-grande");
+    root.classList.add(`fuente-${configuracion?.tamanoFuente || "normal"}`);
+  }, [configuracion]);
+
+  /* Agregar línea al carrito */
   const agregarAlCarrito = (producto, cantidad = 1) => {
     setCarrito((carritoActual) =>
       agregarLineaCarrito(carritoActual, producto, cantidad),
@@ -44,10 +75,6 @@ function App() {
       setCarrito((c) => removerLinea(c, idProducto));
       return;
     }
-    /*
-      TODO: validar contra inventario.cantidad cuando se conecte la BD
-      Por ahora se permite cualquier cantidad positiva
-    */
     setCarrito((c) => actualizarCantidad(c, idProducto, nuevaCantidad));
   };
 
@@ -59,9 +86,26 @@ function App() {
   /* Vaciar el carrito después de una compra exitosa */
   const vaciarCarrito = () => setCarrito([]);
 
+  /* Alternar inicio/cierre de sesión demo */
+  const handleAlternarSesion = () => {
+    const nuevoUsuario = alternarEstadoSesion();
+    setUsuario(nuevoUsuario);
+  };
+
+  /* Alternar un producto en favoritos */
+  const handleAlternarFavorito = (idProducto) => {
+    const nuevosFavs = alternarFavoritoUsuario(idProducto);
+    setFavoritos(nuevosFavs);
+  };
+
   return (
     <>
-      <Encabezado cantidadCarrito={obtenerCantidadTotal(carrito)} />
+      <Encabezado
+        cantidadCarrito={obtenerCantidadTotal(carrito)}
+        usuario={usuario}
+        cantidadFavoritos={favoritos.length}
+        onAlternarSesion={handleAlternarSesion}
+      />
       <RestaurarScroll />
       <Routes>
         <Route path='/' element={<Inicio />} />
@@ -90,6 +134,21 @@ function App() {
         <Route
           path='/confirmacion'
           element={<Confirmacion />}
+        />
+        <Route
+          path='/usuario'
+          element={
+            <Usuario
+              usuario={usuario}
+              favoritos={favoritos}
+              configuracion={configuracion}
+              onAlternarFavorito={handleAlternarFavorito}
+              onAgregarCarrito={agregarAlCarrito}
+              onActualizarUsuario={setUsuario}
+              onActualizarConfig={setConfiguracion}
+              onAlternarSesion={handleAlternarSesion}
+            />
+          }
         />
       </Routes>
     </>

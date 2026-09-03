@@ -38,6 +38,15 @@ import AdminRoles from './paginas/AdminRoles'
 import AdminSucursales from './paginas/AdminSucursales'
 import AdminUbicaciones from './paginas/AdminUbicaciones'
 
+// Panel de Proveedores
+import ProveedorLayout from './componentes/ProveedorLayout'
+import ProveedorDashboard from './paginas/ProveedorDashboard'
+import ProveedorProductos from './paginas/ProveedorProductos'
+import ProveedorPedidos from './paginas/ProveedorPedidos'
+import ProveedorDespachos from './paginas/ProveedorDespachos'
+import ProveedorFacturas from './paginas/ProveedorFacturas'
+import ProveedorEmpresa from './paginas/ProveedorEmpresa'
+
 function RestaurarScroll() {
   const { pathname } = useLocation();
 
@@ -50,7 +59,7 @@ function RestaurarScroll() {
 
 function App() {
   const { pathname } = useLocation();
-  const esAdmin = pathname.startsWith('/admin');
+  const esPanel = pathname.startsWith('/admin') || pathname.startsWith('/proveedor');
 
   /* Estado del carrito */
   const [carrito, setCarrito] = useState(leerCarrito);
@@ -118,7 +127,7 @@ function App() {
 
   return (
     <>
-      {!esAdmin && (
+      {!esPanel && (
         <Encabezado
           cantidadCarrito={obtenerCantidadTotal(carrito)}
           usuario={usuario}
@@ -185,8 +194,18 @@ function App() {
           <Route path='sucursales' element={<AdminSucursales />} />
           <Route path='ubicaciones' element={<AdminUbicaciones />} />
         </Route>
+
+        {/* Panel de Proveedores */}
+        <Route path='/proveedor' element={<ProveedorLayout />}>
+          <Route index element={<ProveedorDashboard />} />
+          <Route path='productos' element={<ProveedorProductos />} />
+          <Route path='pedidos' element={<ProveedorPedidos />} />
+          <Route path='despachos' element={<ProveedorDespachos />} />
+          <Route path='facturas' element={<ProveedorFacturas />} />
+          <Route path='empresa' element={<ProveedorEmpresa />} />
+        </Route>
       </Routes>
-      {!esAdmin && <PiePagina />}
+      {!esPanel && <PiePagina />}
     </>
   );
 }

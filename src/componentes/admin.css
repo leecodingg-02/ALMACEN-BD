@@ -2,36 +2,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ===== PALETA DEL SISTEMA DE DISEÑO (REFERENCIA) ===== */
-  /* Primary: #FFC107 */
+  /* PALETA DEL SISTEMA DE DISEÑO (REFERENCIA) */
+
   --amarillo-primario: #FFC107;
   --amarillo-hover: #FFB300;
   --amarillo-suave: #FFF8E1;
   --amarillo-fondo: #FEF3D6;
   --dorado-oscuro: #7A5800;
   --dorado-bronce: #6B4E00;
-  
-  /* Secondary: #000000 */
+
   --negro-absoluto: #000000;
   --negro-sidebar: #FFFFFF;
   --negro-sidebar-hover: #F5F5F5;
-  
-  /* Tertiary: #FFFFFF */
+
   --blanco-terciario: #FFFFFF;
   --tarjeta-blanca: #FFFFFF;
-  
-  /* Neutral: #F5F5F5 */
+
   --neutral-base: #F5F5F5;
   --fondo-contenido: #F5F5F5;
   --tarjeta-borde: #E5E5E5;
   --tarjeta-borde-suave: #EEEEEE;
   
-  /* Tipografía (Headline, Body, Label en Montserrat) */
+
   --texto-principal: #000000;
   --texto-secundario: #4A4A4A;
   --texto-mutado: #757575;
-  
-  /* Colores de estado y soporte */
+
   --verde: #16A34A;
   --verde-fondo: #DCFCE7;
   --rojo: #B71C1C;

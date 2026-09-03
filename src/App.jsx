@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Encabezado from "./componentes/Encabezado";
+import PiePagina from "./componentes/PiePagina";
 import Inicio from "./paginas/Inicio";
 import Productos from "./paginas/Productos";
 import DetalleProducto from "./paginas/DetalleProducto";
@@ -185,6 +186,7 @@ function App() {
           <Route path='ubicaciones' element={<AdminUbicaciones />} />
         </Route>
       </Routes>
+      {!esAdmin && <PiePagina />}
     </>
   );
 }

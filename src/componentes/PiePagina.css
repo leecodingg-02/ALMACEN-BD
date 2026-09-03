@@ -1,0 +1,223 @@
+/* Footer */
+
+:root {
+  --pie-fondo: #0c0c0e;
+  --pie-fondo-tarjeta: #16161a;
+  --pie-borde: rgba(255, 255, 255, 0.08);
+  --pie-texto-principal: #ffffff;
+  --pie-texto-secundario: #a1a1aa;
+  --pie-texto-atenuado: #71717a;
+  --pie-dorado: #ffc107;
+  --pie-dorado-hover: #ffca28;
+}
+
+.pie-pagina-contenedor {
+  width: 100%;
+  background-color: var(--pie-fondo);
+  color: var(--pie-texto-secundario);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  box-sizing: border-box;
+  margin-top: auto;
+  border-top: 1px solid var(--pie-borde);
+  position: relative;
+  z-index: 40;
+}
+
+/* Cuerpo principal en cuadrícula de 4 columnas */
+.pie-pagina-cuerpo {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 56px 32px 40px 32px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Columna individual */
+.pie-pagina-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Marca y Logo del Encabezado */
+.pie-col-marca {
+  padding-right: 20px;
+}
+
+.pie-logo-encabezado img {
+  width: auto;
+  height: 85px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  transition: transform 0.2s ease;
+}
+
+.pie-logo-encabezado img:hover {
+  transform: scale(1.02);
+}
+
+.pie-descripcion {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--pie-texto-secundario);
+  margin-top: 4px;
+  max-width: 330px;
+}
+
+/* Redes Sociales */
+.pie-redes-sociales {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pie-red-item {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4d4d8;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pie-icono-social {
+  width: 19px;
+  height: 19px;
+  transition: transform 0.2s ease;
+}
+
+.pie-red-item:hover {
+  background-color: var(--pie-dorado);
+  color: #000000;
+  border-color: var(--pie-dorado);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 14px rgba(255, 193, 7, 0.35);
+}
+
+.pie-red-item:hover .pie-icono-social {
+  transform: scale(1.1);
+}
+
+/* Títulos de Columna */
+.pie-col-titulo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--pie-texto-principal);
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
+}
+
+/* Listas de Enlaces */
+.pie-enlaces-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pie-enlace {
+  font-size: 0.92rem;
+  color: var(--pie-texto-secundario);
+  text-decoration: none;
+  font-family: inherit;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.pie-enlace:hover {
+  color: var(--pie-dorado);
+  transform: translateX(4px);
+}
+
+.pie-enlace-destacado {
+  color: var(--pie-dorado);
+  font-weight: 600;
+}
+
+.pie-enlace-destacado:hover {
+  color: #ffffff;
+}
+
+/* Barra Inferior */
+.pie-pagina-inferior {
+  border-top: 1px solid var(--pie-borde);
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 24px 32px 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.88rem;
+  color: var(--pie-texto-atenuado);
+}
+
+.pie-inferior-izq {
+  display: flex;
+  align-items: center;
+}
+
+/* =========================================================
+   RESPONSIVIDAD
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .pie-pagina-cuerpo {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 30px;
+    padding: 44px 24px 32px 24px;
+  }
+
+  .pie-col-marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .pie-pagina-cuerpo {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 36px 20px 24px 20px;
+  }
+
+  .pie-descripcion {
+    max-width: 100%;
+  }
+
+  .pie-pagina-inferior {
+    padding: 20px 16px;
+    font-size: 0.82rem;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* =========================================================
+   SOPORTE PARA MODO ALTO CONTRASTE
+   ========================================================= */
+html.modo-alto-contraste .pie-pagina-contenedor {
+  background-color: #000000 !important;
+  border-top: 2px solid #ffc107 !important;
+}
+
+html.modo-alto-contraste .pie-pagina-inferior {
+  border-top: 1px solid #ffc107 !important;
+}
+
+html.modo-alto-contraste .pie-enlace,
+html.modo-alto-contraste .pie-descripcion,
+html.modo-alto-contraste .pie-inferior-izq p {
+  color: #ffffff !important;
+}

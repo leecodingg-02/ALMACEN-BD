@@ -568,9 +568,7 @@
   background-color: #e6ae06;
 }
 
-/* =========================================================
-   RESPONSIVIDAD
-   ========================================================= */
+/* Responsive */
 @media (max-width: 1024px) {
   .ubicaciones-contenedor-cuerpo {
     grid-template-columns: 1fr;
@@ -581,6 +579,7 @@
     position: static;
   }
 }
+
 
 @media (max-width: 640px) {
   .hero-disruptivo-titulo {
@@ -597,9 +596,7 @@
   }
 }
 
-/* =========================================================
-   ALTO CONTRASTE
-   ========================================================= */
+/* ALTO CONTRASTE */
 html.modo-alto-contraste .ubicaciones-pagina {
   background-color: #000000 !important;
   color: #ffffff !important;

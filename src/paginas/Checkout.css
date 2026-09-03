@@ -1,0 +1,224 @@
+/* ================================================ */
+/* Página Checkout — estilos del formulario         */
+/* ================================================ */
+
+.pagina-checkout {
+  min-height: 100vh;
+  padding: 56px 6vw 96px;
+  background: #f7f7f5;
+  color: #171717;
+}
+
+/* Cabecera */
+.checkout-cabecera {
+  max-width: 1120px;
+  margin: 0 auto 32px;
+  border-bottom: 1px solid #d9d9d3;
+  padding-bottom: 20px;
+}
+
+/* Etiqueta tipo kicker */
+.checkout-kicker {
+  color: #a66021;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.checkout-cabecera h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #171717;
+}
+
+/* ================================================ */
+/* Layout dos columnas: formulario + resumen        */
+/* ================================================ */
+
+.checkout-contenido {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ================================================ */
+/* Formulario                                        */
+/* ================================================ */
+
+.checkout-form {
+  background: #fff;
+  border: 1px solid #e0e0da;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Grupo de campo: label + input + error */
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-grupo label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #171717;
+}
+
+/* Inputs y selects comparten base */
+.campo-grupo input,
+.campo-grupo select {
+  padding: 12px 14px;
+  border: 1px solid #d9d9d3;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #171717;
+  background: #fafaf8;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-grupo input:focus,
+.campo-grupo select:focus {
+  outline: none;
+  border-color: #a66021;
+  box-shadow: 0 0 0 3px rgba(166, 96, 33, 0.12);
+}
+
+/* Estado de error en el campo */
+.campo-error {
+  border-color: #c0392b !important;
+}
+
+/* Mensaje de error */
+.error-msg {
+  color: #c0392b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Fila para campos lado a lado (tipo doc + num ident) */
+.campo-fila {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+}
+
+/* ================================================ */
+/* Resumen lateral del pedido                        */
+/* ================================================ */
+
+.checkout-resumen {
+  background: #fff;
+  border: 1px solid #e0e0da;
+  padding: 24px;
+  position: sticky;
+  top: 24px;
+  border-radius: 4px;
+}
+
+.checkout-resumen h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: #171717;
+}
+
+/* Lista de productos */
+.checkout-lista-productos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checkout-lista-productos li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #ececec;
+  font-size: 0.88rem;
+}
+
+.checkout-lista-productos li:last-child {
+  border-bottom: none;
+}
+
+/* Nombre + cantidad */
+.checkout-producto-info {
+  display: flex;
+  gap: 6px;
+}
+
+.checkout-producto-nombre {
+  color: #171717;
+  font-weight: 600;
+}
+
+.checkout-producto-cant {
+  color: #888;
+}
+
+.checkout-producto-precio {
+  font-weight: 700;
+  color: #171717;
+}
+
+/* Total */
+.checkout-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 18px 0 0;
+  margin-top: 12px;
+  border-top: 1px solid #e8e8e3;
+}
+
+.checkout-total strong {
+  color: #a66021;
+  font-size: 1.25rem;
+}
+
+/* ================================================ */
+/* Estado vacío (sin productos)                      */
+/* ================================================ */
+
+.checkout-vacio {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+/* ================================================ */
+/* Responsivo                                        */
+/* ================================================ */
+
+@media (max-width: 760px) {
+  .pagina-checkout {
+    padding: 36px 18px 64px;
+  }
+
+  /* Una sola columna */
+  .checkout-contenido {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-resumen {
+    position: static;
+  }
+
+  .checkout-form {
+    padding: 20px;
+  }
+
+  /* Tipo doc y número en columna */
+  .campo-fila {
+    grid-template-columns: 1fr;
+  }
+}

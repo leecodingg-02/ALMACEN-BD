@@ -1,0 +1,417 @@
+/* ================================================ */
+/* Página Carrito — estilos generales               */
+/* ================================================ */
+
+.pagina-carrito {
+  min-height: 100vh;
+  padding: 56px 6vw 96px;
+  background: #f7f7f5;
+  color: #171717;
+}
+
+/* Cabecera con título y contador */
+.carrito-cabecera {
+  max-width: 1120px;
+  margin: 0 auto 32px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  border-bottom: 1px solid #d9d9d3;
+  padding-bottom: 20px;
+}
+
+/* Etiqueta superior tipo kicker */
+.carrito-kicker {
+  color: #a66021;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.carrito-cabecera h1 {
+  margin: 8px 0 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: #171717;
+}
+
+/* Contador de artículos */
+.carrito-cantidad-total {
+  font-size: 0.95rem;
+  color: #666660;
+  font-weight: 600;
+}
+
+/* ================================================ */
+/* Layout de dos columnas: lista + resumen          */
+/* ================================================ */
+
+.carrito-contenido {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Fondo blanco compartido entre lista y resumen */
+.carrito-lista,
+.carrito-resumen {
+  background: #fff;
+  border: 1px solid #e0e0da;
+}
+
+/* ================================================ */
+/* Línea de producto individual                     */
+/* ================================================ */
+
+.carrito-linea {
+  min-height: 128px;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px;
+  border-bottom: 1px solid #e8e8e3;
+  transition: background-color 0.2s ease;
+}
+
+.carrito-linea:hover {
+  background-color: #fafaf8;
+}
+
+.carrito-linea:last-child {
+  border-bottom: 0;
+}
+
+/* Imagen placeholder del producto */
+.carrito-imagen {
+  height: 92px;
+  display: grid;
+  place-items: center;
+  background: #ecece8;
+  color: #8a8a83;
+  font-size: 0.8rem;
+  border-radius: 8px;
+}
+
+/* Info del producto: código, nombre, precio unitario */
+.carrito-linea-info span {
+  color: #a66021;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.carrito-linea-info h2,
+.carrito-resumen h2 {
+  margin: 5px 0;
+  color: #171717;
+  font-size: 1rem;
+}
+
+.carrito-linea-info p {
+  color: #666660;
+  font-size: 0.9rem;
+}
+
+/* Precio unitario dentro de la línea */
+.carrito-precio-unitario {
+  color: #888 !important;
+  font-size: 0.82rem !important;
+}
+
+/* ================================================ */
+/* Controles de cantidad, subtotal y eliminar        */
+/* ================================================ */
+
+.carrito-controles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* Grupo de botones +/- y valor */
+.carrito-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #d9d9d3;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Botón de incremento / decremento */
+.btn-cantidad {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #171717;
+  transition: background-color 0.15s ease;
+}
+
+.btn-cantidad:hover:not(:disabled) {
+  background: #e0e0da;
+}
+
+.btn-cantidad:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Valor numérico de la cantidad */
+.cantidad-valor {
+  width: 38px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #171717;
+  user-select: none;
+}
+
+/* Subtotal de la línea */
+.carrito-subtotal {
+  white-space: nowrap;
+  font-size: 1.05rem;
+  color: #171717;
+}
+
+/* Botón eliminar producto */
+.btn-eliminar {
+  border: none;
+  background: transparent;
+  color: #c0392b;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.btn-eliminar:hover {
+  background: #fdecea;
+  color: #a93226;
+}
+
+/* ================================================ */
+/* Panel resumen lateral                             */
+/* ================================================ */
+
+.carrito-resumen {
+  padding: 24px;
+  position: sticky;
+  top: 24px;
+  border-radius: 4px;
+}
+
+/* Desglose de líneas en el resumen */
+.resumen-desglose {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+
+.resumen-desglose li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: #555;
+  border-bottom: 1px dashed #ececec;
+}
+
+.resumen-desglose li:last-child {
+  border-bottom: none;
+}
+
+/* Fila total */
+.carrito-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 20px 0;
+  margin: 12px 0 20px;
+  border-top: 1px solid #e8e8e3;
+  border-bottom: 1px solid #e8e8e3;
+}
+
+.carrito-total strong {
+  color: #a66021;
+  font-size: 1.25rem;
+}
+
+/* ================================================ */
+/* Botones del carrito                               */
+/* ================================================ */
+
+.boton-carrito {
+  display: inline-block;
+  border: 0;
+  padding: 13px 20px;
+  background: #171717;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-carrito:hover {
+  background: #333;
+}
+
+.boton-comprar {
+  width: 100%;
+}
+
+/* Nota informativa al pie del resumen */
+.carrito-nota {
+  margin-top: 16px;
+  color: #777770;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Estado vacío con el lenguaje visual de Inicio */
+.carrito-vacio {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  min-height: calc(100vh - 170px);
+  padding: 60px 40px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  margin: 20px 40px;
+  text-align: center;
+}
+
+.carrito-vacio-icono {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: #ffc107;
+  color: #000;
+}
+
+.carrito-vacio-svg {
+  width: 54px;
+  height: 54px;
+}
+
+.carrito-vacio h1 {
+  margin: 0;
+  color: #000;
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+.carrito-vacio p {
+  max-width: 400px;
+  color: #555;
+  font-size: 1.05rem;
+}
+
+.boton-vacio {
+  border-radius: 8px;
+  padding: 12px 24px;
+  background-color: #ffc107;
+  color: #000;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.boton-vacio:hover {
+  background-color: #e6ae06;
+}
+
+@media (max-width: 760px) {
+  .carrito-vacio {
+    min-height: calc(100vh - 120px);
+    margin: 16px 18px;
+    padding: 44px 24px;
+  }
+
+  .carrito-vacio h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* ================================================ */
+/* Estado vacío                                      */
+/* ================================================ */
+
+.carrito-vacio {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.carrito-vacio h1 {
+  margin: 0;
+  color: #171717;
+}
+
+.carrito-vacio p {
+  color: #666660;
+}
+
+/* Icono decorativo del carrito vacío */
+.carrito-vacio-icono {
+  font-size: 4rem;
+  opacity: 0.3;
+}
+
+/* ================================================ */
+/* Responsivo                                        */
+/* ================================================ */
+
+@media (max-width: 760px) {
+  .pagina-carrito {
+    padding: 36px 18px 64px;
+  }
+
+  .carrito-cabecera {
+    align-items: start;
+    gap: 16px;
+  }
+
+  /* Una sola columna en móvil */
+  .carrito-contenido {
+    grid-template-columns: 1fr;
+  }
+
+  .carrito-resumen {
+    position: static;
+  }
+
+  /* Línea: imagen + info, controles debajo */
+  .carrito-linea {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .carrito-imagen {
+    height: 76px;
+  }
+
+  .carrito-controles {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

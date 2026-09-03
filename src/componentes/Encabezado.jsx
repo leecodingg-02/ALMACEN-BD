@@ -215,7 +215,7 @@ function Encabezado({ cantidadCarrito }) {
             </svg>
           </Link>
 
-          <Link to='btn-carrito'>
+          <Link to='/carrito'>
             {/* El contador permanece visible para mostrar tambien el estado inicial. */}
             <span className='contador-carrito'>{cantidadCarrito}</span>
             <svg

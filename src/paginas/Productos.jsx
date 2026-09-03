@@ -544,9 +544,8 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => (
         <button
           className='boton-agregar'
           onClick={(e) => {
-            // Evitamos abrir el detalle y actualizamos el contador global.
             e.preventDefault();
-            onAgregarCarrito?.();
+            onAgregarCarrito?.(producto, 1);
           }}
         >
           Agregar al carrito

@@ -146,7 +146,7 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
               </div>
               <button
                 className='boton-carrito-detalle'
-                onClick={() => onAgregarCarrito?.(cantidad)}
+                onClick={() => onAgregarCarrito?.(producto, cantidad)}
               >
                 🛒 Añadir al carrito
               </button>

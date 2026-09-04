@@ -339,10 +339,7 @@ CREATE INDEX idx_ubicacion_usuario ON ubicacion (id_usu);
 INSERT INTO rol (nombre, descripcion, color, estado) VALUES
     ('Administrador', 'Acceso total al sistema', '#FFC107', 'Activo'),
     ('Cliente', 'Usuario comprador de la tienda', '#4CAF50', 'Activo'),
-    ('Proveedor', 'Usuario del portal de proveedores', '#2196F3', 'Activo'),
-    ('Supervisor', 'Supervisión de ventas e inventario', '#3b82f6', 'Activo'),
-    ('Vendedor', 'Gestión de ventas al cliente', '#22c55e', 'Activo'),
-    ('Bodeguero', 'Control de inventario y recepciones', '#a855f7', 'Activo');
+;
 
 -- categoria (AdminCategorias.jsx)
 
@@ -392,34 +389,12 @@ INSERT INTO sucursal (nombre, departamento, ciudad, direccion, telefono, estado)
 INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, contrasena_hash, id_rol, id_suc, estado, fecha_registro) VALUES
     ('C.C', 'PLACEHOLDER-001', 'Carlos', 'Rodríguez', 'carlos@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
         (SELECT id_rol FROM rol WHERE nombre = 'Administrador'),
-        (SELECT id_suc FROM sucursal WHERE nombre = 'Sede Principal'), 'Activo', '2024-01-15'),
-    ('C.C', 'PLACEHOLDER-002', 'Luisa', 'Fernández', 'luisa@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
-        (SELECT id_rol FROM rol WHERE nombre = 'Vendedor'),
-        (SELECT id_suc FROM sucursal WHERE nombre = 'Sede Principal'), 'Activo', '2024-03-22'),
-    ('C.C', 'PLACEHOLDER-003', 'Miguel Ángel', 'Torres', 'miguel@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
-        (SELECT id_rol FROM rol WHERE nombre = 'Bodeguero'),
-        (SELECT id_suc FROM sucursal WHERE nombre = 'Sucursal Norte'), 'Activo', '2024-05-10'),
-    ('C.C', 'PLACEHOLDER-004', 'Diana', 'Pérez', 'diana@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
-        (SELECT id_rol FROM rol WHERE nombre = 'Vendedor'),
-        (SELECT id_suc FROM sucursal WHERE nombre = 'Sucursal Sur'), 'Suspendido', '2024-07-01'),
-    ('C.C', 'PLACEHOLDER-005', 'Andrés', 'Castro', 'andres@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
-        (SELECT id_rol FROM rol WHERE nombre = 'Supervisor'),
-        (SELECT id_suc FROM sucursal WHERE nombre = 'Sede Principal'), 'Activo', '2025-01-18');
-
-
+        (SELECT id_suc FROM sucursal WHERE nombre = 'Sede Principal'), 'Activo', '2024-01-15');
 
 INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, telefono, correo, contrasena_hash, id_rol, id_suc, estado) VALUES
     ('C.C', '1020304050', 'Juan', 'Pérez', '3001234567', 'juan.perez@almacen.com',
         '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
         (SELECT id_rol FROM rol WHERE nombre = 'Cliente'), NULL, 'Activo');
-
-
-UPDATE sucursal SET id_gerente = (SELECT id_usu FROM usuario WHERE correo = 'carlos@email.com') WHERE nombre = 'Sede Principal';
-UPDATE sucursal SET id_gerente = (SELECT id_usu FROM usuario WHERE correo = 'luisa@email.com') WHERE nombre = 'Sucursal Norte'; -- mock decía "Luisa Fernández"
-UPDATE sucursal SET id_gerente = (SELECT id_usu FROM usuario WHERE correo = 'miguel@email.com') WHERE nombre = 'Sucursal Sur'; -- mock: "Miguel Torres" ~ "Miguel Ángel Torres"
-UPDATE sucursal SET id_gerente = (SELECT id_usu FROM usuario WHERE correo = 'diana@email.com') WHERE nombre = 'Sucursal Oriente';
-
-
 
 
 INSERT INTO ubicacion (id_usu, departamento, ciudad, direccion, es_principal) VALUES
@@ -479,26 +454,3 @@ INSERT INTO compra (id_proveedor, id_suc, fecha_compra, estado, subtotal, impues
     ((SELECT id_proveedor FROM proveedor WHERE razon_social='LumEx México'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-20', 'Pendiente', 980000, 0, 980000, 'FC-0021', 'Pendiente'),
     ((SELECT id_proveedor FROM proveedor WHERE razon_social='GreenHome'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-15', 'Cancelada', 420000, 0, 420000, 'FC-0020', 'Anulada'); -- mock: 'Suspendida'
 
-
-INSERT INTO venta (id_cli, id_suc, fecha_venta, estado, subtotal, impuesto, total) VALUES
-    ((SELECT id_usu FROM usuario WHERE correo='juan.perez@almacen.com'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-09-02', 'Completada', 289900, 0, 289900), -- cliente: Juan Pérez
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-09-02', 'Pendiente', 1250000, 0, 1250000), -- cliente mock: 'María López' (sin registro de usuario), estado mock: 'En Proceso'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-09-01', 'Pendiente', 95000, 0, 95000), -- cliente mock: 'Carlos Ruiz'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-09-01', 'Completada', 540000, 0, 540000), -- cliente mock: 'Ana García'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-31', 'Cancelada', 189900, 0, 189900), -- cliente mock: 'Pedro Martínez', estado mock: 'Suspendida'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-31', 'Completada', 320000, 0, 320000), -- cliente mock: 'Sofía Torres'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-30', 'Completada', 820000, 0, 820000), -- cliente mock: 'Andrés Gómez'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-29', 'Pendiente', 150000, 0, 150000), -- cliente mock: 'Valentina Castro', estado mock: 'En Proceso'
-    (NULL, (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-28', 'Completada', 430000, 0, 430000); -- cliente mock: 'Camilo Herrera'
-
-
-INSERT INTO pago (id_venta, metodo, monto, estado, fecha_intento, fecha_confirmacion) VALUES
-    ((SELECT id_venta FROM venta WHERE numero_factura IS NULL AND total=289900 AND fecha_venta='2026-09-02' LIMIT 1), 'Tarjeta', 289900, 'Aprobado', '2026-09-02', '2026-09-02'),
-    ((SELECT id_venta FROM venta WHERE total=1250000 LIMIT 1), 'Efectivo', 1250000, 'Pendiente', '2026-09-02', NULL),
-    ((SELECT id_venta FROM venta WHERE total=95000 LIMIT 1), 'Transferencia', 95000, 'Pendiente', '2026-09-01', NULL),
-    ((SELECT id_venta FROM venta WHERE total=540000 LIMIT 1), 'Tarjeta', 540000, 'Aprobado', '2026-09-01', '2026-09-01'),
-    ((SELECT id_venta FROM venta WHERE total=189900 LIMIT 1), 'Efectivo', 189900, 'Anulado', '2026-08-31', NULL),
-    ((SELECT id_venta FROM venta WHERE total=320000 LIMIT 1), 'Transferencia', 320000, 'Aprobado', '2026-08-31', '2026-08-31'),
-    ((SELECT id_venta FROM venta WHERE total=820000 LIMIT 1), 'Tarjeta', 820000, 'Aprobado', '2026-08-30', '2026-08-30'),
-    ((SELECT id_venta FROM venta WHERE total=150000 LIMIT 1), 'Transferencia', 150000, 'Pendiente', '2026-08-29', NULL),
-    ((SELECT id_venta FROM venta WHERE total=430000 LIMIT 1), 'Efectivo', 430000, 'Aprobado', '2026-08-28', '2026-08-28');

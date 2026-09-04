@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   PRODUCTOS_DATA,
@@ -6,6 +6,8 @@ import {
   renderizarEstrellas,
   TarjetaProducto,
 } from "./Productos";
+import { api } from "../servicios/api";
+import { obtenerUsuarioSesion } from "../servicios/usuario";
 import "./DetalleProducto.css";
 
 const DetalleProducto = ({ onAgregarCarrito }) => {
@@ -16,9 +18,20 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
   const [cantidad, setCantidad] = useState(1);
   const [acordeonAbierto, setAcordeonAbierto] = useState("specs");
   const [imagenActiva, setImagenActiva] = useState(0);
+  const [resenas, setResenas] = useState([]);
+  const [cargandoResenas, setCargandoResenas] = useState(true);
+  const [resenaNueva, setResenaNueva] = useState({ calificacion: 5, comentario: "" });
+  const [mensajeResena, setMensajeResena] = useState("");
 
   // Se conserva el fondo para que el espacio no cambie si una URL externa falla.
   const fondosGaleria = ["#e0e0e0", "#d0d0d0", "#c8c8c8", "#bebebe"];
+
+  useEffect(() => {
+    api.get(`/productos/${id}/resenas`, []).then((datos) => {
+      setResenas(datos || []);
+      setCargandoResenas(false);
+    });
+  }, [id]);
 
   if (!producto) {
     return (
@@ -38,8 +51,36 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
     producto.relacionados.includes(p.id),
   );
 
+  const promedioResenas = resenas.length
+    ? resenas.reduce((total, resena) => total + Number(resena.calificacion), 0) / resenas.length
+    : 0;
+
   const toggleAcordeon = (seccion) => {
     setAcordeonAbierto((prev) => (prev === seccion ? null : seccion));
+  };
+
+  const cambiarImagen = (direccion) => {
+    setImagenActiva((actual) => (actual + direccion + fondosGaleria.length) % fondosGaleria.length);
+  };
+
+  const guardarResena = async (e) => {
+    e.preventDefault();
+    setMensajeResena("");
+    const usuario = obtenerUsuarioSesion();
+    const respuesta = await api.post(`/productos/${producto.id}/resenas`, {
+      id_usu: usuario?.id_usu || null,
+      calificacion: resenaNueva.calificacion,
+      comentario: resenaNueva.comentario,
+    });
+
+    if (respuesta?.id_resena) {
+      setResenaNueva({ calificacion: 5, comentario: "" });
+      setMensajeResena("Reseña guardada correctamente.");
+      const actualizadas = await api.get(`/productos/${producto.id}/resenas`, []);
+      setResenas(actualizadas || []);
+    } else {
+      setMensajeResena("No se pudo guardar la reseña.");
+    }
   };
 
   return (
@@ -85,7 +126,23 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
                 className='imagen-principal'
                 style={{ backgroundColor: fondosGaleria[imagenActiva] }}
               >
+                <button
+                  type='button'
+                  className='flecha-galeria flecha-galeria-anterior'
+                  onClick={() => cambiarImagen(-1)}
+                  aria-label='Imagen anterior'
+                >
+                  &#8249;
+                </button>
                 <img src={producto.imagen} alt={producto.titulo} />
+                <button
+                  type='button'
+                  className='flecha-galeria flecha-galeria-siguiente'
+                  onClick={() => cambiarImagen(1)}
+                  aria-label='Imagen siguiente'
+                >
+                  &#8250;
+                </button>
               </div>
             </div>
           </div>
@@ -96,9 +153,9 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
             <h1 className='detalle-titulo'>{producto.titulo}</h1>
 
             <div className='detalle-calificacion'>
-              {renderizarEstrellas(producto.calificacion)}
+              {renderizarEstrellas(promedioResenas)}
               <span className='detalle-valoraciones'>
-                ({producto.valoraciones} reseñas)
+                ({resenas.length} reseñas)
               </span>
             </div>
 
@@ -240,6 +297,52 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
             </div>
           </div>
         </div>
+
+        <section className='seccion-resenas'>
+          <div className='resenas-cabecera'>
+            <h2>Reseñas del producto</h2>
+            <span>{resenas.length} reseñas</span>
+          </div>
+          {cargandoResenas ? (
+            <p className='resenas-vacio'>Cargando reseñas...</p>
+          ) : resenas.length === 0 ? (
+            <p className='resenas-vacio'>Este producto no tiene reseñas.</p>
+          ) : (
+            <div className='lista-resenas'>
+              {resenas.map((resena) => (
+                <article key={resena.id_resena} className='resena'>
+                  <div className='resena-meta'>
+                    <strong>{resena.autor}</strong>
+                    <span>{resena.fecha}</span>
+                  </div>
+                  <div>{renderizarEstrellas(Number(resena.calificacion))}</div>
+                  <p>{resena.comentario}</p>
+                </article>
+              ))}
+            </div>
+          )}
+          <form className='formulario-resena' onSubmit={guardarResena}>
+            <h3>Escribe una reseña</h3>
+            <label>
+              Calificación
+              <select
+                value={resenaNueva.calificacion}
+                onChange={(e) => setResenaNueva({ ...resenaNueva, calificacion: Number(e.target.value) })}
+              >
+                {[5, 4, 3, 2, 1].map((valor) => <option key={valor} value={valor}>{valor} estrellas</option>)}
+              </select>
+            </label>
+            <textarea
+              required
+              maxLength={500}
+              placeholder='Comparte tu opinión'
+              value={resenaNueva.comentario}
+              onChange={(e) => setResenaNueva({ ...resenaNueva, comentario: e.target.value })}
+            />
+            <button type='submit' className='boton-resena'>Publicar reseña</button>
+            {mensajeResena && <p className='mensaje-resena'>{mensajeResena}</p>}
+          </form>
+        </section>
 
         {/* Sección: Completa el look */}
         {productosRelacionados.length > 0 && (

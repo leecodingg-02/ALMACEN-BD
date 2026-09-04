@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { registrarUsuario } from '../servicios/usuario';
+import { Link } from 'react-router-dom';
 import './CrearCuenta.css';
 
-const CrearCuenta = ({ onIniciarSesion }) => {
-  const navigate = useNavigate();
+const CrearCuenta = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -15,11 +13,8 @@ const CrearCuenta = ({ onIniciarSesion }) => {
   });
 
   const [mostrarPassword, setMostrarPassword] = useState(false);
-  const [logoError, setLogoError] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [errores, setErrores] = useState({});
-  const [cargando, setCargando] = useState(false);
-  const [mensajeError, setMensajeError] = useState('');
 
   /* Validaciones */
   const soloLetras = (valor) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(valor);
@@ -52,13 +47,11 @@ const CrearCuenta = ({ onIniciarSesion }) => {
       nuevosErrores.tipoDocumento = "Selecciona un tipo de documento.";
     }
 
-    /* Número de documento — obligatorio, solo números */
+    /* Documento — obligatorio, solo dígitos */
     if (!formData.documento.trim()) {
-      nuevosErrores.documento = "El número de documento es obligatorio.";
+      nuevosErrores.documento = "El documento es obligatorio.";
     } else if (!soloDigitos(formData.documento)) {
-      nuevosErrores.documento = "El documento solo debe contener números.";
-    } else if (formData.documento.length < 6 || formData.documento.length > 12) {
-      nuevosErrores.documento = "Debe tener entre 6 y 12 dígitos.";
+      nuevosErrores.documento = "Solo se permiten dígitos.";
     }
 
     /* Email — obligatorio, formato válido */
@@ -92,36 +85,12 @@ const CrearCuenta = ({ onIniciarSesion }) => {
     if (errores[name]) {
       setErrores((prev) => ({ ...prev, [name]: undefined }));
     }
-    setMensajeError('');
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
-
-    setCargando(true);
-    setMensajeError('');
-
-    try {
-      // Registrar directamente en MySQL
-      const nuevoUsuario = await registrarUsuario({
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        correo: formData.email,
-        tipo_doc: formData.tipoDocumento,
-        num_ident: formData.documento,
-        contrasena: formData.password,
-      });
-
-      if (onIniciarSesion) {
-        onIniciarSesion(nuevoUsuario);
-      }
-      navigate('/usuario');
-    } catch (err) {
-      setMensajeError(err.message || 'No se pudo crear la cuenta');
-    } finally {
-      setCargando(false);
-    }
+    console.log('Datos de Registro:', formData);
   };
 
   return (
@@ -131,30 +100,6 @@ const CrearCuenta = ({ onIniciarSesion }) => {
         {/* Panel Izquierdo: Formulario */}
         <div className="crear-cuenta-left-panel">
           
-          {/* Espacio reservado para la imagen del Logo */}
-          <div className="crear-cuenta-logo-wrapper">
-            <Link to="/" title="Ir al Inicio (Root)">
-              {!logoError ? (
-                <img
-                  src="/src/imagenes/logo.png"
-                  alt="NovaCasa Logo"
-                  className="crear-cuenta-logo-img"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                /* Fallback en caso de que la imagen del logo aún no esté lista */
-                <div className="crear-cuenta-logo-fallback">
-                  <div className="logo-icon-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#F5B400" className="logo-svg">
-                      <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 11-1.06 1.06l-.92-.92V19.5a1.5 1.5 0 01-1.5 1.5h-4.5a.75.75 0 01-.75-.75V15h-3v4.75a.75.75 0 01-.75.75H4.5a1.5 1.5 0 01-1.5-1.5V12.67l-.92.92a.75.75 0 01-1.06-1.06l8.69-8.69z" />
-                    </svg>
-                  </div>
-                  <span className="logo-brand-text">NovaCasa</span>
-                </div>
-              )}
-            </Link>
-          </div>
-
           {/* Encabezado del Formulario */}
           <div className="crear-cuenta-header">
             <h1 className="crear-cuenta-title">Crear Cuenta</h1>
@@ -162,20 +107,6 @@ const CrearCuenta = ({ onIniciarSesion }) => {
               Únete a NovaCasa y transforma tu hogar hoy mismo.
             </p>
           </div>
-
-          {mensajeError && (
-            <div style={{
-              background: 'rgba(239, 68, 68, 0.12)',
-              color: '#ef4444',
-              padding: '12px 16px',
-              borderRadius: '8px',
-              marginBottom: '16px',
-              fontSize: '14px',
-              border: '1px solid rgba(239, 68, 68, 0.3)'
-            }}>
-              ⚠️ {mensajeError}
-            </div>
-          )}
 
           {/* Formulario de Registro */}
           <form onSubmit={handleSubmit} className="crear-cuenta-form" noValidate>
@@ -233,7 +164,6 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     <option value="CE">Cédula de Extranjería</option>
                     <option value="PAS">Pasaporte</option>
                     <option value="NIT">NIT</option>
-                    <option value="TI">Tarjeta de Identidad</option>
                   </select>
                   <svg
                     className="select-chevron"
@@ -262,7 +192,6 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                   onChange={handleChange}
                   required
                 />
-                {errores.documento && <span className="error-msg">{errores.documento}</span>}
               </div>
             </div>
 
@@ -274,12 +203,11 @@ const CrearCuenta = ({ onIniciarSesion }) => {
               <input
                 type="email"
                 name="email"
-                className={`form-input ${errores.email ? "campo-error" : ""}`}
+                className="form-input"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
-              {errores.email && <span className="error-msg">{errores.email}</span>}
             </div>
 
             {/* Fila 4: Contraseña */}
@@ -291,12 +219,11 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                 <input
                   type={mostrarPassword ? 'text' : 'password'}
                   name="password"
-                  className={`form-input ${errores.password ? "campo-error" : ""}`}
+                  className="form-input"
                   value={formData.password}
                   onChange={handleChange}
                   required
                 />
-                {errores.password && <span className="error-msg">{errores.password}</span>}
                 <button
                   type="button"
                   className="btn-toggle-eye"
@@ -320,7 +247,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
 
             {/* Botón Principal de Enviar */}
             <button type="submit" className="crear-cuenta-btn">
-              <span>CREAR CUENTA</span>
+              <span>Crear Cuenta</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

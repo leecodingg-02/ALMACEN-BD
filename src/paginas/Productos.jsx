@@ -1,5 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./Productos.css";
 import { api } from "../servicios/api";
 
@@ -489,14 +490,24 @@ export const PRODUCTOS_DATA = [
   },
 ];
 
+// Las valoraciones se calculan desde la tabla resena, nunca desde datos simulados.
+PRODUCTOS_DATA.forEach((producto) => {
+  producto.calificacion = 0;
+  producto.valoraciones = 0;
+});
+
 export const CATEGORIAS_DISPONIBLES = [
   "Herramientas",
   "Muebles",
   "Decoración",
   "Iluminación",
+  "Baño y Cocina",
 ];
 
 const PRODUCTOS_POR_PAGINA = 8;
+
+const normalizarCategoria = (categoria = "") =>
+  categoria.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 // ============================================================
 // UTILIDADES
@@ -582,17 +593,31 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
 // PÁGINA PRINCIPAL DE PRODUCTOS
 // ============================================================
 const Productos = ({ onAgregarCarrito }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoriaDesdeUrl = searchParams.get("categoria");
+  const categoriaInicial = CATEGORIAS_DISPONIBLES.find(
+    (categoria) => normalizarCategoria(categoria) === normalizarCategoria(categoriaDesdeUrl),
+  );
   const [listaProductos, setListaProductos] = useState(PRODUCTOS_DATA);
-  const [categoriasTemp, setCategoriasTemp] = useState([]);
+  const [categoriasTemp, setCategoriasTemp] = useState(() => categoriaInicial ? [categoriaInicial] : []);
   const [precioMinTemp, setPrecioMinTemp] = useState("");
   const [precioMaxTemp, setPrecioMaxTemp] = useState("");
 
-  const [categoriasAplicadas, setCategoriasAplicadas] = useState([]);
+  const [categoriasAplicadas, setCategoriasAplicadas] = useState(() => categoriaInicial ? [categoriaInicial] : []);
   const [precioMinAplicado, setPrecioMinAplicado] = useState("");
   const [precioMaxAplicado, setPrecioMaxAplicado] = useState("");
 
   const [ordenar, setOrdenar] = useState("destacados");
   const [paginaActual, setPaginaActual] = useState(1);
+  const categoriasActivas = categoriasAplicadas;
+
+  useEffect(() => {
+    if (!categoriaInicial) return;
+    // Sincroniza una nueva categoría elegida desde el encabezado.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCategoriasTemp([categoriaInicial]);
+    setCategoriasAplicadas([categoriaInicial]);
+  }, [categoriaInicial]);
 
   // Cargar catálogo de productos directamente desde MySQL
   useEffect(() => {
@@ -618,6 +643,7 @@ const Productos = ({ onAgregarCarrito }) => {
   }, []);
 
   const handleCategoriaChange = (categoria) => {
+    if (categoriaInicial) setSearchParams({});
     setCategoriasTemp((prev) =>
       prev.includes(categoria)
         ? prev.filter((c) => c !== categoria)
@@ -626,6 +652,7 @@ const Productos = ({ onAgregarCarrito }) => {
   };
 
   const aplicarFiltros = () => {
+    if (categoriaDesdeUrl) setSearchParams({});
     setCategoriasAplicadas(categoriasTemp);
     setPrecioMinAplicado(precioMinTemp);
     setPrecioMaxAplicado(precioMaxTemp);
@@ -634,9 +661,9 @@ const Productos = ({ onAgregarCarrito }) => {
 
   const productosFiltrados = useMemo(() => {
     let resultado = listaProductos.filter((producto) => {
-      if (categoriasAplicadas.length > 0) {
-        const catMatch = categoriasAplicadas.some(
-          (catSel) => catSel.toUpperCase() === producto.categoria.toUpperCase(),
+      if (categoriasActivas.length > 0) {
+        const catMatch = categoriasActivas.some(
+          (catSel) => normalizarCategoria(catSel) === normalizarCategoria(producto.categoria),
         );
         if (!catMatch) return false;
       }
@@ -659,7 +686,7 @@ const Productos = ({ onAgregarCarrito }) => {
       resultado = [...resultado].sort((a, b) => b.precio - a.precio);
 
     return resultado;
-  }, [categoriasAplicadas, precioMinAplicado, precioMaxAplicado, ordenar]);
+  }, [listaProductos, categoriasActivas, precioMinAplicado, precioMaxAplicado, ordenar]);
 
   const totalPaginas = Math.ceil(
     productosFiltrados.length / PRODUCTOS_POR_PAGINA,

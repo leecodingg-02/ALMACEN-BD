@@ -35,7 +35,7 @@ function Encabezado({
               />
             </svg>
 
-            <p className='barra-supi-txt'> Envios a toda Colombia !</p>
+            <p className='barra-supi-txt'> Envios a toda Colombia</p>
           </div>
 
           <div className='item-barrasup-izq'>
@@ -54,7 +54,7 @@ function Encabezado({
               />
             </svg>
 
-            <p className='barra-supi-txt'>Atencion al cliente: 690 324 343</p>
+            <p className='barra-supi-txt'>Atencion al cliente</p>
           </div>
         </div>
 
@@ -191,31 +191,38 @@ function Encabezado({
               className={`btn-desplegable-conte${desplegableAbierto ? " mostrar" : ""}`}
             >
               <NavLink
-                to='/productos'
+                to='/productos?categoria=Herramientas'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Herramientas
               </NavLink>
 
               <NavLink
-                to='/productos'
+                to='/productos?categoria=Muebles'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Muebles
               </NavLink>
 
               <NavLink
-                to='/productos'
+                to='/productos?categoria=Decoración'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Decoracion
               </NavLink>
 
               <NavLink
-                to='/productos'
+                to='/productos?categoria=Iluminación'
                 onClick={() => setDesplegableAbierto(false)}
               >
                 Iluminacion
+              </NavLink>
+
+              <NavLink
+                to='/productos?categoria=Baño%20y%20Cocina'
+                onClick={() => setDesplegableAbierto(false)}
+              >
+                Baño y Cocina
               </NavLink>
             </div>
           </div>

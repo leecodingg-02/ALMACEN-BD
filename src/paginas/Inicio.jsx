@@ -174,7 +174,7 @@ const Inicio = () => {
                     </div>
                     <div className="inspiracion-contenido">
                         <h2>Inspírate,<br />crea y disfruta<br />tu espacio.</h2>
-                        <a href="#" className="boton boton-primario">Ver inspiración &rarr;</a>
+                        <a href="productos" className="boton boton-primario">Ver inspiración &rarr;</a>
                     </div>
                 </div>
             </section>

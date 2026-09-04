@@ -1,5 +1,6 @@
 import './Ofertas.css';
 import { PRODUCTOS_DATA, TarjetaProducto } from './Productos';
+import { Link } from 'react-router-dom';
 
 const Ofertas = () => {
     // Filtrar productos que están en oferta o tienen etiqueta relacionada
@@ -41,7 +42,7 @@ const Ofertas = () => {
                     <div className="portada-ofertas-imagen">
                         <div className="portada-ofertas-marcador">
                             <div className="ofertas-imagen-placeholder">
-                                <img src="https://images.sodimac.com/v3/assets/blt2f8082df109cfbfb/bltf768b33a78a7b7a2/673dfeb5554dc38d3cc6a2ab/LND-GC-499-PC1-La-importancia-de-una-buena-iluminacion-en-la-sala.jpg" alt="Ofertas Banner" className="portada-ofertas-imagen" />
+                                <img src="https://images.sodimac.com/v3/assets/blt2f8082df109cfbfb/bltf768b33a78a7b7a2/673dfeb5554dc38d3cc6a2ab/LND-GC-499-PC1-La-importancia-de-una-buena-iluminacion-en-la-sala.jpg" alt="Ofertas Banner" className="ofertas-banner-imagen" />
                             </div>
                         </div>
                     </div>
@@ -49,6 +50,7 @@ const Ofertas = () => {
 
                 {/* Sección Categorías (Misma estructura que Inicio) */}
                 <section className="categorias">
+                    <Link to="/productos?categoria=Herramientas" className="categoria-enlace">
                     <div className="tarjeta-categoria destacado">
                         <div className="categoria-imagen-marcador">
                             <img src="https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-1024x682.jpg" alt="Herramientas" />
@@ -60,6 +62,8 @@ const Ofertas = () => {
                             <span className="categoria-icono">&rarr;</span>
                         </div>
                     </div>
+                    </Link>
+                    <Link to="/productos?categoria=Muebles" className="categoria-enlace">
                     <div className="tarjeta-categoria">
                         <div className="categoria-imagen-marcador">
                             <img src="https://blog.jamar.com/wp-content/uploads/Juego-sala-Gris-1200x900.jpg" alt="Muebles" />
@@ -71,6 +75,8 @@ const Ofertas = () => {
                             <span className="categoria-icono">&rarr;</span>
                         </div>
                     </div>
+                    </Link>
+                    <Link to="/productos?categoria=Decoración" className="categoria-enlace">
                     <div className="tarjeta-categoria">
                         <div className="categoria-imagen-marcador">
                             <img src="https://www.tuoagency.com/uploads/blog/c%C3%B3mo%20decorar%20paredes%20con%20telas/como-decorar-con-telas2.jpg?1646062174189.jpg" alt="Decoración" />
@@ -82,6 +88,8 @@ const Ofertas = () => {
                             <span className="categoria-icono">&rarr;</span>
                         </div>
                     </div>
+                    </Link>
+                    <Link to="/productos?categoria=Iluminación" className="categoria-enlace">
                     <div className="tarjeta-categoria">
                         <div className="categoria-imagen-marcador">
                             <img src="https://www.eglo.com/media/wysiwyg/Iluminaci_n_Vintage_Que_es_y_que_estilos_hay_5.jpg" alt="Iluminación" />
@@ -93,6 +101,8 @@ const Ofertas = () => {
                             <span className="categoria-icono">&rarr;</span>
                         </div>
                     </div>
+                    </Link>
+                    <Link to="/productos?categoria=Baño%20y%20Cocina" className="categoria-enlace">
                     <div className="tarjeta-categoria">
                         <div className="categoria-imagen-marcador">
                             <img src="https://dugal.es/wp-content/uploads/2024/05/Tendencias-en-diseno-de-interiores-2024.jpg" alt="Baño y Cocina" />
@@ -104,6 +114,7 @@ const Ofertas = () => {
                             <span className="categoria-icono">&rarr;</span>
                         </div>
                     </div>
+                    </Link>
                 </section>
 
                 {/* Sección Productos Destacados */}

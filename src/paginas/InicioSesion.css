@@ -163,7 +163,7 @@
   position: relative;
 }
 
-.btn-toggle-password {
+.btn-toggle-eye {
   position: absolute;
   right: 0;
   top: 50%;
@@ -179,11 +179,11 @@
   transition: opacity 0.2s ease;
 }
 
-.btn-toggle-password:hover {
+.btn-toggle-eye:hover {
   opacity: 0.7;
 }
 
-.btn-toggle-password svg {
+.btn-toggle-eye svg {
   width: 20px;
   height: 20px;
 }

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Ubicaciones.css";
+import { api } from "../servicios/api";
 
 const SUCURSALES_DATA = [
   {
@@ -102,25 +103,58 @@ const SUCURSALES_DATA = [
   },
 ];
 
+const normalizarTexto = (texto = "") =>
+  texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
 function Ubicaciones() {
+  const [sucursales, setSucursales] = useState(SUCURSALES_DATA);
   const [busqueda, setBusqueda] = useState("");
   const [filtroCiudad, setFiltroCiudad] = useState("Todas");
-  const [sucursalSeleccionada, setSucursalSeleccionada] = useState(
-    SUCURSALES_DATA[0],
+  const [sucursalSeleccionadaId, setSucursalSeleccionadaId] = useState(
+    SUCURSALES_DATA[0].id,
   );
   const [copiadoId, setCopiadoId] = useState(null);
 
   const ciudades = ["Todas", "Bogotá", "Medellín", "Cali", "Barranquilla"];
 
-  const sucursalesFiltradas = SUCURSALES_DATA.filter((sucursal) => {
+  useEffect(() => {
+    api.get("/sucursales", []).then((datos) => {
+      if (!datos.length) return;
+
+      const sucursalesCompletas = datos.map((sucursal) => {
+        const datosVisuales = SUCURSALES_DATA.find(
+          (local) => local.id === sucursal.id ||
+            normalizarTexto(local.ciudad).includes(normalizarTexto(sucursal.ciudad) || "__"),
+        );
+        return {
+          ...datosVisuales,
+          ...sucursal,
+          id: sucursal.id,
+          nombre: sucursal.nombre || datosVisuales?.nombre || "Sucursal NovaCasa",
+          ciudad: sucursal.ciudad || datosVisuales?.ciudad || "Ciudad no disponible",
+          direccion: sucursal.direccion || datosVisuales?.direccion || "Dirección no disponible",
+          estado: sucursal.estado || datosVisuales?.estado || "Consultar horario",
+        };
+      });
+      setSucursales(sucursalesCompletas);
+    });
+  }, []);
+
+  const sucursalesFiltradas = sucursales.filter((sucursal) => {
     const coincideCiudad =
-      filtroCiudad === "Todas" || sucursal.ciudad.includes(filtroCiudad);
-    const coincideBusqueda =
-      sucursal.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      sucursal.ciudad.toLowerCase().includes(busqueda.toLowerCase()) ||
-      sucursal.direccion.toLowerCase().includes(busqueda.toLowerCase());
+      filtroCiudad === "Todas" ||
+      normalizarTexto(sucursal.ciudad).includes(normalizarTexto(filtroCiudad));
+    const textoSucursal = normalizarTexto(
+      `${sucursal.nombre} ${sucursal.ciudad} ${sucursal.direccion}`,
+    );
+    const coincideBusqueda = textoSucursal.includes(normalizarTexto(busqueda));
     return coincideCiudad && coincideBusqueda;
   });
+
+  const sucursalSeleccionada =
+    sucursalesFiltradas.find((sucursal) => sucursal.id === sucursalSeleccionadaId) ||
+    sucursalesFiltradas[0] ||
+    sucursales[0];
 
   const copiarDireccion = (direccion, id) => {
     navigator.clipboard.writeText(direccion);
@@ -191,7 +225,10 @@ function Ubicaciones() {
                   className={`btn-ciudad-pill ${
                     filtroCiudad === ciudad ? "activo" : ""
                   }`}
-                  onClick={() => setFiltroCiudad(ciudad)}
+                  onClick={() => {
+                    setFiltroCiudad(ciudad);
+                    setBusqueda("");
+                  }}
                 >
                   {ciudad}
                 </button>
@@ -257,7 +294,7 @@ function Ubicaciones() {
                   className={`tarjeta-sucursal ${
                     esSeleccionada ? "seleccionada" : ""
                   }`}
-                  onClick={() => setSucursalSeleccionada(sucursal)}
+                  onClick={() => setSucursalSeleccionadaId(sucursal.id)}
                 >
                   <div className='tarjeta-sucursal-cabecera'>
                     <div className='tarjeta-sucursal-info'>

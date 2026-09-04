@@ -344,7 +344,7 @@ const Usuario = ({
                     <ul>
                       {ord.detalles.map((d, index) => (
                         <li key={index}>
-                          <span>Producto #{d.id_pro}</span>
+                          <span>{d.nombre_producto || `Producto #${d.id_pro}`}</span>
                           <span>Cantidad: {d.cantidad}</span>
                           <strong>{formatearPrecio(d.subtotal)}</strong>
                         </li>

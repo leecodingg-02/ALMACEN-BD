@@ -368,4 +368,57 @@ router.post('/:id/favoritos', async (req, res) => {
   }
 });
 
+// Obtener todos los pedidos de un usuario por su ID
+router.get('/:id/pedidos', async (req, res) => {
+  try {
+    const idUsuario = req.params.id;
+
+    // Obtener cabeceras de ventas del usuario
+    const [ventas] = await pool.query(`
+      SELECT
+        v.id_venta,
+        v.fecha_venta,
+        v.total,
+        v.estado,
+        COALESCE(ub.direccion, '') AS direccion,
+        COALESCE(ub.ciudad, '') AS ciudad
+      FROM venta v
+      LEFT JOIN ubicacion ub ON ub.id_usu = v.id_cli AND ub.es_principal = TRUE
+      WHERE v.id_cli = ?
+      ORDER BY v.fecha_venta DESC
+    `, [idUsuario]);
+
+    if (ventas.length === 0) {
+      return res.json([]);
+    }
+
+    // Obtener líneas de detalle para cada venta
+    const idsVentas = ventas.map(v => v.id_venta);
+    const [detalles] = await pool.query(`
+      SELECT
+        dv.id_venta,
+        dv.id_pro,
+        dv.cantidad,
+        dv.precio_unitario,
+        dv.subtotal,
+        p.nombre AS nombre_producto
+      FROM detalle_venta dv
+      LEFT JOIN producto p ON dv.id_pro = p.id_pro
+      WHERE dv.id_venta IN (?)
+    `, [idsVentas]);
+
+    // Agrupar los detalles dentro de cada venta
+    const pedidosConDetalles = ventas.map(venta => ({
+      ...venta,
+      cliente: { direccion: venta.direccion, ciudad: venta.ciudad },
+      detalles: detalles.filter(d => d.id_venta === venta.id_venta)
+    }));
+
+    res.json(pedidosConDetalles);
+  } catch (error) {
+    console.error('Error al obtener pedidos del usuario:', error.message);
+    res.status(500).json({ error: 'No se pudieron cargar los pedidos' });
+  }
+});
+
 export default router;

@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { registrarUsuario, rutaPanelSegunRol } from '../servicios/usuario';
 import './CrearCuenta.css';
 
-const CrearCuenta = () => {
+const CrearCuenta = ({ onIniciarSesion }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -15,6 +17,8 @@ const CrearCuenta = () => {
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [errores, setErrores] = useState({});
+  const [cargando, setCargando] = useState(false);
+  const [mensajeError, setMensajeError] = useState('');
 
   /* Validaciones */
   const soloLetras = (valor) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(valor);
@@ -87,10 +91,37 @@ const CrearCuenta = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
-    console.log('Datos de Registro:', formData);
+
+    setCargando(true);
+    setMensajeError('');
+
+    try {
+      // Mapear los campos del formulario a los nombres esperados por el backend
+      const datos = {
+        nombre: formData.nombre.trim(),
+        apellido: formData.apellido.trim(),
+        tipo_doc: formData.tipoDocumento,
+        num_ident: formData.documento.trim(),
+        correo: formData.email.trim(),
+        contrasena: formData.password,
+      };
+
+      const usuario = await registrarUsuario(datos);
+
+      if (onIniciarSesion) {
+        onIniciarSesion(usuario);
+      }
+
+      // Redirigir según el rol (nuevos registros son Cliente por defecto)
+      navigate(rutaPanelSegunRol(usuario));
+    } catch (err) {
+      setMensajeError(err.message || 'No se pudo crear la cuenta. Intenta nuevamente.');
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
@@ -107,6 +138,21 @@ const CrearCuenta = () => {
               Únete a NovaCasa y transforma tu hogar hoy mismo.
             </p>
           </div>
+
+          {/* Mensaje de error del registro */}
+          {mensajeError && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.12)',
+              color: '#ef4444',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              fontSize: '14px',
+              border: '1px solid rgba(239, 68, 68, 0.3)'
+            }}>
+              ⚠️ {mensajeError}
+            </div>
+          )}
 
           {/* Formulario de Registro */}
           <form onSubmit={handleSubmit} className="crear-cuenta-form" noValidate>
@@ -246,8 +292,8 @@ const CrearCuenta = () => {
             </div>
 
             {/* Botón Principal de Enviar */}
-            <button type="submit" className="crear-cuenta-btn">
-              <span>Crear Cuenta</span>
+            <button type="submit" className="crear-cuenta-btn" disabled={cargando}>
+              <span>{cargando ? 'CREANDO CUENTA...' : 'Crear Cuenta'}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

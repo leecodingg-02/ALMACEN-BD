@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import logoImg from '../imagenes/logo.png';
 import logoBlancoImg from '../imagenes/logo_blanco.png';
 
 import CortinaMetalica from './CortinaMetalica';
 import './admin.css';
+import { cerrarSesionProveedor, obtenerProveedorSesion } from '../servicios/proveedor';
 
 const seccionesProveedor = [
   {
@@ -32,10 +33,12 @@ const seccionesProveedor = [
 
 export default function ProveedorLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [editandoPerfil, setEditandoPerfil] = useState(false);
   const [nombreProveedor, setNombreProveedor] = useState(() => {
-    return localStorage.getItem('novacasa_proveedor_nombre') || 'Distribuidora Central S.A.S.';
+    const sesion = obtenerProveedorSesion();
+    return sesion?.razon_social || localStorage.getItem('novacasa_proveedor_nombre') || 'Distribuidora Central S.A.S.';
   });
   const [contactoProveedor, setContactoProveedor] = useState('Proveedor Oficial');
   const [fotoProveedor, setFotoProveedor] = useState(() => {
@@ -93,6 +96,13 @@ export default function ProveedorLayout() {
 
   const cancelarEdicion = () => {
     setEditandoPerfil(false);
+  };
+
+  const handleCerrarSesion = () => {
+    cerrarSesionProveedor();
+    localStorage.removeItem('novacasa_proveedor_nombre');
+    localStorage.removeItem('novacasa_proveedor_foto');
+    navigate('/inicio-sesion');
   };
 
   const cambiarFoto = (e) => {
@@ -344,7 +354,11 @@ export default function ProveedorLayout() {
                       <div className="perfil-dropdown-separador" />
 
                       <div className="perfil-dropdown-opciones">
-                        <Link to="/" className="perfil-dropdown-btn salir" style={{ textDecoration: 'none' }}>
+                        <button className="perfil-dropdown-btn salir" onClick={handleCerrarSesion}>
+                            <IconoSalir />
+                            Cerrar sesión
+                          </button>
+                          <Link to="/" className="perfil-dropdown-btn" style={{ textDecoration: 'none' }}>
                           <IconoSalir />
                           Volver a la tienda
                         </Link>

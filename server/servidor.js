@@ -64,6 +64,7 @@ app.get('/api/dashboard', async (req, res) => {
     const [[{ totalOrdenes }]] = await pool.query('SELECT COUNT(*) AS totalOrdenes FROM venta');
     const [[{ totalProductos }]] = await pool.query('SELECT COUNT(*) AS totalProductos FROM producto WHERE estado = "Activo"');
     const [[{ bajoStock }]] = await pool.query('SELECT COUNT(*) AS bajoStock FROM inventario WHERE cantidad <= stock_minimo');
+    const [[{ totalClientes }]] = await pool.query('SELECT COUNT(*) AS totalClientes FROM usuario WHERE id_rol = 2');
 
     const [ventasRecientes] = await pool.query(`
       SELECT 
@@ -78,12 +79,37 @@ app.get('/api/dashboard', async (req, res) => {
       LIMIT 5
     `);
 
+    const [topProductos] = await pool.query(`
+      SELECT
+        p.nombre,
+        COALESCE(SUM(dv.cantidad), 0) AS cantidad
+      FROM producto p
+      LEFT JOIN detalle_venta dv ON p.id_pro = dv.id_pro
+      GROUP BY p.id_pro, p.nombre
+      ORDER BY cantidad DESC, p.id_pro ASC
+      LIMIT 4
+    `);
+
+    const [categorias] = await pool.query(`
+      SELECT
+        c.nombre,
+        COUNT(p.id_pro) AS cantidad
+      FROM categoria c
+      LEFT JOIN producto p ON c.id_categoria = p.id_categoria
+      GROUP BY c.id_categoria, c.nombre
+      ORDER BY cantidad DESC, c.id_categoria ASC
+      LIMIT 5
+    `);
+
     res.json({
       totalVentas: Number(totalVentas),
       totalOrdenes: Number(totalOrdenes),
       totalProductos: Number(totalProductos),
+      totalClientes: Number(totalClientes),
       bajoStock: Number(bajoStock),
-      ventasRecientes
+      ventasRecientes,
+      topProductos,
+      categorias
     });
   } catch (error) {
     console.error('Error al obtener dashboard:', error.message);

@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import logoImg from '../imagenes/logo.png';
 import logoBlancoImg from '../imagenes/logo_blanco.png';
 
 import CortinaMetalica from './CortinaMetalica';
 import './admin.css';
+import { cerrarSesion, obtenerUsuarioSesion } from '../servicios/usuario';
 
 const secciones = [
   {
@@ -42,10 +43,12 @@ const secciones = [
 
 export default function PanelLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [editandoPerfil, setEditandoPerfil] = useState(false);
   const [nombreAdmin, setNombreAdmin] = useState(() => {
-    return localStorage.getItem('almacen_admin_nombre') || 'Admin Almacén';
+    const sesion = obtenerUsuarioSesion();
+    return sesion?.nombreCompleto || localStorage.getItem('almacen_admin_nombre') || 'Admin Almacén';
   });
   const [rolAdmin] = useState('Administrador');
   const [fotoAdmin, setFotoAdmin] = useState(() => {
@@ -103,6 +106,13 @@ export default function PanelLayout() {
 
   const cancelarEdicion = () => {
     setEditandoPerfil(false);
+  };
+
+  const handleCerrarSesion = () => {
+    cerrarSesion();
+    localStorage.removeItem('almacen_admin_nombre');
+    localStorage.removeItem('almacen_admin_foto');
+    navigate('/inicio-sesion');
   };
 
   const cambiarFoto = (e) => {
@@ -332,7 +342,7 @@ export default function PanelLayout() {
                       <div className="perfil-dropdown-separador" />
 
                       <div className="perfil-dropdown-opciones">
-                        <button className="perfil-dropdown-btn salir">
+                        <button className="perfil-dropdown-btn salir" onClick={handleCerrarSesion}>
                           <IconoSalir />
                           Cerrar sesión
                         </button>

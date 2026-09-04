@@ -2,6 +2,37 @@ import { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { api } from '../servicios/api';
 
+/* Helpers para mapear datos de la base de datos a los iconos y estados del tablero */
+const mapearEstadoVenta = (estado) => {
+  const e = (estado || '').toLowerCase();
+  if (e === 'completada') return { estado: 'completada', estadoTexto: 'Completada' };
+  if (e === 'cancelada') return { estado: 'cancelada', estadoTexto: 'Cancelada' };
+  if (e === 'pendiente') return { estado: 'pendiente', estadoTexto: 'Pendiente' };
+  return { estado: 'proceso', estadoTexto: 'En proceso' };
+};
+
+const iconoOrdenPorIndice = (i) =>
+  [IconoHerramienta, IconoMueble, IconoIluminacion, IconoDecoracion][i % 4];
+
+const mapearIconoCategoria = (nombre) => {
+  const n = (nombre || '').toLowerCase();
+  if (n.includes('herramienta')) return IconoHerramienta;
+  if (n.includes('mueble')) return IconoMueble;
+  if (n.includes('ilumin') || n.includes('lamp') || n.includes('luz')) return IconoIluminacion;
+  if (n.includes('decor')) return IconoDecoracion;
+  if (n.includes('baño') || n.includes('cocina')) return IconoBano;
+  return IconoProductos;
+};
+
+const mapearIconoProducto = (nombre, indice) => {
+  const n = (nombre || '').toLowerCase();
+  if (n.includes('taladro') || n.includes('herramienta') || n.includes('cepillo')) return IconoHerramienta;
+  if (n.includes('sof') || n.includes('mueble') || n.includes('silla') || n.includes('mesa')) return IconoMueble;
+  if (n.includes('lampara') || n.includes('lamp') || n.includes('luz') || n.includes('bombillo')) return IconoIluminacion;
+  if (n.includes('maceta') || n.includes('espejo') || n.includes('decor')) return IconoDecoracion;
+  return [IconoHerramienta, IconoMueble, IconoDecoracion, IconoIluminacion][indice % 4];
+};
+
 export default function Tablero() {
   const context = useOutletContext();
   const nombreAdmin = context?.nombreAdmin || localStorage.getItem('almacen_admin_nombre') || 'Admin';
@@ -26,6 +57,10 @@ export default function Tablero() {
   const totalOrdenesFormateado = metricasBD?.totalOrdenes 
     ? String(metricasBD.totalOrdenes) 
     : '12';
+
+  const totalClientesFormateado = metricasBD?.totalClientes != null 
+    ? String(metricasBD.totalClientes) 
+    : '1.204';
 
   const estadisticas = [
     {
@@ -53,7 +88,7 @@ export default function Tablero() {
     {
       id: 'clientes',
       etiqueta: 'Clientes Registrados',
-      valor: '1.204',
+      valor: totalClientesFormateado,
       cambio: '↑ 14.3%',
       subida: true,
       icono: IconoClientes,
@@ -74,27 +109,59 @@ export default function Tablero() {
     },
   ];
 
-  const ordenesRecientes = [
-    { id: '1247', tiempo: 'Hace 12 min', estado: 'completada', estadoTexto: 'Completada', monto: '$89.900', icono: IconoHerramienta },
-    { id: '1246', tiempo: 'Hace 1 h', estado: 'proceso', estadoTexto: 'En proceso', monto: '$299.900', icono: IconoMueble },
-    { id: '1245', tiempo: 'Hace 3 h', estado: 'pendiente', estadoTexto: 'Pendiente', monto: '$159.900', icono: IconoIluminacion },
-    { id: '1244', tiempo: 'Hace 5 h', estado: 'completada', estadoTexto: 'Completada', monto: '$219.900', icono: IconoDecoracion },
-  ];
+  const ordenesRecientes = metricasBD?.ventasRecientes?.length
+    ? metricasBD.ventasRecientes.map((v, i) => {
+        const m = mapearEstadoVenta(v.estado);
+        return {
+          id: String(v.id),
+          tiempo: v.fecha || '',
+          estado: m.estado,
+          estadoTexto: m.estadoTexto,
+          monto: `$${Number(v.total || 0).toLocaleString('es-CO')}`,
+          icono: iconoOrdenPorIndice(i),
+        };
+      })
+    : [
+        { id: '1247', tiempo: 'Hace 12 min', estado: 'completada', estadoTexto: 'Completada', monto: '$89.900', icono: IconoHerramienta },
+        { id: '1246', tiempo: 'Hace 1 h', estado: 'proceso', estadoTexto: 'En proceso', monto: '$299.900', icono: IconoMueble },
+        { id: '1245', tiempo: 'Hace 3 h', estado: 'pendiente', estadoTexto: 'Pendiente', monto: '$159.900', icono: IconoIluminacion },
+        { id: '1244', tiempo: 'Hace 5 h', estado: 'completada', estadoTexto: 'Completada', monto: '$219.900', icono: IconoDecoracion },
+      ];
 
-  const topProductos = [
-    { posicion: 1, nombre: 'Taladro Inalámbrico 20V', ventas: '126 ventas', icono: IconoHerramienta, progreso: 85 },
-    { posicion: 2, nombre: 'Sofá Modular 3 Puestos', ventas: '98 ventas', icono: IconoMueble, progreso: 68 },
-    { posicion: 3, nombre: 'Maceta Moderna Con Base', ventas: '87 ventas', icono: IconoDecoracion, progreso: 55 },
-    { posicion: 4, nombre: 'Lámpara Colgante Minimalista', ventas: '76 ventas', icono: IconoIluminacion, progreso: 42 },
-  ];
+  const topProductos = metricasBD?.topProductos?.length
+    ? (() => {
+        const max = Number(metricasBD.topProductos[0].cantidad) || 1;
+        return metricasBD.topProductos.map((p, i) => ({
+          posicion: i + 1,
+          nombre: p.nombre,
+          ventas: `${p.cantidad} ventas`,
+          icono: mapearIconoProducto(p.nombre, i),
+          progreso: Math.max(5, Math.round((Number(p.cantidad) / max) * 100)),
+        }));
+      })()
+    : [
+        { posicion: 1, nombre: 'Taladro Inalámbrico 20V', ventas: '126 ventas', icono: IconoHerramienta, progreso: 85 },
+        { posicion: 2, nombre: 'Sofá Modular 3 Puestos', ventas: '98 ventas', icono: IconoMueble, progreso: 68 },
+        { posicion: 3, nombre: 'Maceta Moderna Con Base', ventas: '87 ventas', icono: IconoDecoracion, progreso: 55 },
+        { posicion: 4, nombre: 'Lámpara Colgante Minimalista', ventas: '76 ventas', icono: IconoIluminacion, progreso: 42 },
+      ];
 
-  const categorias = [
-    { nombre: 'Herramientas', porcentaje: 32, icono: IconoHerramienta },
-    { nombre: 'Muebles', porcentaje: 24, icono: IconoMueble },
-    { nombre: 'Decoración', porcentaje: 18, icono: IconoDecoracion },
-    { nombre: 'Iluminación', porcentaje: 14, icono: IconoIluminacion },
-    { nombre: 'Baño y Cocina', porcentaje: 12, icono: IconoBano },
-  ];
+  const categorias = metricasBD?.categorias?.length
+    ? (() => {
+        const max = Number(metricasBD.categorias[0].cantidad) || 1;
+        return metricasBD.categorias.map((c) => ({
+          nombre: c.nombre,
+          porcentaje: Math.max(4, Math.round((Number(c.cantidad) / max) * 100)),
+          icono: mapearIconoCategoria(c.nombre),
+        }));
+      })()
+    : [
+        { nombre: 'Herramientas', porcentaje: 32, icono: IconoHerramienta },
+        { nombre: 'Muebles', porcentaje: 24, icono: IconoMueble },
+        { nombre: 'Decoración', porcentaje: 18, icono: IconoDecoracion },
+        { nombre: 'Iluminación', porcentaje: 14, icono: IconoIluminacion },
+        { nombre: 'Baño y Cocina', porcentaje: 12, icono: IconoBano },
+      ];
 
   return (
     <>

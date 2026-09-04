@@ -52,6 +52,7 @@ import ProveedorPedidos from './paginas/ProveedorPedidos'
 import ProveedorDespachos from './paginas/ProveedorDespachos'
 import ProveedorFacturas from './paginas/ProveedorFacturas'
 import ProveedorEmpresa from './paginas/ProveedorEmpresa'
+import RutaProtegida from './componentes/RutaProtegida'
 
 function RestaurarScroll() {
   const { pathname } = useLocation();
@@ -189,7 +190,7 @@ function App() {
         <Route path='/ayuda' element={<Ayuda />} />
 
         {/* Panel de Administración */}
-        <Route path='/admin' element={<AdminLayout />}>
+        <Route path='/admin' element={<RutaProtegida rolRequerido="admin"><AdminLayout /></RutaProtegida>}>
           <Route index element={<AdminDashboard />} />
           <Route path='productos' element={<AdminProductos />} />
           <Route path='categorias' element={<AdminCategorias />} />
@@ -204,7 +205,7 @@ function App() {
         </Route>
 
         {/* Panel de Proveedores */}
-        <Route path='/proveedor' element={<ProveedorLayout />}>
+        <Route path='/proveedor' element={<RutaProtegida rolRequerido="proveedor"><ProveedorLayout /></RutaProtegida>}>
           <Route index element={<ProveedorDashboard />} />
           <Route path='productos' element={<ProveedorProductos />} />
           <Route path='pedidos' element={<ProveedorPedidos />} />

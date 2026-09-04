@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { iniciarSesion } from '../servicios/usuario';
+import { iniciarSesion, rutaPanelSegunRol } from '../servicios/usuario';
+import { iniciarSesionProveedor } from '../servicios/proveedor';
 import './InicioSesion.css';
 
 const InicioSesion = ({ onIniciarSesion }) => {
   const navigate = useNavigate();
+  const [modo, setModo] = useState('cliente'); // 'cliente' | 'proveedor'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [errores, setErrores] = useState({});
   const [cargando, setCargando] = useState(false);
   const [mensajeError, setMensajeError] = useState('');
+  const esProveedor = modo === 'proveedor';
 
   /* Validaciones */
   const correoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
@@ -18,11 +21,18 @@ const InicioSesion = ({ onIniciarSesion }) => {
   const validarFormulario = () => {
     const nuevosErrores = {};
 
-    /* Email — obligatorio, formato válido */
-    if (!email.trim()) {
-      nuevosErrores.email = "El correo es obligatorio.";
-    } else if (!correoValido(email)) {
-      nuevosErrores.email = "Ingresa un correo válido.";
+    if (esProveedor) {
+      /* NIT — obligatorio */
+      if (!email.trim()) {
+        nuevosErrores.email = "El NIT es obligatorio.";
+      }
+    } else {
+      /* Email — obligatorio, formato válido */
+      if (!email.trim()) {
+        nuevosErrores.email = "El correo es obligatorio.";
+      } else if (!correoValido(email)) {
+        nuevosErrores.email = "Ingresa un correo válido.";
+      }
     }
 
     /* Contraseña — obligatoria, mínimo 6 caracteres */
@@ -48,6 +58,12 @@ const InicioSesion = ({ onIniciarSesion }) => {
     setMensajeError('');
   };
 
+  const cambiarModo = (nuevoModo) => {
+    setModo(nuevoModo);
+    setErrores({});
+    setMensajeError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
@@ -56,14 +72,22 @@ const InicioSesion = ({ onIniciarSesion }) => {
     setMensajeError('');
 
     try {
-      // Iniciar sesión consultando la tabla usuario en MySQL
-      const usuario = await iniciarSesion(email, password);
-      if (onIniciarSesion) {
-        onIniciarSesion(usuario);
+      if (esProveedor) {
+        // Iniciar sesión como proveedor consultando la tabla proveedor (usuario = NIT)
+        await iniciarSesionProveedor(email, password);
+        // Redirigir al panel de proveedor
+        navigate('/proveedor');
+      } else {
+        // Iniciar sesión consultando la tabla usuario en MySQL
+        const usuario = await iniciarSesion(email, password);
+        if (onIniciarSesion) {
+          onIniciarSesion(usuario);
+        }
+        // Redirigir al panel correspondiente según el rol
+        navigate(rutaPanelSegunRol(usuario));
       }
-      navigate('/usuario');
     } catch (err) {
-      setMensajeError(err.message || 'Correo o contraseña incorrectos');
+      setMensajeError(err.message || 'Credenciales incorrectas');
     } finally {
       setCargando(false);
     }
@@ -84,6 +108,52 @@ const InicioSesion = ({ onIniciarSesion }) => {
               Ingresa a tu cuenta para continuar transformando tu hogar.
             </p>
 
+            {/* Selector de tipo de acceso: Cliente (correo) o Proveedor (NIT) */}
+            <div style={{
+              display: 'flex',
+              background: '#f1f5f9',
+              borderRadius: '10px',
+              padding: '4px',
+              marginBottom: '18px'
+            }}>
+              <button
+                type="button"
+                onClick={() => cambiarModo('cliente')}
+                style={{
+                  flex: 1,
+                  padding: '9px 0',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  background: !esProveedor ? '#f5c518' : 'transparent',
+                  color: !esProveedor ? '#1f2937' : '#64748b',
+                  transition: 'all .2s'
+                }}
+              >
+                Cliente
+              </button>
+              <button
+                type="button"
+                onClick={() => cambiarModo('proveedor')}
+                style={{
+                  flex: 1,
+                  padding: '9px 0',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  background: esProveedor ? '#f5c518' : 'transparent',
+                  color: esProveedor ? '#1f2937' : '#64748b',
+                  transition: 'all .2s'
+                }}
+              >
+                Proveedor
+              </button>
+            </div>
+
             {mensajeError && (
               <div style={{
                 background: 'rgba(239, 68, 68, 0.12)',
@@ -99,14 +169,14 @@ const InicioSesion = ({ onIniciarSesion }) => {
             )}
 
             <form onSubmit={handleSubmit} className="login-form" noValidate>
-              {/* Campo Correo Electrónico */}
+              {/* Campo Correo Electrónico / NIT */}
               <div className="login-field-group">
                 <input
-                  type="email"
+                  type={esProveedor ? 'text' : 'email'}
                   id="email"
                   name="email"
                   className={`login-input ${errores.email ? "campo-error" : ""}`}
-                  placeholder="Correo Electrónico"
+                  placeholder={esProveedor ? 'NIT (Número de Identificación Tributaria)' : 'Correo Electrónico'}
                   value={email}
                   onChange={handleChange}
                   required

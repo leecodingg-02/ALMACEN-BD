@@ -34,6 +34,14 @@ export const iniciarSesion = async (correo, contrasena) => {
   throw new Error("Credenciales inválidas");
 };
 
+// Determina la ruta del panel según el rol del usuario autenticado
+export const rutaPanelSegunRol = (usuario) => {
+  const rol = (usuario?.rol || "").toString().toLowerCase();
+  if (rol === "administrador") return "/admin";
+  if (rol === "proveedor") return "/proveedor";
+  return "/usuario";
+};
+
 // Registrar una nueva cuenta de cliente en MySQL
 export const registrarUsuario = async (datos) => {
   const respuesta = await api.post("/usuarios", datos);
@@ -44,7 +52,10 @@ export const registrarUsuario = async (datos) => {
       apellido: respuesta.apellido,
       correo: respuesta.correo,
       telefono: respuesta.telefono,
-      id_rol: 2,
+      tipo_doc: respuesta.tipo_doc,
+      num_ident: respuesta.num_ident,
+      id_rol: respuesta.id_rol || 2,
+      rol: "Cliente",
       estado: "Activo",
     };
     localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));

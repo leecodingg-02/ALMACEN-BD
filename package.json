@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "server": "node server/servidor.js",
+    "crear-proveedores-demo": "node server/crear_proveedores_demo.js",
     "init-db": "node server/importar_bd.js",
     "exportar-bd": "node server/exportar_bd.js",
     "importar-backup": "node server/importar_backup.js",

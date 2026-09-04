@@ -338,8 +338,7 @@ CREATE INDEX idx_ubicacion_usuario ON ubicacion (id_usu);
 
 INSERT INTO rol (nombre, descripcion, color, estado) VALUES
     ('Administrador', 'Acceso total al sistema', '#FFC107', 'Activo'),
-    ('Cliente', 'Usuario comprador de la tienda', '#4CAF50', 'Activo'),
-;
+    ('Cliente', 'Usuario comprador de la tienda', '#4CAF50', 'Activo');
 
 -- categoria (AdminCategorias.jsx)
 

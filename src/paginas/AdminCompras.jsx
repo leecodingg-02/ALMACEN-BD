@@ -2,18 +2,10 @@ import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
 import { api } from '../servicios/api';
 
-const datosIniciales = [
-  { id: 1, fecha: '2026-09-01', proveedor: 'DeWalt Colombia', total: 1850000, items: 15, estado: 'Recibida', factura: 'FC-0024' },
-  { id: 2, fecha: '2026-08-28', proveedor: 'Bosch Distribuidora', total: 3200000, items: 28, estado: 'En Tránsito', factura: 'FC-0023' },
-  { id: 3, fecha: '2026-08-25', proveedor: 'HomeStyle S.A.S', total: 5400000, items: 6, estado: 'Recibida', factura: 'FC-0022' },
-  { id: 4, fecha: '2026-08-20', proveedor: 'LumEx México', total: 980000, items: 12, estado: 'Pendiente', factura: 'FC-0021' },
-  { id: 5, fecha: '2026-08-15', proveedor: 'GreenHome', total: 420000, items: 30, estado: 'Suspendida', factura: 'FC-0020' },
-];
-
 const formularioVacio = { fecha: '', proveedor: '', total: '', items: '', estado: 'Pendiente', factura: '' };
 
 export default function Compras() {
-  const [datos, setDatos] = useState(datosIniciales);
+  const [datos, setDatos] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
@@ -21,8 +13,8 @@ export default function Compras() {
 
   // Cargar compras directamente desde MySQL
   useEffect(() => {
-    api.get('/compras', datosIniciales).then((res) => {
-      if (res && res.length > 0) setDatos(res);
+    api.get('/compras').then((res) => {
+      if (Array.isArray(res)) setDatos(res);
     });
   }, []);
 
@@ -84,11 +76,11 @@ export default function Compras() {
   const suspender = () => {
     const actualizadas = datos.map((c) => {
       if (c.id === actual.id) {
-        const nuevoEstado = c.estado === 'Suspendida' ? (c.estadoAnterior || 'Pendiente') : 'Suspendida';
+        const nuevoEstado = c.estado === 'Cancelada' ? (c.estadoAnterior || 'Pendiente') : 'Cancelada';
         return {
           ...c,
           estado: nuevoEstado,
-          estadoAnterior: c.estado !== 'Suspendida' ? c.estado : c.estadoAnterior,
+          estadoAnterior: c.estado !== 'Cancelada' ? c.estado : c.estadoAnterior,
         };
       }
       return c;
@@ -100,9 +92,8 @@ export default function Compras() {
 
   const insigniaEstado = {
     Recibida: 'completado',
-    'En Tránsito': 'proceso',
+    Aprobada: 'proceso',
     Pendiente: 'pendiente',
-    Suspendida: 'cancelado',
     Cancelada: 'cancelado',
   };
 
@@ -173,11 +164,11 @@ export default function Compras() {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                       </button>
                       <button
-                        className={`btn-accion ${c.estado === 'Suspendida' ? 'reactivar' : 'suspender'}`}
+                        className={`btn-accion ${c.estado === 'Cancelada' ? 'reactivar' : 'suspender'}`}
                         onClick={() => abrirSuspender(c)}
-                        title={c.estado === 'Suspendida' ? 'Reactivar compra' : 'Suspender/Anular compra'}
+                        title={c.estado === 'Cancelada' ? 'Reactivar compra' : 'Suspender/Anular compra'}
                       >
-                        {c.estado === 'Suspendida' ? (
+                        {c.estado === 'Cancelada' ? (
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
                         ) : (
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" /></svg>
@@ -225,9 +216,9 @@ export default function Compras() {
             <label>Estado</label>
             <select value={formulario.estado} onChange={(e) => setFormulario({ ...formulario, estado: e.target.value })}>
               <option>Pendiente</option>
-              <option>En Tránsito</option>
+              <option>Aprobada</option>
               <option>Recibida</option>
-              <option>Suspendida</option>
+              <option>Cancelada</option>
             </select>
           </div>
         </Modal>

@@ -46,15 +46,15 @@ export default function Tablero() {
     });
   }, []);
 
-  const totalVentasFormateado = metricasBD?.totalVentas 
+  const totalVentasFormateado = metricasBD?.totalVentas != null 
     ? `$${Number(metricasBD.totalVentas).toLocaleString('es-CO')}` 
     : '$12.450.000';
 
-  const totalProductosFormateado = metricasBD?.totalProductos 
+  const totalProductosFormateado = metricasBD?.totalProductos != null 
     ? String(metricasBD.totalProductos) 
     : '248';
 
-  const totalOrdenesFormateado = metricasBD?.totalOrdenes 
+  const totalOrdenesFormateado = metricasBD?.totalOrdenes != null 
     ? String(metricasBD.totalOrdenes) 
     : '12';
 
@@ -109,8 +109,7 @@ export default function Tablero() {
     },
   ];
 
-  const ordenesRecientes = metricasBD?.ventasRecientes?.length
-    ? metricasBD.ventasRecientes.map((v, i) => {
+  const ordenesRecientes = (metricasBD?.ventasRecientes || []).map((v, i) => {
         const m = mapearEstadoVenta(v.estado);
         return {
           id: String(v.id),
@@ -120,13 +119,7 @@ export default function Tablero() {
           monto: `$${Number(v.total || 0).toLocaleString('es-CO')}`,
           icono: iconoOrdenPorIndice(i),
         };
-      })
-    : [
-        { id: '1247', tiempo: 'Hace 12 min', estado: 'completada', estadoTexto: 'Completada', monto: '$89.900', icono: IconoHerramienta },
-        { id: '1246', tiempo: 'Hace 1 h', estado: 'proceso', estadoTexto: 'En proceso', monto: '$299.900', icono: IconoMueble },
-        { id: '1245', tiempo: 'Hace 3 h', estado: 'pendiente', estadoTexto: 'Pendiente', monto: '$159.900', icono: IconoIluminacion },
-        { id: '1244', tiempo: 'Hace 5 h', estado: 'completada', estadoTexto: 'Completada', monto: '$219.900', icono: IconoDecoracion },
-      ];
+      });
 
   const topProductos = metricasBD?.topProductos?.length
     ? (() => {

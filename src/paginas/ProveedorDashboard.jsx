@@ -9,8 +9,8 @@ export default function ProveedorDashboard() {
     {
       id: 'pedidos',
       etiqueta: 'Órdenes de Compra',
-      valor: '18',
-      cambio: '↑ 4 nuevas',
+      valor: '0',
+      cambio: 'Sin nuevas',
       subida: true,
       icono: IconoPedido,
       colorClase: 'tarjeta-est-azul',
@@ -18,8 +18,8 @@ export default function ProveedorDashboard() {
     {
       id: 'porCobrar',
       etiqueta: 'Facturación por Cobrar',
-      valor: '$18.450.000',
-      cambio: '↑ $4.2M este mes',
+      valor: '$0',
+      cambio: 'Sin movimientos',
       subida: true,
       icono: IconoFactura,
       colorClase: 'tarjeta-est-verde',
@@ -44,12 +44,7 @@ export default function ProveedorDashboard() {
     },
   ];
 
-  const pedidosRecientes = [
-    { id: 'OC-2026-089', sucursal: 'Sede Principal (Bogotá)', items: 45, total: 3450000, estado: 'En Preparación', fecha: '2026-09-03' },
-    { id: 'OC-2026-088', sucursal: 'Sucursal Norte (Medellín)', items: 20, total: 1890000, estado: 'Enviado', fecha: '2026-09-02' },
-    { id: 'OC-2026-087', sucursal: 'Sucursal Sur (Cali)', items: 60, total: 5200000, estado: 'Entregado', fecha: '2026-09-01' },
-    { id: 'OC-2026-086', sucursal: 'Sucursal Oriente (Bucaramanga)', items: 15, total: 980000, estado: 'Entregado', fecha: '2026-08-30' },
-  ];
+  const pedidosRecientes = [];
 
   const insigniaEstado = {
     'En Preparación': 'proceso',

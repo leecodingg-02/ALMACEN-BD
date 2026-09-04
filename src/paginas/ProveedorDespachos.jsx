@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Modal } from '../componentes/AdminModals';
 
-const datosIniciales = [
-  { id: 1, orden: 'OC-2026-088', fechaEnvio: '2026-09-02', destino: 'Sucursal Norte (Medellín)', bultos: 4, transportadora: 'Envía', guia: 'ENV-112390', costoEnvio: 145000, estadoEnvio: 'En Tránsito', fechaEstimada: '2026-09-05' },
-  { id: 2, orden: 'OC-2026-087', fechaEnvio: '2026-09-01', destino: 'Sucursal Sur (Cali)', bultos: 8, transportadora: 'Servientrega', guia: 'SRV-883412', costoEnvio: 280000, estadoEnvio: 'Entregado en Destino', fechaEstimada: '2026-09-03' },
-  { id: 3, orden: 'OC-2026-086', fechaEnvio: '2026-08-30', destino: 'Sucursal Oriente (Bucaramanga)', bultos: 2, transportadora: 'Interrapidísimo', guia: 'INT-330192', costoEnvio: 85000, estadoEnvio: 'Entregado en Destino', fechaEstimada: '2026-09-02' },
-  { id: 4, orden: 'OC-2026-085', fechaEnvio: '2026-08-28', destino: 'Sede Principal (Bogotá)', bultos: 5, transportadora: 'TCC Carga', guia: 'TCC-980012', costoEnvio: 190000, estadoEnvio: 'Entregado en Destino', fechaEstimada: '2026-08-31' },
-];
+const datosIniciales = [];
 
 const formularioVacio = {
   orden: '',

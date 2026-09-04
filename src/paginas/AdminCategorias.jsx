@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender, ConfirmarEliminar } from '../componentes/AdminModals';
 import { api } from '../servicios/api';
 
+
 const datosIniciales = [
   { id: 1, nombre: 'Herramientas', descripcion: 'Herramientas manuales y eléctricas', estado: 'Activo', productos: 64 },
   { id: 2, nombre: 'Muebles', descripcion: 'Muebles para hogar y oficina', estado: 'Activo', productos: 48 },
@@ -10,6 +11,7 @@ const datosIniciales = [
   { id: 5, nombre: 'Baño y Cocina', descripcion: 'Accesorios para baño y cocina', estado: 'Activo', productos: 22 },
   { id: 6, nombre: 'Jardín', descripcion: 'Plantas y artículos de jardinería', estado: 'Suspendido', productos: 15 },
 ];
+
 
 const formularioVacio = { nombre: '', descripcion: '', estado: 'Activo' };
 const colores = ['#f5c518', '#3b82f6', '#a855f7', '#22c55e', '#f97316', '#ef4444'];

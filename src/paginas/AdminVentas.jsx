@@ -2,27 +2,15 @@ import { useState, useMemo, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
 import { api } from '../servicios/api';
 
-const datosIniciales = [
-  { id: 1, fecha: '2026-09-02', cliente: 'Juan Pérez', total: 289900, items: 2, estado: 'Completada', metodo: 'Tarjeta' },
-  { id: 2, fecha: '2026-09-02', cliente: 'María López', total: 1250000, items: 1, estado: 'En Proceso', metodo: 'Efectivo' },
-  { id: 3, fecha: '2026-09-01', cliente: 'Carlos Ruiz', total: 95000, items: 3, estado: 'Pendiente', metodo: 'Transferencia' },
-  { id: 4, fecha: '2026-09-01', cliente: 'Ana García', total: 540000, items: 2, estado: 'Completada', metodo: 'Tarjeta' },
-  { id: 5, fecha: '2026-08-31', cliente: 'Pedro Martínez', total: 189900, items: 1, estado: 'Suspendida', metodo: 'Efectivo' },
-  { id: 6, fecha: '2026-08-31', cliente: 'Sofía Torres', total: 320000, items: 4, estado: 'Completada', metodo: 'Transferencia' },
-  { id: 7, fecha: '2026-08-30', cliente: 'Andrés Gómez', total: 820000, items: 2, estado: 'Completada', metodo: 'Tarjeta' },
-  { id: 8, fecha: '2026-08-29', cliente: 'Valentina Castro', total: 150000, items: 1, estado: 'En Proceso', metodo: 'Transferencia' },
-  { id: 9, fecha: '2026-08-28', cliente: 'Camilo Herrera', total: 430000, items: 3, estado: 'Completada', metodo: 'Efectivo' },
-];
-
 const formularioVacio = { fecha: '', cliente: '', total: '', items: '', estado: 'Pendiente', metodo: 'Efectivo' };
 
 export default function Ventas() {
-  const [datos, setDatos] = useState(datosIniciales);
+  const [datos, setDatos] = useState([]);
 
   // Cargar ventas directamente desde MySQL
   useEffect(() => {
-    api.get('/ventas', datosIniciales).then((res) => {
-      if (res && res.length > 0) setDatos(res);
+    api.get('/ventas').then((res) => {
+      if (Array.isArray(res)) setDatos(res);
     });
   }, []);
 
@@ -56,9 +44,9 @@ export default function Ventas() {
     return {
       Todos: datos.length,
       Completada: datos.filter((v) => v.estado === 'Completada').length,
-      'En Proceso': datos.filter((v) => v.estado === 'En Proceso').length,
       Pendiente: datos.filter((v) => v.estado === 'Pendiente').length,
-      Suspendida: datos.filter((v) => v.estado === 'Suspendida').length,
+      Cancelada: datos.filter((v) => v.estado === 'Cancelada').length,
+      Reembolsada: datos.filter((v) => v.estado === 'Reembolsada').length,
     };
   }, [datos]);
 
@@ -224,11 +212,11 @@ export default function Ventas() {
   const suspender = async () => {
     const actualizadas = datos.map((v) => {
       if (v.id === actual.id) {
-        const nuevoEstado = v.estado === 'Suspendida' ? (v.estadoAnterior || 'Pendiente') : 'Suspendida';
+        const nuevoEstado = v.estado === 'Cancelada' ? (v.estadoAnterior || 'Pendiente') : 'Cancelada';
         return {
           ...v,
           estado: nuevoEstado,
-          estadoAnterior: v.estado !== 'Suspendida' ? v.estado : v.estadoAnterior,
+          estadoAnterior: v.estado !== 'Cancelada' ? v.estado : v.estadoAnterior,
         };
       }
       return v;
@@ -240,10 +228,9 @@ export default function Ventas() {
 
   const insigniaEstado = {
     Completada: 'completado',
-    'En Proceso': 'proceso',
     Pendiente: 'pendiente',
-    Suspendida: 'cancelado',
     Cancelada: 'cancelado',
+    Reembolsada: 'cancelado',
   };
 
   return (
@@ -386,7 +373,7 @@ export default function Ventas() {
         >
           {/* Botones de filtro de estado (con estilo dorado y negro) */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {['Todos', 'Completada', 'En Proceso', 'Pendiente', 'Suspendida'].map((est) => {
+            {['Todos', 'Completada', 'Pendiente', 'Cancelada', 'Reembolsada'].map((est) => {
               const activo = filtroEstado === est;
               return (
                 <button
@@ -720,11 +707,11 @@ export default function Ventas() {
                         </svg>
                       </button>
                       <button
-                        className={`btn-accion ${v.estado === 'Suspendida' ? 'reactivar' : 'suspender'}`}
+                        className={`btn-accion ${v.estado === 'Cancelada' ? 'reactivar' : 'suspender'}`}
                         onClick={() => abrirSuspender(v)}
-                        title={v.estado === 'Suspendida' ? 'Reactivar venta' : 'Suspender/Anular venta'}
+                        title={v.estado === 'Cancelada' ? 'Reactivar venta' : 'Suspender/Anular venta'}
                       >
-                        {v.estado === 'Suspendida' ? (
+                        {v.estado === 'Cancelada' ? (
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
@@ -769,9 +756,9 @@ export default function Ventas() {
               <label>Estado</label>
               <select value={formulario.estado} onChange={(e) => setFormulario({ ...formulario, estado: e.target.value })}>
                 <option>Pendiente</option>
-                <option>En Proceso</option>
                 <option>Completada</option>
-                <option>Suspendida</option>
+                <option>Cancelada</option>
+                <option>Reembolsada</option>
               </select>
             </div>
           </div>

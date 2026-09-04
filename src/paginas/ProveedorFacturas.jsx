@@ -1,12 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Modal } from '../componentes/AdminModals';
 
-const datosIniciales = [
-  { id: 1, numeroFactura: 'FACT-2026-104', ordenCompra: 'OC-2026-088', fechaEmision: '2026-09-02', fechaVencimiento: '2026-10-02', subtotal: 1890000, iva: 359100, total: 2249100, estadoPago: 'En Revisión', metodoPago: 'Transferencia Bancaria' },
-  { id: 2, numeroFactura: 'FACT-2026-103', ordenCompra: 'OC-2026-087', fechaEmision: '2026-09-01', fechaVencimiento: '2026-10-01', subtotal: 5200000, iva: 988000, total: 6188000, estadoPago: 'Pendiente', metodoPago: 'Transferencia Bancaria' },
-  { id: 3, numeroFactura: 'FACT-2026-102', ordenCompra: 'OC-2026-086', fechaEmision: '2026-08-30', fechaVencimiento: '2026-09-30', subtotal: 980000, iva: 186200, total: 1166200, estadoPago: 'Pagada', metodoPago: 'Transferencia Bancaria' },
-  { id: 4, numeroFactura: 'FACT-2026-101', ordenCompra: 'OC-2026-085', fechaEmision: '2026-08-28', fechaVencimiento: '2026-09-28', subtotal: 2400000, iva: 456000, total: 2856000, estadoPago: 'Pagada', metodoPago: 'Transferencia Bancaria' },
-];
+const datosIniciales = [];
 
 const formularioVacio = {
   numeroFactura: '',

@@ -1,13 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Modal } from '../componentes/AdminModals';
 
-const datosIniciales = [
-  { id: 'OC-2026-089', fecha: '2026-09-03', sucursal: 'Sede Principal (Bogotá)', items: 45, total: 3450000, estado: 'En Preparación', fechaEstimada: '2026-09-06', guia: 'TCC-982341', transportadora: 'TCC Carga' },
-  { id: 'OC-2026-088', fecha: '2026-09-02', sucursal: 'Sucursal Norte (Medellín)', items: 20, total: 1890000, estado: 'Despachado', fechaEstimada: '2026-09-05', guia: 'ENV-112390', transportadora: 'Envía' },
-  { id: 'OC-2026-087', fecha: '2026-09-01', sucursal: 'Sucursal Sur (Cali)', items: 60, total: 5200000, estado: 'Entregado', fechaEstimada: '2026-09-03', guia: 'SRV-883412', transportadora: 'Servientrega' },
-  { id: 'OC-2026-086', fecha: '2026-08-30', sucursal: 'Sucursal Oriente (Bucaramanga)', items: 15, total: 980000, estado: 'Entregado', fechaEstimada: '2026-09-02', guia: 'INT-330192', transportadora: 'Interrapidísimo' },
-  { id: 'OC-2026-085', fecha: '2026-08-28', sucursal: 'Sede Principal (Bogotá)', items: 30, total: 2400000, estado: 'Entregado', fechaEstimada: '2026-08-31', guia: 'TCC-980012', transportadora: 'TCC Carga' },
-];
+const datosIniciales = [];
 
 export default function ProveedorPedidos() {
   const [datos, setDatos] = useState(() => {

@@ -446,10 +446,5 @@ INSERT INTO inventario (id_pro, id_suc, ubicacion_fisica, cantidad, stock_minimo
 
 
 
-INSERT INTO compra (id_proveedor, id_suc, fecha_compra, estado, subtotal, impuesto, total, numero_factura, estado_pago) VALUES
-    ((SELECT id_proveedor FROM proveedor WHERE razon_social='DeWalt Colombia'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-09-01', 'Recibida', 1850000, 0, 1850000, 'FC-0024', 'Pagada'),
-    ((SELECT id_proveedor FROM proveedor WHERE razon_social='Bosch Distribuidora'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-28', 'Aprobada', 3200000, 0, 3200000, 'FC-0023', 'Pendiente'), -- mock: 'En Tránsito'
-    ((SELECT id_proveedor FROM proveedor WHERE razon_social='HomeStyle S.A.S'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-25', 'Recibida', 5400000, 0, 5400000, 'FC-0022', 'Pagada'),
-    ((SELECT id_proveedor FROM proveedor WHERE razon_social='LumEx México'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-20', 'Pendiente', 980000, 0, 980000, 'FC-0021', 'Pendiente'),
-    ((SELECT id_proveedor FROM proveedor WHERE razon_social='GreenHome'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), '2026-08-15', 'Cancelada', 420000, 0, 420000, 'FC-0020', 'Anulada'); -- mock: 'Suspendida'
+-- Sin datos iniciales de compras ni ventas: el sistema arranca con 0 órdenes de compra y 0 ventas.
 

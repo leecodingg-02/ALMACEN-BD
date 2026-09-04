@@ -1,17 +1,27 @@
 // Rutas para MARCAS
-// Permite ver, crear, editar y eliminar marcas de productos
+// Permite ver, crear, editar y eliminar marcas con conteo de productos asociados
 
 import { Router } from 'express';
 import pool from '../conexion.js';
 
 const router = Router();
 
-// Obtener todas las marcas
+// Obtener todas las marcas con el número de productos de cada una
 router.get('/', async (req, res) => {
   try {
-    const [marcas] = await pool.query(
-      'SELECT id_marca AS id, nombre, pais, contacto, estado FROM marca ORDER BY id_marca'
-    );
+    const [marcas] = await pool.query(`
+      SELECT 
+        m.id_marca AS id,
+        m.nombre,
+        m.pais,
+        m.contacto,
+        m.estado,
+        COUNT(p.id_pro) AS productos
+      FROM marca m
+      LEFT JOIN producto p ON m.id_marca = p.id_marca
+      GROUP BY m.id_marca, m.nombre, m.pais, m.contacto, m.estado
+      ORDER BY m.id_marca ASC
+    `);
     res.json(marcas);
   } catch (error) {
     console.error('Error al obtener marcas:', error.message);
@@ -36,12 +46,12 @@ router.get('/:id', async (req, res) => {
 // Crear una nueva marca
 router.post('/', async (req, res) => {
   try {
-    const { nombre, pais, contacto, estado } = req.body;
+    const { nombre, pais, contacto, estado = 'Activo' } = req.body;
     const [resultado] = await pool.query(
       'INSERT INTO marca (nombre, pais, contacto, estado) VALUES (?, ?, ?, ?)',
-      [nombre, pais || null, contacto || null, estado || 'Activo']
+      [nombre, pais || null, contacto || null, estado]
     );
-    res.status(201).json({ id: resultado.insertId, nombre, pais, contacto, estado: estado || 'Activo' });
+    res.status(201).json({ id: resultado.insertId, nombre, pais, contacto, estado, productos: 0 });
   } catch (error) {
     console.error('Error al crear marca:', error.message);
     res.status(500).json({ error: 'No se pudo crear la marca' });

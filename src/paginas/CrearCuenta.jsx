@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { registrarUsuario } from '../servicios/usuario';
 import './CrearCuenta.css';
 
-const CrearCuenta = () => {
+const CrearCuenta = ({ onIniciarSesion }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -16,6 +18,8 @@ const CrearCuenta = () => {
   const [logoError, setLogoError] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [errores, setErrores] = useState({});
+  const [cargando, setCargando] = useState(false);
+  const [mensajeError, setMensajeError] = useState('');
 
   /* Validaciones */
   const soloLetras = (valor) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(valor);
@@ -48,11 +52,13 @@ const CrearCuenta = () => {
       nuevosErrores.tipoDocumento = "Selecciona un tipo de documento.";
     }
 
-    /* Documento — obligatorio, solo dígitos */
+    /* Número de documento — obligatorio, solo números */
     if (!formData.documento.trim()) {
-      nuevosErrores.documento = "El documento es obligatorio.";
+      nuevosErrores.documento = "El número de documento es obligatorio.";
     } else if (!soloDigitos(formData.documento)) {
-      nuevosErrores.documento = "Solo se permiten dígitos.";
+      nuevosErrores.documento = "El documento solo debe contener números.";
+    } else if (formData.documento.length < 6 || formData.documento.length > 12) {
+      nuevosErrores.documento = "Debe tener entre 6 y 12 dígitos.";
     }
 
     /* Email — obligatorio, formato válido */
@@ -86,12 +92,36 @@ const CrearCuenta = () => {
     if (errores[name]) {
       setErrores((prev) => ({ ...prev, [name]: undefined }));
     }
+    setMensajeError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
-    console.log('Datos de Registro:', formData);
+
+    setCargando(true);
+    setMensajeError('');
+
+    try {
+      // Registrar directamente en MySQL
+      const nuevoUsuario = await registrarUsuario({
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        correo: formData.email,
+        tipo_doc: formData.tipoDocumento,
+        num_ident: formData.documento,
+        contrasena: formData.password,
+      });
+
+      if (onIniciarSesion) {
+        onIniciarSesion(nuevoUsuario);
+      }
+      navigate('/usuario');
+    } catch (err) {
+      setMensajeError(err.message || 'No se pudo crear la cuenta');
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
@@ -132,6 +162,20 @@ const CrearCuenta = () => {
               Únete a NovaCasa y transforma tu hogar hoy mismo.
             </p>
           </div>
+
+          {mensajeError && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.12)',
+              color: '#ef4444',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              fontSize: '14px',
+              border: '1px solid rgba(239, 68, 68, 0.3)'
+            }}>
+              ⚠️ {mensajeError}
+            </div>
+          )}
 
           {/* Formulario de Registro */}
           <form onSubmit={handleSubmit} className="crear-cuenta-form" noValidate>

@@ -1,17 +1,26 @@
 // Rutas para CATEGORÍAS
-// Permite ver, crear, editar y eliminar categorías de productos
+// Permite ver, crear, editar y eliminar categorías de productos con conteo de artículos
 
 import { Router } from 'express';
 import pool from '../conexion.js';
 
 const router = Router();
 
-// Obtener todas las categorías
+// Obtener todas las categorías con el conteo de productos asociados
 router.get('/', async (req, res) => {
   try {
-    const [categorias] = await pool.query(
-      'SELECT id_categoria AS id, nombre, descripcion, estado FROM categoria ORDER BY id_categoria'
-    );
+    const [categorias] = await pool.query(`
+      SELECT 
+        c.id_categoria AS id,
+        c.nombre,
+        c.descripcion,
+        c.estado,
+        COUNT(p.id_pro) AS productos
+      FROM categoria c
+      LEFT JOIN producto p ON c.id_categoria = p.id_categoria
+      GROUP BY c.id_categoria, c.nombre, c.descripcion, c.estado
+      ORDER BY c.id_categoria ASC
+    `);
     res.json(categorias);
   } catch (error) {
     console.error('Error al obtener categorías:', error.message);
@@ -36,12 +45,12 @@ router.get('/:id', async (req, res) => {
 // Crear una nueva categoría
 router.post('/', async (req, res) => {
   try {
-    const { nombre, descripcion, estado } = req.body;
+    const { nombre, descripcion, estado = 'Activo' } = req.body;
     const [resultado] = await pool.query(
       'INSERT INTO categoria (nombre, descripcion, estado) VALUES (?, ?, ?)',
-      [nombre, descripcion || null, estado || 'Activo']
+      [nombre, descripcion || null, estado]
     );
-    res.status(201).json({ id: resultado.insertId, nombre, descripcion, estado: estado || 'Activo' });
+    res.status(201).json({ id: resultado.insertId, nombre, descripcion, estado, productos: 0 });
   } catch (error) {
     console.error('Error al crear categoría:', error.message);
     res.status(500).json({ error: 'No se pudo crear la categoría' });

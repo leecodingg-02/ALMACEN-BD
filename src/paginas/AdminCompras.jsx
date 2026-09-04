@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, fecha: '2026-09-01', proveedor: 'DeWalt Colombia', total: 1850000, items: 15, estado: 'Recibida', factura: 'FC-0024' },
@@ -12,18 +13,18 @@ const datosIniciales = [
 const formularioVacio = { fecha: '', proveedor: '', total: '', items: '', estado: 'Pendiente', factura: '' };
 
 export default function Compras() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardadas = localStorage.getItem('novacasa_compras');
-      return guardadas ? JSON.parse(guardadas) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
+
+  // Cargar compras directamente desde MySQL
+  useEffect(() => {
+    api.get('/compras', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   const guardarEnStorage = (nuevas) => {
     try {
@@ -48,23 +49,35 @@ export default function Compras() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.proveedor.trim()) return;
-    let actualizadas;
+    const total = Number(formulario.total) || 0;
+    const items = Number(formulario.items) || 0;
+    const payload = { ...formulario, total, items };
+
     if (modal === 'crear') {
-      actualizadas = [
-        ...datos,
-        { ...formulario, id: Date.now(), total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 },
-      ];
+      try {
+        const nueva = await api.post('/compras', payload);
+        const actualizadas = [...datos, { ...payload, id: nueva.id || Date.now(), factura: nueva.factura || payload.factura }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      } catch {
+        const actualizadas = [...datos, { ...payload, id: Date.now() }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      }
     } else {
-      actualizadas = datos.map((c) =>
-        c.id === actual.id
-          ? { ...formulario, id: actual.id, total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 }
-          : c
+      try {
+        await api.put(`/compras/${actual.id}`, payload);
+      } catch (e) {
+        console.warn('Fallback local para editar compra:', e);
+      }
+      const actualizadas = datos.map((c) =>
+        c.id === actual.id ? { ...payload, id: actual.id } : c
       );
+      setDatos(actualizadas);
+      guardarEnStorage(actualizadas);
     }
-    setDatos(actualizadas);
-    guardarEnStorage(actualizadas);
     setModal(null);
   };
 

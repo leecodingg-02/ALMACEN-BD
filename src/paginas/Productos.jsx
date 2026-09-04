@@ -1,7 +1,7 @@
-/* eslint-disable react-refresh/only-export-components */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Productos.css";
+import { api } from "../servicios/api";
 
 // ============================================================
 // FUENTE ÚNICA DE DATOS DE PRODUCTOS
@@ -582,6 +582,7 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
 // PÁGINA PRINCIPAL DE PRODUCTOS
 // ============================================================
 const Productos = ({ onAgregarCarrito }) => {
+  const [listaProductos, setListaProductos] = useState(PRODUCTOS_DATA);
   const [categoriasTemp, setCategoriasTemp] = useState([]);
   const [precioMinTemp, setPrecioMinTemp] = useState("");
   const [precioMaxTemp, setPrecioMaxTemp] = useState("");
@@ -592,6 +593,29 @@ const Productos = ({ onAgregarCarrito }) => {
 
   const [ordenar, setOrdenar] = useState("destacados");
   const [paginaActual, setPaginaActual] = useState(1);
+
+  // Cargar catálogo de productos directamente desde MySQL
+  useEffect(() => {
+    api.get("/productos", null).then((res) => {
+      if (res && res.length > 0) {
+        const mapaVisual = new Map(PRODUCTOS_DATA.map((p) => [p.id, p]));
+        const sincronizados = res.map((p) => {
+          const visual = mapaVisual.get(p.id) || {};
+          return {
+            ...visual,
+            ...p,
+            id: p.id,
+            titulo: p.titulo || p.nombre || visual.titulo,
+            categoria: (p.categoria || visual.categoria || "Herramientas").toUpperCase(),
+            precio: Number(p.precio) || visual.precio,
+            imagen: p.imagen || visual.imagen,
+            descripcion: p.descripcion || visual.descripcion,
+          };
+        });
+        setListaProductos(sincronizados);
+      }
+    });
+  }, []);
 
   const handleCategoriaChange = (categoria) => {
     setCategoriasTemp((prev) =>
@@ -609,7 +633,7 @@ const Productos = ({ onAgregarCarrito }) => {
   };
 
   const productosFiltrados = useMemo(() => {
-    let resultado = PRODUCTOS_DATA.filter((producto) => {
+    let resultado = listaProductos.filter((producto) => {
       if (categoriasAplicadas.length > 0) {
         const catMatch = categoriasAplicadas.some(
           (catSel) => catSel.toUpperCase() === producto.categoria.toUpperCase(),

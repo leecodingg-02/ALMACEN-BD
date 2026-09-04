@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'DeWalt', pais: 'EE.UU.', contacto: 'ventas@dewalt.co', productos: 23, estado: 'Activo' },
@@ -13,18 +14,18 @@ const datosIniciales = [
 const formularioVacio = { nombre: '', pais: '', contacto: '', estado: 'Activo' };
 
 export default function Marcas() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardadas = localStorage.getItem('novacasa_marcas');
-      return guardadas ? JSON.parse(guardadas) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
+
+  // Cargar marcas directamente desde la base de datos MySQL
+  useEffect(() => {
+    api.get('/marcas', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   const guardarEnStorage = (nuevas) => {
     try {
@@ -44,26 +45,43 @@ export default function Marcas() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.nombre.trim()) return;
-    let actualizadas;
     if (modal === 'crear') {
-      actualizadas = [...datos, { ...formulario, id: Date.now(), productos: 0 }];
+      try {
+        const nueva = await api.post('/marcas', formulario);
+        const actualizadas = [...datos, { ...formulario, id: nueva.id || Date.now(), productos: 0 }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      } catch {
+        const actualizadas = [...datos, { ...formulario, id: Date.now(), productos: 0 }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      }
     } else {
-      actualizadas = datos.map((m) =>
+      try {
+        await api.put(`/marcas/${actual.id}`, formulario);
+      } catch (e) {
+        console.warn('Fallback local para editar marca:', e);
+      }
+      const actualizadas = datos.map((m) =>
         m.id === actual.id ? { ...formulario, id: actual.id, productos: actual.productos } : m
       );
+      setDatos(actualizadas);
+      guardarEnStorage(actualizadas);
     }
-    setDatos(actualizadas);
-    guardarEnStorage(actualizadas);
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
+    const nuevoEstado = actual.estado === 'Activo' ? 'Suspendido' : 'Activo';
+    try {
+      await api.put(`/marcas/${actual.id}`, { ...actual, estado: nuevoEstado });
+    } catch (e) {
+      console.warn('Fallback local para suspender marca:', e);
+    }
     const actualizadas = datos.map((m) =>
-      m.id === actual.id
-        ? { ...m, estado: m.estado === 'Activo' ? 'Suspendido' : 'Activo' }
-        : m
+      m.id === actual.id ? { ...m, estado: nuevoEstado } : m
     );
     setDatos(actualizadas);
     guardarEnStorage(actualizadas);

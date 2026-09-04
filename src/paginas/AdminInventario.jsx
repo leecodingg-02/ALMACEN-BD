@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const sucursalesDisponibles = [
   'Todas',
@@ -38,19 +39,19 @@ const datosIniciales = [
 const formularioVacio = { producto: '', sucursal: 'Sede Principal', ubicacion: '', cantidad: '', minimo: '', estado: 'OK' };
 
 export default function Inventario() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardados = localStorage.getItem('novacasa_inventario');
-      return guardados ? JSON.parse(guardados) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
   const [sucursalSeleccionada, setSucursalSeleccionada] = useState('Todas');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
+
+  // Cargar inventario directamente desde MySQL
+  useEffect(() => {
+    api.get('/inventario', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   const guardarEnStorage = (nuevos) => {
     try {
@@ -84,25 +85,40 @@ export default function Inventario() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.producto.trim()) return;
     const cantidad = Number(formulario.cantidad) || 0;
     const minimo = Number(formulario.minimo) || 0;
     const estado = cantidad === 0 ? 'Agotado' : cantidad < minimo ? 'Bajo' : 'OK';
-    let actualizados;
+    const payload = { ...formulario, cantidad, minimo, estado };
+
     if (modal === 'crear') {
-      actualizados = [...datos, { ...formulario, id: Date.now(), cantidad, minimo, estado }];
+      try {
+        const nuevo = await api.post('/inventario', payload);
+        const actualizados = [...datos, { ...payload, id: nuevo.id || Date.now() }];
+        setDatos(actualizados);
+        guardarEnStorage(actualizados);
+      } catch {
+        const actualizados = [...datos, { ...payload, id: Date.now() }];
+        setDatos(actualizados);
+        guardarEnStorage(actualizados);
+      }
     } else {
-      actualizados = datos.map((i) =>
-        i.id === actual.id ? { ...formulario, id: actual.id, cantidad, minimo, estado } : i
+      try {
+        await api.put(`/inventario/${actual.id}`, payload);
+      } catch (e) {
+        console.warn('Fallback local para editar inventario:', e);
+      }
+      const actualizados = datos.map((i) =>
+        i.id === actual.id ? { ...payload, id: actual.id } : i
       );
+      setDatos(actualizados);
+      guardarEnStorage(actualizados);
     }
-    setDatos(actualizados);
-    guardarEnStorage(actualizados);
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
     const actualizados = datos.map((i) => {
       if (i.id === actual.id) {
         const nuevoEstado = i.estado === 'Suspendido'

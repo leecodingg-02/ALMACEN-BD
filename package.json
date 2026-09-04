@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/servidor.js",
+    "init-db": "node server/importar_bd.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

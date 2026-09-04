@@ -1,194 +1,161 @@
-/* Servicio de Usuario — mock local de autenticación, perfil, direcciones y favoritos */
-/* Estructura totalmente alineada a las tablas `usuario` y `ubicacion` de bd_almacen_1 */
+/* Servicio de Usuario — Conectado 100% a la base de datos MySQL */
+/* Gestiona autenticación, perfil, direcciones y favoritos reales */
+
+import { api } from "./api";
 
 const CLAVE_USUARIO = "almacenweb_usuario";
-const CLAVE_FAVORITOS = "almacenweb_favoritos";
-const CLAVE_DIRECCIONES = "almacenweb_direcciones";
 const CLAVE_CONFIGURACION = "almacenweb_configuracion";
 
-/* Datos por defecto del usuario demo */
-const USUARIO_DEMO_DEFAULT = {
-  id_usu: 1,
-  tipo_doc: "C.C",
-  num_ident: "1020304050",
-  nombre: "Juan",
-  apellido: "Pérez",
-  telefono: "3001234567",
-  correo: "juan.perez@almacen.com",
-  estado: "Activo",
-  id_rol: 2,
-};
-
-/* Direcciones por defecto (coincide con tabla `ubicacion`) */
-const DIRECCIONES_DEFAULT = [
-  {
-    id_ubi: 1,
-    departamento: "Bogotá D.C.",
-    ciudad: "Bogotá",
-    direccion: "Carrera 7 # 45 - 20, Apto 502",
-    id_usu: 1,
-  },
-  {
-    id_ubi: 2,
-    departamento: "Antioquia",
-    ciudad: "Medellín",
-    direccion: "Calle 10 # 30 - 15, El Poblado",
-    id_usu: 1,
-  },
-];
-
-/* Favoritos iniciales (IDs de productos de prueba) */
-const FAVORITOS_DEFAULT = [1, 2];
-
-/* Configuración de accesibilidad y preferencias */
+/* Configuración de accesibilidad por defecto */
 const CONFIG_DEFAULT = {
   altoContraste: false,
   tamanoFuente: "normal",
   notificacionesEmail: true,
 };
 
-/**
- * Obtiene el usuario actualmente autenticado desde localStorage.
- * Retorna `null` si la sesión no está activa.
- */
+// Obtiene el usuario autenticado (retorna null si no ha iniciado sesión)
 export const obtenerUsuarioSesion = () => {
   try {
     const data = localStorage.getItem(CLAVE_USUARIO);
-    if (data === null) {
-      /* Por defecto iniciamos con la sesión activa del usuario demo para facilitar pruebas */
-      localStorage.setItem(CLAVE_USUARIO, JSON.stringify(USUARIO_DEMO_DEFAULT));
-      return USUARIO_DEMO_DEFAULT;
-    }
+    if (!data) return null;
     return JSON.parse(data);
   } catch {
     return null;
   }
 };
 
-/**
- * Alterna el estado de sesión (Iniciar / Cerrar sesión).
- */
+// Iniciar sesión consultando la tabla usuario en MySQL
+export const iniciarSesion = async (correo, contrasena) => {
+  const usuario = await api.post("/usuarios/login", { correo, contrasena });
+  if (usuario && usuario.id_usu) {
+    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    return usuario;
+  }
+  throw new Error("Credenciales inválidas");
+};
+
+// Registrar una nueva cuenta de cliente en MySQL
+export const registrarUsuario = async (datos) => {
+  const respuesta = await api.post("/usuarios", datos);
+  if (respuesta && respuesta.id_usu) {
+    const usuario = {
+      id_usu: respuesta.id_usu,
+      nombre: respuesta.nombre,
+      apellido: respuesta.apellido,
+      correo: respuesta.correo,
+      telefono: respuesta.telefono,
+      id_rol: 2,
+      estado: "Activo",
+    };
+    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    return usuario;
+  }
+  throw new Error("No se pudo registrar el usuario");
+};
+
+// Cerrar sesión del usuario
+export const cerrarSesion = () => {
+  localStorage.removeItem(CLAVE_USUARIO);
+  return null;
+};
+
+// Alternar sesión (usado por botones de salir o cierre rápido)
 export const alternarEstadoSesion = () => {
   const usuarioActual = obtenerUsuarioSesion();
   if (usuarioActual) {
-    localStorage.removeItem(CLAVE_USUARIO);
-    return null;
-  } else {
-    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(USUARIO_DEMO_DEFAULT));
-    return USUARIO_DEMO_DEFAULT;
+    return cerrarSesion();
   }
+  return null;
 };
 
-/**
- * Guarda los cambios del perfil del usuario (Tabla `usuario`).
- */
-export const actualizarPerfilUsuario = (datosActualizados) => {
+// Actualizar datos de perfil en MySQL
+export const actualizarPerfilUsuario = async (datosActualizados) => {
   const usuarioActual = obtenerUsuarioSesion() || {};
   const nuevoPerfil = { ...usuarioActual, ...datosActualizados };
+
+  if (nuevoPerfil.id_usu) {
+    await api.put(`/usuarios/${nuevoPerfil.id_usu}`, nuevoPerfil);
+  }
+
   localStorage.setItem(CLAVE_USUARIO, JSON.stringify(nuevoPerfil));
   return nuevoPerfil;
 };
 
-/**
- * Obtiene las direcciones guardadas del usuario (Tabla `ubicacion`).
- */
-export const obtenerDireccionesUsuario = () => {
-  try {
-    const data = localStorage.getItem(CLAVE_DIRECCIONES);
-    if (!data) {
-      localStorage.setItem(CLAVE_DIRECCIONES, JSON.stringify(DIRECCIONES_DEFAULT));
-      return DIRECCIONES_DEFAULT;
-    }
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+// Obtener direcciones de un usuario desde la base de datos (tabla ubicacion)
+export const obtenerDireccionesUsuario = async (idUsuario) => {
+  const id = idUsuario || obtenerUsuarioSesion()?.id_usu;
+  if (!id) return [];
+
+  const direcciones = await api.get(`/usuarios/${id}/direcciones`, []);
+  return direcciones || [];
 };
 
-/**
- * Agrega o actualiza una dirección en el sistema.
- */
-export const guardarDireccionUsuario = (nuevaDireccion) => {
-  const direcciones = obtenerDireccionesUsuario();
-  let listaActualizada;
+// Guardar nueva dirección en MySQL
+export const guardarDireccionUsuario = async (nuevaDireccion) => {
+  const usuario = obtenerUsuarioSesion();
+  if (!usuario?.id_usu) return [];
 
-  if (nuevaDireccion.id_ubi) {
-    listaActualizada = direcciones.map((dir) =>
-      dir.id_ubi === nuevaDireccion.id_ubi ? nuevaDireccion : dir
-    );
-  } else {
-    const nuevoId = Date.now();
-    listaActualizada = [
-      ...direcciones,
-      { ...nuevaDireccion, id_ubi: nuevoId, id_usu: 1 },
-    ];
-  }
-
-  localStorage.setItem(CLAVE_DIRECCIONES, JSON.stringify(listaActualizada));
-  return listaActualizada;
+  await api.post(`/usuarios/${usuario.id_usu}/direcciones`, nuevaDireccion);
+  return await obtenerDireccionesUsuario(usuario.id_usu);
 };
 
-/**
- * Elimina una dirección de usuario por su id_ubi.
- */
-export const eliminarDireccionUsuario = (idUbi) => {
-  const direcciones = obtenerDireccionesUsuario();
-  const listaActualizada = direcciones.filter((dir) => dir.id_ubi !== idUbi);
-  localStorage.setItem(CLAVE_DIRECCIONES, JSON.stringify(listaActualizada));
-  return listaActualizada;
+// Eliminar dirección en MySQL
+export const eliminarDireccionUsuario = async (idUbi) => {
+  const usuario = obtenerUsuarioSesion();
+  if (!usuario?.id_usu) return [];
+
+  await api.delete(`/usuarios/direcciones/${idUbi}`);
+  return await obtenerDireccionesUsuario(usuario.id_usu);
 };
 
-/**
- * Obtiene el listado de IDs de productos guardados en Favoritos.
- */
-export const obtenerFavoritosUsuario = () => {
-  try {
-    const data = localStorage.getItem(CLAVE_FAVORITOS);
-    if (!data) {
-      localStorage.setItem(CLAVE_FAVORITOS, JSON.stringify(FAVORITOS_DEFAULT));
-      return FAVORITOS_DEFAULT;
-    }
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+// Obtener favoritos desde la base de datos (tabla favorito)
+export const obtenerFavoritosUsuario = async (idUsuario) => {
+  const id = idUsuario || obtenerUsuarioSesion()?.id_usu;
+  if (!id) return [];
+
+  const favs = await api.get(`/usuarios/${id}/favoritos`, []);
+  return favs || [];
 };
 
-/**
- * Alterna un producto en la lista de favoritos.
- */
-export const alternarFavoritoUsuario = (idProducto) => {
-  const favoritos = obtenerFavoritosUsuario();
-  let nuevosFavoritos;
-  if (favoritos.includes(idProducto)) {
-    nuevosFavoritos = favoritos.filter((id) => id !== idProducto);
-  } else {
-    nuevosFavoritos = [...favoritos, idProducto];
-  }
-  localStorage.setItem(CLAVE_FAVORITOS, JSON.stringify(nuevosFavoritos));
-  return nuevosFavoritos;
+// Alternar producto en favoritos en MySQL
+export const alternarFavoritoUsuario = async (idProducto) => {
+  const usuario = obtenerUsuarioSesion();
+  if (!usuario?.id_usu) return [];
+
+  await api.post(`/usuarios/${usuario.id_usu}/favoritos`, { id_pro: idProducto });
+  return await obtenerFavoritosUsuario(usuario.id_usu);
 };
 
-/**
- * Obtiene la configuración de accesibilidad y preferencias.
- */
+// Obtener pedidos de un usuario desde MySQL
+export const obtenerPedidosUsuario = async (idUsuario) => {
+  const id = idUsuario || obtenerUsuarioSesion()?.id_usu;
+  if (!id) return [];
+
+  const pedidos = await api.get(`/usuarios/${id}/pedidos`, []);
+  return pedidos || [];
+};
+
+// Configuración de accesibilidad y preferencias
 export const obtenerConfiguracionUsuario = () => {
   try {
     const data = localStorage.getItem(CLAVE_CONFIGURACION);
-    if (!data) {
-      localStorage.setItem(CLAVE_CONFIGURACION, JSON.stringify(CONFIG_DEFAULT));
-      return CONFIG_DEFAULT;
-    }
-    return JSON.parse(data);
+    return data ? JSON.parse(data) : CONFIG_DEFAULT;
   } catch {
     return CONFIG_DEFAULT;
   }
 };
 
-/**
- * Guarda la configuración de accesibilidad del usuario.
- */
 export const guardarConfiguracionUsuario = (nuevaConfig) => {
   localStorage.setItem(CLAVE_CONFIGURACION, JSON.stringify(nuevaConfig));
+
+  const usuario = obtenerUsuarioSesion();
+  if (usuario?.id_usu) {
+    api.put(`/usuarios/${usuario.id_usu}`, {
+      alto_contraste: nuevaConfig.altoContraste,
+      tamano_fuente: nuevaConfig.tamanoFuente,
+      notificaciones_email: nuevaConfig.notificacionesEmail,
+    }).catch(() => {});
+  }
+
   return nuevaConfig;
 };

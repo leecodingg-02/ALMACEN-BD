@@ -297,8 +297,9 @@ export const PRODUCTOS_DATA = [
     },
     relacionados: [3, 7, 16, 9],
   },
-  {imagen: "https://mueblesdixie.com/wp-content/uploads/2024/11/Copia-de-29-20700-Alto-80-Largo-140-Fondo-60JPG.jpg",
-    
+  {
+    imagen: "https://mueblesdixie.com/wp-content/uploads/2024/11/Copia-de-29-20700-Alto-80-Largo-140-Fondo-60JPG.jpg",
+
     id: 13,
     categoria: "MUEBLES",
     subcategoria: "Oficina",
@@ -591,33 +592,33 @@ export const TarjetaProducto = ({
             <span className='producto-imagen-fallback'>Imagen no disponible</span>
           )}
         </div>
-      <div className='producto-info'>
-        <span className='producto-categoria'>{producto.categoria}</span>
-        <h4 className='producto-titulo'>{producto.titulo}</h4>
-        <div className='producto-calificacion'>
-          {renderizarEstrellas(producto.calificacion)}
-          <span>({producto.valoraciones})</span>
-        </div>
-        <div className='producto-precios'>
-          <span className='precio-actual'>
-            {formatearPrecio(producto.precio)}
-          </span>
-          {producto.precioAnterior && (
-            <span className='precio-anterior'>
-              {formatearPrecio(producto.precioAnterior)}
+        <div className='producto-info'>
+          <span className='producto-categoria'>{producto.categoria}</span>
+          <h4 className='producto-titulo'>{producto.titulo}</h4>
+          <div className='producto-calificacion'>
+            {renderizarEstrellas(producto.calificacion)}
+            <span>({producto.valoraciones})</span>
+          </div>
+          <div className='producto-precios'>
+            <span className='precio-actual'>
+              {formatearPrecio(producto.precio)}
             </span>
-          )}
+            {producto.precioAnterior && (
+              <span className='precio-anterior'>
+                {formatearPrecio(producto.precioAnterior)}
+              </span>
+            )}
+          </div>
+          <button
+            className='boton-agregar'
+            onClick={(e) => {
+              e.preventDefault();
+              onAgregarCarrito?.(producto, 1);
+            }}
+          >
+            Agregar al carrito
+          </button>
         </div>
-        <button
-          className='boton-agregar'
-          onClick={(e) => {
-            e.preventDefault();
-            onAgregarCarrito?.(producto, 1);
-          }}
-        >
-          Agregar al carrito
-        </button>
-      </div>
       </div>
     </Link>
   );

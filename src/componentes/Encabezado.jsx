@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Encabezado.css";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Encabezado({
   cantidadCarrito,
@@ -10,7 +10,18 @@ function Encabezado({
 }) {
   const [desplegableAbierto, setDesplegableAbierto] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState("");
+  const desplegableRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const manejarClicFuera = (e) => {
+      if (desplegableRef.current && !desplegableRef.current.contains(e.target)) {
+        setDesplegableAbierto(false);
+      }
+    };
+    document.addEventListener("mousedown", manejarClicFuera);
+    return () => document.removeEventListener("mousedown", manejarClicFuera);
+  }, []);
 
   const handleBuscar = (e) => {
     e.preventDefault();
@@ -175,7 +186,7 @@ function Encabezado({
             Inicio{" "}
           </NavLink>
 
-          <div className='btn-desplegable'>
+          <div className='btn-desplegable' ref={desplegableRef}>
             <button
               className={`btn-productos${desplegableAbierto ? " activo" : ""}`}
               onClick={() => setDesplegableAbierto(!desplegableAbierto)}

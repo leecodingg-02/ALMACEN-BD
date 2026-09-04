@@ -128,7 +128,7 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
                   {producto.etiqueta}
                 </span>
               )}
-              <button 
+              <button
                 type="button"
                 className={`favorito-detalle ${favoritos.includes(producto.id) ? 'activo' : ''}`}
                 onClick={() => {

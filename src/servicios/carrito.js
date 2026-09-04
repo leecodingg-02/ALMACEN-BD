@@ -12,11 +12,20 @@ export const leerCarrito = () => {
 export const agregarLineaCarrito = (carrito, producto, cantidad = 1) => {
   if (!producto || cantidad < 1) return carrito;
 
-  const lineaExistente = carrito.find((linea) => linea.id_pro === producto.id);
+  const idProducto = producto.id_pro || producto.id;
+  const imagen = producto.imagen || producto.imagen_url || producto.imagenUrl || '';
+  const nombre = producto.titulo || producto.nombre || 'Producto';
+
+  const lineaExistente = carrito.find((linea) => linea.id_pro === idProducto);
   if (lineaExistente) {
     return carrito.map((linea) =>
-      linea.id_pro === producto.id
-        ? { ...linea, cantidad: linea.cantidad + cantidad }
+      linea.id_pro === idProducto
+        ? {
+            ...linea,
+            cantidad: linea.cantidad + cantidad,
+            imagen: linea.imagen || imagen,
+            imagen_url: linea.imagen_url || imagen,
+          }
         : linea,
     );
   }
@@ -24,9 +33,11 @@ export const agregarLineaCarrito = (carrito, producto, cantidad = 1) => {
   return [
     ...carrito,
     {
-      id_pro: producto.id,
-      nombre: producto.titulo,
-      precio_unitario: producto.precio,
+      id_pro: idProducto,
+      nombre,
+      precio_unitario: producto.precio || producto.precio_unitario || 0,
+      imagen,
+      imagen_url: imagen,
       cantidad,
     },
   ];

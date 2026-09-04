@@ -70,8 +70,10 @@ const Carrito = ({ carrito, usuario, onActualizarCant, onRemoverLinea }) => {
         <section className='carrito-lista' aria-label='Productos agregados'>
           {carrito.map((linea) => (
             <article className='carrito-linea' key={linea.id_pro}>
-              {/* Imagen placeholder */}
-              <div className='carrito-imagen'>Img {linea.id_pro}</div>
+              {/* Imagen del producto */}
+              <div className='carrito-imagen'>
+                <img src={linea.imagen || linea.imagen_url} alt={linea.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }} />
+              </div>
 
               {/* Información del producto */}
               <div className='carrito-linea-info'>

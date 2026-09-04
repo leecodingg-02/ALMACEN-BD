@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { PRODUCTOS_DATA, formatearPrecio } from "./Productos";
-import { obtenerOrdenes } from "../servicios/ordenes";
 import {
   actualizarPerfilUsuario,
   obtenerDireccionesUsuario,
   guardarDireccionUsuario,
   eliminarDireccionUsuario,
+  obtenerPedidosUsuario,
   guardarConfiguracionUsuario,
 } from "../servicios/usuario";
 import "./Usuario.css";
@@ -79,11 +79,20 @@ const Usuario = ({
   const [mostrandoFormDir, setMostrandoFormDir] = useState(false);
   const [erroresDir, setErroresDir] = useState({});
 
-  /* Cargar ordenes y direcciones */
+  /* Cargar órdenes y direcciones del usuario directamente desde MySQL */
   useEffect(() => {
-    setOrdenes(obtenerOrdenes());
-    setDirecciones(obtenerDireccionesUsuario());
-  }, []);
+    if (usuario?.id_usu) {
+      obtenerPedidosUsuario(usuario.id_usu).then((res) => {
+        setOrdenes(res || []);
+      });
+      obtenerDireccionesUsuario(usuario.id_usu).then((res) => {
+        setDirecciones(res || []);
+      });
+    } else {
+      setOrdenes([]);
+      setDirecciones([]);
+    }
+  }, [usuario]);
 
   /* Cargar datos del usuario en el formulario de perfil */
   useEffect(() => {
@@ -131,18 +140,18 @@ const Usuario = ({
     return Object.keys(err).length === 0;
   };
 
-  /* Guardar Perfil */
-  const handleGuardarPerfil = (e) => {
+  /* Guardar Perfil en MySQL */
+  const handleGuardarPerfil = async (e) => {
     e.preventDefault();
     if (!validarPerfil()) return;
 
-    const perfilActualizado = actualizarPerfilUsuario(formPerfil);
+    const perfilActualizado = await actualizarPerfilUsuario(formPerfil);
     onActualizarUsuario(perfilActualizado);
-    notificarExito("Perfil actualizado correctamente.");
+    notificarExito("Perfil actualizado correctamente en la base de datos.");
   };
 
-  /* Guardar Dirección */
-  const handleGuardarDireccion = (e) => {
+  /* Guardar Dirección en MySQL */
+  const handleGuardarDireccion = async (e) => {
     e.preventDefault();
     const err = {};
     if (!formDireccion.departamento) err.departamento = "Selecciona un departamento.";
@@ -154,7 +163,7 @@ const Usuario = ({
       return;
     }
 
-    const listaNueva = guardarDireccionUsuario(formDireccion);
+    const listaNueva = await guardarDireccionUsuario(formDireccion);
     setDirecciones(listaNueva);
     setMostrandoFormDir(false);
     setFormDireccion({ id_ubi: null, departamento: "", ciudad: "", direccion: "" });
@@ -162,9 +171,9 @@ const Usuario = ({
     notificarExito("Dirección guardada correctamente.");
   };
 
-  /* Eliminar Dirección */
-  const handleEliminarDireccion = (idUbi) => {
-    const listaNueva = eliminarDireccionUsuario(idUbi);
+  /* Eliminar Dirección en MySQL */
+  const handleEliminarDireccion = async (idUbi) => {
+    const listaNueva = await eliminarDireccionUsuario(idUbi);
     setDirecciones(listaNueva);
     notificarExito("Dirección eliminada.");
   };
@@ -197,11 +206,11 @@ const Usuario = ({
             favoritos, perfil y configuraciones.
           </p>
           <div className="usuario-acciones-alerta">
-            <button className="boton-primario" onClick={onAlternarSesion}>
-              Simular Iniciar Sesión
-            </button>
-            <Link to="/productos" className="boton-contorno">
-              Explorar Productos
+            <Link to="/inicio-sesion" className="boton-primario">
+              Iniciar Sesión
+            </Link>
+            <Link to="/crear-cuenta" className="boton-contorno">
+              Crear Cuenta
             </Link>
           </div>
         </div>

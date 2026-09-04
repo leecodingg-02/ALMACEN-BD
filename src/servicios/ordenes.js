@@ -1,65 +1,55 @@
-/* Servicio de órdenes — mock local */
-/* Estructura alineada a las tablas venta / detalle_venta de bd_almacen_1 */
+// Servicio de órdenes y ventas conectado a la base de datos MySQL
 
 import { obtenerTotalCarrito, crearDetallesVenta } from "./carrito";
+import { api } from "./api";
 
-/* Almacén temporal en memoria (simula la tabla venta) */
-let ordenesRegistradas = [];
+// Almacén temporal en memoria por si el servidor no está corriendo
+let ordenesEnMemoria = [];
 
-/* Genera un ID simulado para la orden */
-const generarIdOrden = () =>
-  "ORD-" + Date.now().toString(36).toUpperCase();
+// Genera un ID de orden en caso de operar fuera de línea
+const generarIdOrden = () => "ORD-" + Date.now().toString(36).toUpperCase();
 
-/* crearOrden
- Arma el payload con la misma forma que la tabla `venta` + `detalle_venta`.
- Cuando exista la API real, este método hará un POST al backend.
- 
- Campos de la tabla venta:
-   id_venta, id_cli, id_suc, fecha_venta, estado, total
- Campos de la tabla detalle_venta:
- id_detventa, id_venta, id_pro, cantidad, precio_unitario, subtotal
- */
-
+// Registrar una nueva venta en MySQL
 export const crearOrden = async ({ carrito, cliente }) => {
-  /* Simular latencia de red */
-  await new Promise((r) => setTimeout(r, 400));
+  const total = obtenerTotalCarrito(carrito);
+  const detalles = crearDetallesVenta(carrito);
 
-  const idOrden = generarIdOrden();
-
-  const orden = {
-    /* Tabla venta */
-    id_venta: idOrden,
-    id_cli: null,               // Se asignará cuando el usuario inicie sesión
-    id_suc: null,               // Se asignará según la sucursal seleccionada
-    fecha_venta: new Date().toISOString(),
-    estado: "Completada",
-    total: obtenerTotalCarrito(carrito),
-
-    /* Tabla detalle_venta (array) */
-    detalles: crearDetallesVenta(carrito),
-
-    /* Datos del cliente (formulario checkout) */
-    cliente,
+  const payload = {
+    id_cli: cliente?.id_usu || null,
+    id_suc: 1, // Sede Principal por defecto
+    total,
+    metodo: cliente?.metodoPago || 'Tarjeta',
+    estado: 'Completada',
+    detalles
   };
 
-  /* Guardar en memoria para que el admin pueda consultarla */
-  ordenesRegistradas.push(orden);
-  console.log("Orden creada (mock):", orden);
-
-  return { idOrden, orden };
+  try {
+    // Intentar guardar directamente en la base de datos MySQL
+    const respuesta = await api.post('/ventas', payload);
+    const idOrden = respuesta.idOrden || `ORD-${respuesta.id_venta}`;
+    const orden = { ...payload, id_venta: idOrden, fecha_venta: new Date().toISOString(), cliente };
+    ordenesEnMemoria.push(orden);
+    return { idOrden, orden };
+  } catch {
+    // Si la base de datos está desconectada, guardar en memoria local
+    console.warn("No se pudo conectar a la base de datos. Guardando orden en memoria local.");
+    const idOrden = generarIdOrden();
+    const orden = { ...payload, id_venta: idOrden, fecha_venta: new Date().toISOString(), cliente };
+    ordenesEnMemoria.push(orden);
+    return { idOrden, orden };
+  }
 };
 
-/**
- * obtenerOrdenes
- * Devuelve todas las órdenes registradas en memoria.
- * Futuramente hará un GET al endpoint del administrador.
- */
-export const obtenerOrdenes = () => [...ordenesRegistradas];
+// Obtener todas las órdenes registradas desde MySQL
+export const obtenerOrdenes = async () => {
+  const ventas = await api.get('/ventas', null);
+  return ventas || [...ordenesEnMemoria];
+};
 
-/**
- * obtenerOrden
- * Busca una orden por su ID.
- * Futuramente hará un GET /ventas/:id al backend.
- */
-export const obtenerOrden = (idOrden) =>
-  ordenesRegistradas.find((o) => o.id_venta === idOrden) || null;
+// Buscar una orden por su ID
+export const obtenerOrden = async (idOrden) => {
+  const idNumerico = idOrden.toString().replace('ORD-', '');
+  const orden = await api.get(`/ventas/${idNumerico}`, null);
+  if (orden) return orden;
+  return ordenesEnMemoria.find((o) => o.id_venta === idOrden) || null;
+};

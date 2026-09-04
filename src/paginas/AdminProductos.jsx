@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'Taladro Inalámbrico 20V', categoria: 'Herramientas', marca: 'DeWalt', precio: 289900, stock: 45, estado: 'Activo', imagen: '' },
@@ -14,19 +15,19 @@ const datosIniciales = [
 const formularioVacio = { nombre: '', categoria: '', marca: '', precio: '', stock: '', estado: 'Activo', imagen: '' };
 
 export default function Productos() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardados = localStorage.getItem('novacasa_productos');
-      return guardados ? JSON.parse(guardados) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
   const inputImagenRef = useRef(null);
+
+  // Cargar productos directamente desde MySQL
+  useEffect(() => {
+    api.get('/productos', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   // Obtener lista dinámica de marcas registradas
   const obtenerMarcasDisponibles = () => {
@@ -71,9 +72,9 @@ export default function Productos() {
 
   const filtrados = datos.filter(
     (p) =>
-      p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.categoria.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.marca.toLowerCase().includes(busqueda.toLowerCase())
+      (p.nombre || p.titulo || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (p.categoria || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (p.marca || '').toLowerCase().includes(busqueda.toLowerCase())
   );
 
   const abrirCrear = () => { setFormulario(formularioVacio); setActual(null); setModal('crear'); };
@@ -97,31 +98,47 @@ export default function Productos() {
     if (inputImagenRef.current) inputImagenRef.current.value = '';
   };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.nombre.trim()) return;
-    let actualizados;
+    const precio = Number(formulario.precio) || 0;
+    const stock = Number(formulario.stock) || 0;
+    const payload = { ...formulario, precio, stock };
+
     if (modal === 'crear') {
-      actualizados = [
-        ...datos,
-        { ...formulario, id: Date.now(), precio: Number(formulario.precio) || 0, stock: Number(formulario.stock) || 0 },
-      ];
+      try {
+        const nuevo = await api.post('/productos', payload);
+        const actualizados = [...datos, { ...payload, id: nuevo.id || Date.now() }];
+        setDatos(actualizados);
+        guardarEnStorage(actualizados);
+      } catch {
+        const actualizados = [...datos, { ...payload, id: Date.now() }];
+        setDatos(actualizados);
+        guardarEnStorage(actualizados);
+      }
     } else {
-      actualizados = datos.map((p) =>
-        p.id === actual.id
-          ? { ...formulario, id: actual.id, precio: Number(formulario.precio) || 0, stock: Number(formulario.stock) || 0 }
-          : p
+      try {
+        await api.put(`/productos/${actual.id}`, payload);
+      } catch (e) {
+        console.warn('Fallback local para editar producto:', e);
+      }
+      const actualizados = datos.map((p) =>
+        p.id === actual.id ? { ...payload, id: actual.id } : p
       );
+      setDatos(actualizados);
+      guardarEnStorage(actualizados);
     }
-    setDatos(actualizados);
-    guardarEnStorage(actualizados);
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
+    const nuevoEstado = actual.estado === 'Activo' ? 'Suspendido' : 'Activo';
+    try {
+      await api.put(`/productos/${actual.id}`, { ...actual, estado: nuevoEstado });
+    } catch (e) {
+      console.warn('Fallback local para suspender producto:', e);
+    }
     const actualizados = datos.map((p) =>
-      p.id === actual.id
-        ? { ...p, estado: p.estado === 'Activo' ? 'Suspendido' : 'Activo' }
-        : p
+      p.id === actual.id ? { ...p, estado: nuevoEstado } : p
     );
     setDatos(actualizados);
     guardarEnStorage(actualizados);

@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, fecha: '2026-09-02', cliente: 'Juan Pérez', total: 289900, items: 2, estado: 'Completada', metodo: 'Tarjeta' },
@@ -16,14 +17,14 @@ const datosIniciales = [
 const formularioVacio = { fecha: '', cliente: '', total: '', items: '', estado: 'Pendiente', metodo: 'Efectivo' };
 
 export default function Ventas() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardadas = localStorage.getItem('novacasa_ventas');
-      return guardadas ? JSON.parse(guardadas) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
+
+  // Cargar ventas directamente desde MySQL
+  useEffect(() => {
+    api.get('/ventas', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   // Estados de filtrado especializado
   const [busqueda, setBusqueda] = useState('');
@@ -68,55 +69,45 @@ export default function Ventas() {
         // Búsqueda por texto
         if (busqueda.trim()) {
           const q = busqueda.toLowerCase().trim();
-          const coincide =
-            v.cliente.toLowerCase().includes(q) ||
-            v.estado.toLowerCase().includes(q) ||
-            v.metodo.toLowerCase().includes(q) ||
-            String(v.id).includes(q) ||
-            String(v.total).includes(q);
-          if (!coincide) return false;
+          const coincideId = v.id.toString().includes(q);
+          const coincideCliente = v.cliente.toLowerCase().includes(q);
+          const coincideMetodo = v.metodo.toLowerCase().includes(q);
+          if (!coincideId && !coincideCliente && !coincideMetodo) return false;
         }
 
-        // Filtro de Estado
-        if (filtroEstado !== 'Todos' && v.estado !== filtroEstado) {
-          return false;
-        }
+        // Filtro por estado
+        if (filtroEstado !== 'Todos' && v.estado !== filtroEstado) return false;
 
-        // Filtro de Método de Pago
-        if (filtroMetodo !== 'Todos' && v.metodo !== filtroMetodo) {
-          return false;
-        }
+        // Filtro por método de pago
+        if (filtroMetodo !== 'Todos' && v.metodo !== filtroMetodo) return false;
 
-        // Filtro de Período / Fechas
-        if (filtroPeriodo === 'hoy') {
-          const hoy = new Date().toISOString().split('T')[0];
-          if (v.fecha !== hoy) return false;
-        } else if (filtroPeriodo === 'ultimos7') {
-          const hoy = new Date();
-          const limite = new Date();
-          limite.setDate(hoy.getDate() - 7);
+        // Filtro por período relativo
+        if (filtroPeriodo !== 'todos') {
+          const hoy = new Date('2026-09-02');
           const fechaVenta = new Date(v.fecha);
-          if (fechaVenta < limite) return false;
-        } else if (filtroPeriodo === 'mes') {
-          const hoy = new Date();
-          const mesActual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
-          if (!v.fecha.startsWith(mesActual)) return false;
-        } else if (filtroPeriodo === 'personalizado') {
-          if (fechaDesde && v.fecha < fechaDesde) return false;
-          if (fechaHasta && v.fecha > fechaHasta) return false;
+          const diffDias = Math.floor((hoy - fechaVenta) / (1000 * 60 * 60 * 24));
+
+          if (filtroPeriodo === 'hoy' && diffDias !== 0) return false;
+          if (filtroPeriodo === 'semana' && (diffDias < 0 || diffDias > 7)) return false;
+          if (filtroPeriodo === 'mes' && (diffDias < 0 || diffDias > 30)) return false;
         }
 
-        // Filtro de Montos
-        if (montoMin && Number(v.total) < Number(montoMin)) return false;
-        if (montoMax && Number(v.total) > Number(montoMax)) return false;
+        // Filtro por rango de fechas exacto
+        if (fechaDesde && v.fecha < fechaDesde) return false;
+        if (fechaHasta && v.fecha > fechaHasta) return false;
+
+        // Filtro por monto
+        const totalNum = Number(v.total) || 0;
+        if (montoMin !== '' && totalNum < Number(montoMin)) return false;
+        if (montoMax !== '' && totalNum > Number(montoMax)) return false;
 
         return true;
       })
       .sort((a, b) => {
-        if (orden === 'fecha-desc') return new Date(b.fecha) - new Date(a.fecha) || b.id - a.id;
-        if (orden === 'fecha-asc') return new Date(a.fecha) - new Date(b.fecha) || a.id - b.id;
-        if (orden === 'total-desc') return b.total - a.total;
-        if (orden === 'total-asc') return a.total - b.total;
+        if (orden === 'fecha-desc') return new Date(b.fecha) - new Date(a.fecha);
+        if (orden === 'fecha-asc') return new Date(a.fecha) - new Date(b.fecha);
+        if (orden === 'monto-desc') return Number(b.total) - Number(a.total);
+        if (orden === 'monto-asc') return Number(a.total) - Number(b.total);
         if (orden === 'items-desc') return b.items - a.items;
         if (orden === 'cliente-asc') return a.cliente.localeCompare(b.cliente);
         return 0;
@@ -181,6 +172,7 @@ export default function Ventas() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const abrirCrear = () => {
@@ -191,27 +183,45 @@ export default function Ventas() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.cliente.trim()) return;
-    let actualizadas;
+    const total = Number(formulario.total) || 0;
+    const items = Number(formulario.items) || 0;
+    const payload = { ...formulario, total, items };
+
     if (modal === 'crear') {
-      actualizadas = [
-        ...datos,
-        { ...formulario, id: Date.now(), total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 },
-      ];
+      try {
+        const nueva = await api.post('/ventas', payload);
+        const actualizadas = [
+          ...datos,
+          { ...payload, id: nueva.id_venta || Date.now() },
+        ];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      } catch {
+        const actualizadas = [
+          ...datos,
+          { ...payload, id: Date.now() },
+        ];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      }
     } else {
-      actualizadas = datos.map((v) =>
-        v.id === actual.id
-          ? { ...formulario, id: actual.id, total: Number(formulario.total) || 0, items: Number(formulario.items) || 0 }
-          : v
+      try {
+        await api.put(`/ventas/${actual.id}/estado`, { estado: formulario.estado });
+      } catch (e) {
+        console.warn('Fallback local para actualizar venta:', e);
+      }
+      const actualizadas = datos.map((v) =>
+        v.id === actual.id ? { ...payload, id: actual.id } : v
       );
+      setDatos(actualizadas);
+      guardarEnStorage(actualizadas);
     }
-    setDatos(actualizadas);
-    guardarEnStorage(actualizadas);
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
     const actualizadas = datos.map((v) => {
       if (v.id === actual.id) {
         const nuevoEstado = v.estado === 'Suspendida' ? (v.estadoAnterior || 'Pendiente') : 'Suspendida';

@@ -1,16 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
+import { api } from '../servicios/api';
 
 export default function Tablero() {
   const context = useOutletContext();
   const nombreAdmin = context?.nombreAdmin || localStorage.getItem('almacen_admin_nombre') || 'Admin';
   const [filtroTiempo, setFiltroTiempo] = useState('Hoy');
+  const [metricasBD, setMetricasBD] = useState(null);
+
+  // Cargar métricas directamente desde MySQL
+  useEffect(() => {
+    api.get('/dashboard', null).then((res) => {
+      if (res) setMetricasBD(res);
+    });
+  }, []);
+
+  const totalVentasFormateado = metricasBD?.totalVentas 
+    ? `$${Number(metricasBD.totalVentas).toLocaleString('es-CO')}` 
+    : '$12.450.000';
+
+  const totalProductosFormateado = metricasBD?.totalProductos 
+    ? String(metricasBD.totalProductos) 
+    : '248';
+
+  const totalOrdenesFormateado = metricasBD?.totalOrdenes 
+    ? String(metricasBD.totalOrdenes) 
+    : '12';
 
   const estadisticas = [
     {
       id: 'ventas',
       etiqueta: 'Ventas Totales',
-      valor: '$12.450.000',
+      valor: totalVentasFormateado,
       cambio: '↑ 12.5%',
       subida: true,
       icono: IconoVentas,
@@ -21,7 +42,7 @@ export default function Tablero() {
     {
       id: 'productos',
       etiqueta: 'Productos Activos',
-      valor: '248',
+      valor: totalProductosFormateado,
       cambio: '↑ 8.2%',
       subida: true,
       icono: IconoProductos,
@@ -42,8 +63,8 @@ export default function Tablero() {
     },
     {
       id: 'ordenes',
-      etiqueta: 'Órdenes Pendientes',
-      valor: '12',
+      etiqueta: 'Órdenes en Sistema',
+      valor: totalOrdenesFormateado,
       cambio: '↓ 6.7%',
       subida: false,
       icono: IconoOrdenes,

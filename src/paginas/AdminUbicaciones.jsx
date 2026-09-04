@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'Estante A', zona: 'Herramientas', sucursal: 'Sede Principal', capacidad: 200, ocupacion: 145, descripcion: 'Estante principal área herramientas', estado: 'Activo' },
@@ -17,6 +18,13 @@ export default function Ubicaciones() {
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
+
+  // Cargar ubicaciones directamente desde MySQL
+  useEffect(() => {
+    api.get('/ubicaciones', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   const filtrados = datos.filter(
     (u) =>

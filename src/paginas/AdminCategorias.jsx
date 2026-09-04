@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender, ConfirmarEliminar } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'Herramientas', descripcion: 'Herramientas manuales y eléctricas', estado: 'Activo', productos: 64 },
@@ -14,18 +15,18 @@ const formularioVacio = { nombre: '', descripcion: '', estado: 'Activo' };
 const colores = ['#f5c518', '#3b82f6', '#a855f7', '#22c55e', '#f97316', '#ef4444'];
 
 export default function Categorias() {
-  const [datos, setDatos] = useState(() => {
-    try {
-      const guardadas = localStorage.getItem('novacasa_categorias');
-      return guardadas ? JSON.parse(guardadas) : datosIniciales;
-    } catch {
-      return datosIniciales;
-    }
-  });
+  const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
+
+  // Cargar categorías directamente desde la base de datos MySQL
+  useEffect(() => {
+    api.get('/categorias', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
 
   const guardarEnStorage = (nuevas) => {
     try {
@@ -46,33 +47,55 @@ export default function Categorias() {
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
   const abrirEliminar = (elem) => { setActual(elem); setModal('eliminar'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.nombre.trim()) return;
-    let actualizadas;
     if (modal === 'crear') {
-      actualizadas = [...datos, { ...formulario, id: Date.now(), productos: 0 }];
+      try {
+        const nueva = await api.post('/categorias', formulario);
+        const actualizadas = [...datos, { ...formulario, id: nueva.id || Date.now(), productos: 0 }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      } catch {
+        const actualizadas = [...datos, { ...formulario, id: Date.now(), productos: 0 }];
+        setDatos(actualizadas);
+        guardarEnStorage(actualizadas);
+      }
     } else {
-      actualizadas = datos.map((c) =>
+      try {
+        await api.put(`/categorias/${actual.id}`, formulario);
+      } catch (e) {
+        console.warn('Fallback local para editar categoría:', e);
+      }
+      const actualizadas = datos.map((c) =>
         c.id === actual.id ? { ...formulario, id: actual.id, productos: actual.productos } : c
       );
+      setDatos(actualizadas);
+      guardarEnStorage(actualizadas);
     }
-    setDatos(actualizadas);
-    guardarEnStorage(actualizadas);
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
+    const nuevoEstado = actual.estado === 'Activo' ? 'Suspendido' : 'Activo';
+    try {
+      await api.put(`/categorias/${actual.id}`, { ...actual, estado: nuevoEstado });
+    } catch (e) {
+      console.warn('Fallback local para suspender categoría:', e);
+    }
     const actualizadas = datos.map((c) =>
-      c.id === actual.id
-        ? { ...c, estado: c.estado === 'Activo' ? 'Suspendido' : 'Activo' }
-        : c
+      c.id === actual.id ? { ...c, estado: nuevoEstado } : c
     );
     setDatos(actualizadas);
     guardarEnStorage(actualizadas);
     setModal(null);
   };
 
-  const eliminar = () => {
+  const eliminar = async () => {
+    try {
+      await api.delete(`/categorias/${actual.id}`);
+    } catch (e) {
+      console.warn('Fallback local para eliminar categoría:', e);
+    }
     const actualizadas = datos.filter((c) => c.id !== actual.id);
     setDatos(actualizadas);
     guardarEnStorage(actualizadas);

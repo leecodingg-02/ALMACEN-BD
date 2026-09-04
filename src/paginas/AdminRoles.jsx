@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'Administrador', descripcion: 'Acceso total al sistema', permisos: 12, usuarios: 1, color: '#FFC107', estado: 'Activo' },
@@ -17,6 +18,13 @@ export default function Roles() {
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
 
+  // Cargar roles desde MySQL
+  useEffect(() => {
+    api.get('/roles', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
+
   const filtrados = datos.filter(
     (r) =>
       r.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -27,11 +35,21 @@ export default function Roles() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.nombre.trim()) return;
     if (modal === 'crear') {
-      setDatos((prev) => [...prev, { ...formulario, id: Date.now(), permisos: 0, usuarios: 0, estado: 'Activo' }]);
+      try {
+        const nuevo = await api.post('/roles', formulario);
+        setDatos((prev) => [...prev, { ...formulario, id: nuevo.id || Date.now(), permisos: 3, usuarios: 0, estado: 'Activo' }]);
+      } catch {
+        setDatos((prev) => [...prev, { ...formulario, id: Date.now(), permisos: 0, usuarios: 0, estado: 'Activo' }]);
+      }
     } else {
+      try {
+        await api.put(`/roles/${actual.id}`, formulario);
+      } catch (e) {
+        console.warn('Fallback local para editar rol:', e);
+      }
       setDatos((prev) =>
         prev.map((r) =>
           r.id === actual.id
@@ -43,12 +61,16 @@ export default function Roles() {
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
+    const nuevoEstado = actual.estado === 'Activo' ? 'Suspendido' : 'Activo';
+    try {
+      await api.put(`/roles/${actual.id}`, { ...actual, estado: nuevoEstado });
+    } catch (e) {
+      console.warn('Fallback local para suspender rol:', e);
+    }
     setDatos((prev) =>
       prev.map((r) =>
-        r.id === actual.id
-          ? { ...r, estado: r.estado === 'Activo' ? 'Suspendido' : 'Activo' }
-          : r
+        r.id === actual.id ? { ...r, estado: nuevoEstado } : r
       )
     );
     setModal(null);

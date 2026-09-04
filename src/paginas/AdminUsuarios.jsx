@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
+import { api } from '../servicios/api';
 
 const datosIniciales = [
   { id: 1, nombre: 'Carlos Rodríguez', correo: 'carlos@email.com', rol: 'Administrador', sucursal: 'Sede Principal', estado: 'Activo', fechaRegistro: '2024-01-15' },
@@ -9,7 +10,7 @@ const datosIniciales = [
   { id: 5, nombre: 'Andrés Castro', correo: 'andres@email.com', rol: 'Supervisor', sucursal: 'Sede Principal', estado: 'Activo', fechaRegistro: '2025-01-18' },
 ];
 
-const formularioVacio = { nombre: '', correo: '', rol: '', sucursal: '', estado: 'Activo' };
+const formularioVacio = { nombre: '', correo: '', rol: 'Vendedor', sucursal: 'Sede Principal', estado: 'Activo' };
 const coloresAvatar = ['#FFC107', '#3b82f6', '#a855f7', '#22c55e', '#f97316'];
 
 export default function Usuarios() {
@@ -19,25 +20,45 @@ export default function Usuarios() {
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
 
+  // Cargar usuarios desde MySQL
+  useEffect(() => {
+    api.get('/usuarios', datosIniciales).then((res) => {
+      if (res && res.length > 0) setDatos(res);
+    });
+  }, []);
+
   const filtrados = datos.filter(
     (u) =>
       u.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
       u.correo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      u.rol.toLowerCase().includes(busqueda.toLowerCase())
+      (u.rol || '').toLowerCase().includes(busqueda.toLowerCase())
   );
 
   const abrirCrear = () => { setFormulario(formularioVacio); setActual(null); setModal('crear'); };
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
-  const guardar = () => {
+  const guardar = async () => {
     if (!formulario.nombre.trim()) return;
     if (modal === 'crear') {
-      setDatos((prev) => [
-        ...prev,
-        { ...formulario, id: Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
-      ]);
+      try {
+        const nuevo = await api.post('/usuarios', formulario);
+        setDatos((prev) => [
+          ...prev,
+          { ...formulario, id: nuevo.id || Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
+        ]);
+      } catch {
+        setDatos((prev) => [
+          ...prev,
+          { ...formulario, id: Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
+        ]);
+      }
     } else {
+      try {
+        await api.put(`/usuarios/${actual.id}`, formulario);
+      } catch (e) {
+        console.warn('Fallback local para editar usuario:', e);
+      }
       setDatos((prev) =>
         prev.map((u) =>
           u.id === actual.id ? { ...formulario, id: actual.id, fechaRegistro: actual.fechaRegistro } : u
@@ -47,12 +68,16 @@ export default function Usuarios() {
     setModal(null);
   };
 
-  const suspender = () => {
+  const suspender = async () => {
+    const nuevoEstado = actual.estado === 'Activo' ? 'Suspendido' : 'Activo';
+    try {
+      await api.put(`/usuarios/${actual.id}`, { ...actual, estado: nuevoEstado });
+    } catch (e) {
+      console.warn('Fallback local para suspender usuario:', e);
+    }
     setDatos((prev) =>
       prev.map((u) =>
-        u.id === actual.id
-          ? { ...u, estado: u.estado === 'Activo' ? 'Suspendido' : 'Activo' }
-          : u
+        u.id === actual.id ? { ...u, estado: nuevoEstado } : u
       )
     );
     setModal(null);

@@ -72,8 +72,19 @@ function App() {
 
   /* Estado de sesión de usuario y preferencias */
   const [usuario, setUsuario] = useState(obtenerUsuarioSesion);
-  const [favoritos, setFavoritos] = useState(obtenerFavoritosUsuario);
+  const [favoritos, setFavoritos] = useState([]);
   const [configuracion, setConfiguracion] = useState(obtenerConfiguracionUsuario);
+
+  /* Cargar favoritos del usuario autenticado directamente desde MySQL */
+  useEffect(() => {
+    if (usuario?.id_usu) {
+      obtenerFavoritosUsuario(usuario.id_usu).then((favs) => {
+        setFavoritos(favs || []);
+      });
+    } else {
+      setFavoritos([]);
+    }
+  }, [usuario]);
 
   useEffect(() => {
     localStorage.setItem("almacenweb_carrito", JSON.stringify(carrito));
@@ -116,15 +127,17 @@ function App() {
     setCarrito((c) => removerLinea(c, idProducto));
   };
 
-  /* Alternar inicio/cierre de sesión demo */
+  /* Cerrar sesión */
   const handleAlternarSesion = () => {
     const nuevoUsuario = alternarEstadoSesion();
     setUsuario(nuevoUsuario);
+    setFavoritos([]);
   };
 
-  /* Alternar un producto en favoritos */
-  const handleAlternarFavorito = (idProducto) => {
-    const nuevosFavs = alternarFavoritoUsuario(idProducto);
+  /* Alternar un producto en favoritos en MySQL */
+  const handleAlternarFavorito = async (idProducto) => {
+    if (!usuario) return;
+    const nuevosFavs = await alternarFavoritoUsuario(idProducto);
     setFavoritos(nuevosFavs);
   };
 
@@ -168,8 +181,8 @@ function App() {
           element={<Confirmacion />}
         />
         <Route path='/usuario' element={<Usuario usuario={usuario} favoritos={favoritos} configuracion={configuracion} onAlternarFavorito={handleAlternarFavorito} onAgregarCarrito={agregarAlCarrito} onActualizarUsuario={setUsuario} onActualizarConfig={setConfiguracion} onAlternarSesion={handleAlternarSesion} />} />
-        <Route path='/inicio-sesion' element={<InicioSesion />} />
-        <Route path='/crear-cuenta' element={<CrearCuenta />} />
+        <Route path='/inicio-sesion' element={<InicioSesion onIniciarSesion={setUsuario} />} />
+        <Route path='/crear-cuenta' element={<CrearCuenta onIniciarSesion={setUsuario} />} />
         <Route path='/nosotros' element={<Nosotros />} />
         <Route path='/ofertas' element={<Ofertas />} />
         <Route path='/ubicaciones' element={<Ubicaciones />} />

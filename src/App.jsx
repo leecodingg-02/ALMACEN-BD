@@ -31,6 +31,7 @@ import {
 } from "./servicios/usuario";
 import PasarelaPagos from "./paginas/PasarelaPagos";
 import { AvisoSesionProvider } from "./contextos/AvisoSesionContext";
+import { NotificacionProvider, useNotificacion } from "./contextos/NotificacionContext";
 
 // Panel de Administración
 import AdminLayout from './componentes/AdminLayout'
@@ -66,8 +67,9 @@ function RestaurarScroll() {
   return null;
 }
 
-function App() {
+function AppContenido() {
   const { pathname } = useLocation();
+  const { mostrarNotificacion } = useNotificacion();
   const esPanel = pathname.startsWith('/admin') || pathname.startsWith('/proveedor');
 
   /* Estado del carrito */
@@ -114,6 +116,19 @@ function App() {
     setCarrito((carritoActual) =>
       agregarLineaCarrito(carritoActual, producto, cantidad),
     );
+
+    const nombre = producto.titulo || producto.nombre || 'Producto';
+    const imagen = producto.imagen || producto.imagen_url || producto.imagenUrl || '';
+
+    mostrarNotificacion({
+      tipo: 'carrito',
+      titulo: '¡Agregado al carrito!',
+      mensaje: `${nombre} (${cantidad} ud.)`,
+      imagen,
+      enlace: '/carrito',
+      textoEnlace: 'Ver carrito',
+      icono: '🛒'
+    });
   };
 
   /* Actualizar la cantidad de un producto en el carrito */
@@ -137,15 +152,34 @@ function App() {
     setFavoritos([]);
   };
 
-  /* Alternar un producto en favoritos en MySQL */
-  const handleAlternarFavorito = async (idProducto) => {
+  /* Alternar un producto en favoritos en MySQL con notificación */
+  const handleAlternarFavorito = async (idProducto, nombreProducto) => {
     if (!usuario) return;
+    const estabaEnFavoritos = favoritos && favoritos.includes(idProducto);
     const nuevosFavs = await alternarFavoritoUsuario(idProducto);
-    setFavoritos(nuevosFavs);
+    setFavoritos(nuevosFavs || []);
+
+    if (estabaEnFavoritos) {
+      mostrarNotificacion({
+        tipo: 'favorito-removido',
+        titulo: 'Eliminado de favoritos',
+        mensaje: nombreProducto ? `"${nombreProducto}" fue removido de tus favoritos.` : 'Producto eliminado de favoritos.',
+        icono: '🤍'
+      });
+    } else {
+      mostrarNotificacion({
+        tipo: 'favorito',
+        titulo: '¡Agregado a favoritos!',
+        mensaje: nombreProducto ? `"${nombreProducto}" se guardó en tus favoritos.` : 'Producto agregado a tus favoritos.',
+        enlace: '/usuario',
+        textoEnlace: 'Ver mis favoritos',
+        icono: '❤️'
+      });
+    }
   };
 
   return (
-    <AvisoSesionProvider>
+    <>
       {!esPanel && (
         <Encabezado
           cantidadCarrito={obtenerCantidadTotal(carrito)}
@@ -230,7 +264,7 @@ function App() {
         <Route path='/inicio-sesion' element={<InicioSesion onIniciarSesion={setUsuario} />} />
         <Route path='/crear-cuenta' element={<CrearCuenta onIniciarSesion={setUsuario} />} />
         <Route path='/nosotros' element={<Nosotros />} />
-        <Route path='/ofertas' element={<Ofertas />} />
+        <Route path='/ofertas' element={<Ofertas onAgregarCarrito={agregarAlCarrito} usuario={usuario} favoritos={favoritos} onAlternarFavorito={handleAlternarFavorito} />} />
         <Route path='/ubicaciones' element={<Ubicaciones />} />
         <Route path='/ayuda' element={<Ayuda />} />
 
@@ -260,9 +294,19 @@ function App() {
         </Route>
       </Routes>
       {!esPanel && <PiePagina />}
-    </AvisoSesionProvider>
+    </>
   );
 }
 
+function App() {
+  return (
+    <NotificacionProvider>
+      <AvisoSesionProvider>
+        <AppContenido />
+      </AvisoSesionProvider>
+    </NotificacionProvider>
+  );
+}
 
 export default App;
+

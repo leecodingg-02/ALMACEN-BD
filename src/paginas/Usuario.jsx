@@ -392,7 +392,12 @@ const Usuario = ({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <div className="favorito-imagen">Img {prod.id}</div>
+                  <div className="favorito-imagen">
+                    <img
+                      src={prod.imagen || prod.imagen_url || 'https://admin.wurth.co/uploads/ec5f5dc6_8a5c_45c1_8630_f7dc139a3e30_7b732362fb.jpg'}
+                      alt={prod.titulo}
+                    />
+                  </div>
                   <span className="favorito-categoria">{prod.categoria}</span>
                   <h3>{prod.titulo}</h3>
                   <strong className="favorito-precio">

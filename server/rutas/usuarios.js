@@ -215,51 +215,67 @@ router.post('/', async (req, res) => {
       apellido = '',
       correo,
       telefono = null,
-      tipo_doc = 'C.C',
-      num_ident = `ID-${Date.now().toString().slice(-6)}`,
+      tipo_doc = 'CC',
+      num_ident,
       contrasena = '123456',
       id_rol = 2, // Por defecto Cliente
       id_suc = null,
       estado = 'Activo'
     } = req.body;
 
-    let nom = nombre;
-    let ape = apellido;
-    if (!ape && nombre.includes(' ')) {
-      const partes = nombre.trim().split(' ');
+    if (!nombre || !correo) {
+      return res.status(400).json({ error: 'El nombre y correo electrónico son obligatorios.' });
+    }
+
+    let nom = (nombre || '').trim();
+    let ape = (apellido || '').trim();
+    if (!ape && nom.includes(' ')) {
+      const partes = nom.split(' ');
       nom = partes[0];
       ape = partes.slice(1).join(' ');
     }
 
+    const documentoFinal = (num_ident || '').trim() || `ID-${Date.now().toString().slice(-6)}`;
+    const correoFinal = (correo || '').trim().toLowerCase();
+
     // Verificar si el correo ya está registrado
-    const [existente] = await pool.query('SELECT id_usu FROM usuario WHERE correo = ?', [correo]);
+    const [existente] = await pool.query('SELECT id_usu FROM usuario WHERE LOWER(correo) = ?', [correoFinal]);
     if (existente.length > 0) {
-      return res.status(400).json({ error: 'Este correo electrónico ya está registrado' });
+      return res.status(400).json({ error: 'Este correo electrónico ya está registrado.' });
+    }
+
+    // Verificar si el documento ya está registrado
+    const [docExistente] = await pool.query('SELECT id_usu FROM usuario WHERE num_ident = ?', [documentoFinal]);
+    if (docExistente.length > 0) {
+      return res.status(400).json({ error: 'Este número de documento ya está registrado.' });
     }
 
     // Hashear la contraseña antes de guardarla en la base de datos
-    const contrasenaHash = await bcrypt.hash(contrasena, 10);
+    const contrasenaHash = await bcrypt.hash(contrasena || '123456', 10);
 
     const [resultado] = await pool.query(`
       INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, telefono, contrasena_hash, id_rol, id_suc, estado)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tipo_doc, num_ident, nom, ape, correo, telefono, contrasenaHash, id_rol, id_suc, estado]);
+    `, [tipo_doc, documentoFinal, nom, ape, correoFinal, telefono, contrasenaHash, id_rol, id_suc, estado]);
 
     res.status(201).json({
       id: resultado.insertId,
       id_usu: resultado.insertId,
       nombre: nom,
       apellido: ape,
-      correo,
+      correo: correoFinal,
       telefono,
       tipo_doc,
-      num_ident,
+      num_ident: documentoFinal,
       id_rol,
       estado
     });
   } catch (error) {
     console.error('Error al crear usuario:', error.message);
-    res.status(500).json({ error: 'No se pudo crear el usuario' });
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'El correo electrónico o número de documento ya se encuentra registrado.' });
+    }
+    res.status(500).json({ error: error.message || 'No se pudo crear el usuario en el servidor.' });
   }
 });
 

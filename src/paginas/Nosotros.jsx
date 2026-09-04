@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Nosotros.css';
 
 const Nosotros = () => {
@@ -61,7 +62,7 @@ const Nosotros = () => {
                             <blockquote className="cita-motor">
                                 <p>La innovación no ocurre en el vacío. Ocurre en pasillos de almacenes modernos, optimizados con tecnología logística de punta, donde cada tornillo y cada sofá modular tiene su propósito.</p>
                             </blockquote>
-                            <a href="/ubicaciones" className="boton boton-sucursales">CONOCE NUESTRAS SUCURSALES</a>
+                            <Link to="/ubicaciones" className="boton boton-sucursales">CONOCE NUESTRAS SUCURSALES</Link>
                         </div>
                     </div>
                 </section>

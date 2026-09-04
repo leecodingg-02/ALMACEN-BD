@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Notificaciones Toast Flotantes (Carrito, Favoritos, Sistema) - NovaCasa
+   ========================================================================== */
+
+.notificaciones-toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100000;
+  max-width: 390px;
+  width: calc(100vw - 36px);
+  pointer-events: none;
+}
+
+.notificacion-toast {
+  pointer-events: auto;
+  position: relative;
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.98) 0%, rgba(13, 17, 23, 0.98) 100%);
+  border: 1px solid rgba(245, 180, 0, 0.4);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 20px rgba(245, 180, 0, 0.12);
+  border-radius: 14px;
+  padding: 16px 18px 14px 16px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #f3f4f6;
+  animation: notifEntrada 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow: hidden;
+}
+
+.notificacion-tipo-favorito {
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.notificacion-tipo-favorito-removido {
+  border-color: rgba(156, 163, 175, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65);
+}
+
+@keyframes notifEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Barra de progreso de auto-cierre */
+.notificacion-barra-progreso {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f5b400, #fbbf24);
+  width: 100%;
+  animation: notifProgreso linear forwards;
+}
+
+.notificacion-tipo-favorito .notificacion-barra-progreso {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.notificacion-tipo-favorito-removido .notificacion-barra-progreso {
+  background: linear-gradient(90deg, #9ca3af, #d1d5db);
+}
+
+@keyframes notifProgreso {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Botón cerrar X */
+.notificacion-btn-cerrar {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.notificacion-btn-cerrar:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Estructura interior */
+.notificacion-contenido {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Thumbnail imagen */
+.notificacion-img-wrapper {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificacion-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ícono fallback */
+.notificacion-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(245, 180, 0, 0.15);
+  border: 1px solid rgba(245, 180, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.notificacion-icono-favorito {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.notificacion-icono-favorito-removido {
+  background: rgba(156, 163, 175, 0.15);
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+/* Textos */
+.notificacion-textos {
+  flex: 1;
+  min-width: 0;
+}
+
+.notificacion-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #f5b400;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.notificacion-tipo-favorito .notificacion-tag {
+  color: #f87171;
+}
+
+.notificacion-tipo-favorito-removido .notificacion-tag {
+  color: #9ca3af;
+}
+
+.notificacion-titulo {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  margin: 0 0 3px 0;
+  padding-right: 14px;
+}
+
+.notificacion-mensaje {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.35;
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Enlace directo acción */
+.notificacion-link-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f5b400;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.notificacion-tipo-favorito .notificacion-link-accion {
+  color: #f87171;
+}
+
+.notificacion-link-accion:hover {
+  text-decoration: underline;
+  transform: translateX(2px);
+}
+
+/* Modo Alto Contraste */
+html.modo-alto-contraste .notificacion-toast {
+  background: #000000 !important;
+  border: 2px solid #ffc107 !important;
+  color: #ffffff !important;
+}
+
+/* Adaptación móvil */
+@media (max-width: 480px) {
+  .notificaciones-toast-container {
+    top: 14px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+  }
+}

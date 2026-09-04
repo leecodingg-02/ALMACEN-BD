@@ -13,13 +13,13 @@ const IMAGENES_CATEGORIAS_DEF = {
   'Baño y Cocina': 'https://dugal.es/wp-content/uploads/2024/05/Tendencias-en-diseno-de-interiores-2024.jpg'
 };
 
-const Inicio = ({ 
-  carrito = [], 
-  onLimpiarCarrito, 
-  onAgregarCarrito, 
-  usuario, 
-  favoritos = [], 
-  onAlternarFavorito 
+const Inicio = ({
+  carrito = [],
+  onLimpiarCarrito,
+  onAgregarCarrito,
+  usuario,
+  favoritos = [],
+  onAlternarFavorito
 }) => {
   const { mostrarAvisoSesion } = useAvisoSesion();
   const [categoriasBD, setCategoriasBD] = useState([]);
@@ -44,18 +44,20 @@ const Inicio = ({
 
   // Categorías a renderizar (BD o fallback)
   const listaCategorias = categoriasBD.length > 0
-    ? categoriasBD.map((c) => ({
-        nombre: c.nombre,
-        descripcion: c.descripcion || `Catálogo de ${c.nombre}`,
-        imagen: IMAGENES_CATEGORIAS_DEF[c.nombre] || IMAGENES_CATEGORIAS_DEF.Herramientas
-      }))
+    ? categoriasBD
+        .filter((c) => c.nombre.toLowerCase() !== 'jardín' && c.nombre.toLowerCase() !== 'jardin')
+        .map((c) => ({
+      nombre: c.nombre,
+      descripcion: c.descripcion || `Catálogo de ${c.nombre}`,
+      imagen: IMAGENES_CATEGORIAS_DEF[c.nombre] || IMAGENES_CATEGORIAS_DEF.Herramientas
+    }))
     : [
-        { nombre: 'Herramientas', descripcion: 'Todo para construir y reparar.', imagen: IMAGENES_CATEGORIAS_DEF.Herramientas },
-        { nombre: 'Muebles', descripcion: 'Diseños para cada espacio de tu hogar.', imagen: IMAGENES_CATEGORIAS_DEF.Muebles },
-        { nombre: 'Decoración', descripcion: 'Detalles que transforman tus espacios.', imagen: IMAGENES_CATEGORIAS_DEF.Decoración },
-        { nombre: 'Iluminación', descripcion: 'Ambientes que inspiran.', imagen: IMAGENES_CATEGORIAS_DEF.Iluminación },
-        { nombre: 'Baño y Cocina', descripcion: 'Funcionalidad y estilo.', imagen: IMAGENES_CATEGORIAS_DEF['Baño y Cocina'] }
-      ];
+      { nombre: 'Herramientas', descripcion: 'Todo para construir y reparar.', imagen: IMAGENES_CATEGORIAS_DEF.Herramientas },
+      { nombre: 'Muebles', descripcion: 'Diseños para cada espacio de tu hogar.', imagen: IMAGENES_CATEGORIAS_DEF.Muebles },
+      { nombre: 'Decoración', descripcion: 'Detalles que transforman tus espacios.', imagen: IMAGENES_CATEGORIAS_DEF.Decoración },
+      { nombre: 'Iluminación', descripcion: 'Ambientes que inspiran.', imagen: IMAGENES_CATEGORIAS_DEF.Iluminación },
+      { nombre: 'Baño y Cocina', descripcion: 'Funcionalidad y estilo.', imagen: IMAGENES_CATEGORIAS_DEF['Baño y Cocina'] }
+    ];
 
   // Productos destacados (BD o fallback)
   // Busca imagen coincidente en PRODUCTOS_DATA para evitar imagen genérica única
@@ -68,14 +70,14 @@ const Inicio = ({
 
   const productosDestacados = productosBD.length > 0
     ? productosBD.slice(0, 5).map((p) => ({
-        id: p.id_pro || p.id,
-        titulo: p.nombre,
-        precio: p.precio,
-        imagen: p.imagen_url || buscarImagenLocal(p.nombre) || PRODUCTOS_DATA[0]?.imagen,
-        categoria: p.categoria || 'GENERAL',
-        calificacion: p.calificacion || 0,
-        valoraciones: p.valoraciones || 0
-      }))
+      id: p.id_pro || p.id,
+      titulo: p.nombre,
+      precio: p.precio,
+      imagen: p.imagen_url || buscarImagenLocal(p.nombre) || PRODUCTOS_DATA[0]?.imagen,
+      categoria: p.categoria || 'GENERAL',
+      calificacion: p.calificacion || 0,
+      valoraciones: p.valoraciones || 0
+    }))
     : PRODUCTOS_DATA.slice(0, 5);
 
   return (

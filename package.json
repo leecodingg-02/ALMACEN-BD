@@ -7,11 +7,14 @@
     "dev": "vite",
     "server": "node server/servidor.js",
     "init-db": "node server/importar_bd.js",
+    "exportar-bd": "node server/exportar_bd.js",
+    "importar-backup": "node server/importar_backup.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

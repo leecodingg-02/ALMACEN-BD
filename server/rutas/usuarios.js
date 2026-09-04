@@ -2,6 +2,7 @@
 // Permite autenticación, gestión de personal, perfil, direcciones y favoritos desde MySQL
 
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 import pool from '../conexion.js';
 
 const router = Router();
@@ -33,11 +34,15 @@ router.post('/login', async (req, res) => {
 
     const usuario = filas[0];
 
-    // Comprobar contraseña (valida contraseña directa o hash inicial)
-    const contrasenaValida = 
-      usuario.contrasena_hash === contrasena ||
-      usuario.contrasena_hash?.startsWith('$2y$') ||
-      contrasena === '123456';
+    // Verificar la contraseña con bcrypt
+    // Si el hash no empieza con $2 (bcrypt), se compara en texto plano (compatibilidad con datos antiguos)
+    let contrasenaValida = false;
+    if (usuario.contrasena_hash?.startsWith('$2')) {
+      contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena_hash);
+    } else {
+      // Compatibilidad con contraseñas antiguas guardadas en texto plano
+      contrasenaValida = usuario.contrasena_hash === contrasena;
+    }
 
     if (!contrasenaValida) {
       return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
@@ -228,10 +233,13 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Este correo electrónico ya está registrado' });
     }
 
+    // Hashear la contraseña antes de guardarla en la base de datos
+    const contrasenaHash = await bcrypt.hash(contrasena, 10);
+
     const [resultado] = await pool.query(`
       INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, telefono, contrasena_hash, id_rol, id_suc, estado)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tipo_doc, num_ident, nom, ape, correo, telefono, contrasena, id_rol, id_suc, estado]);
+    `, [tipo_doc, num_ident, nom, ape, correo, telefono, contrasenaHash, id_rol, id_suc, estado]);
 
     res.status(201).json({
       id: resultado.insertId,

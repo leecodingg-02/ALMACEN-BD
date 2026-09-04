@@ -25,10 +25,10 @@ import rutasUbicaciones from './rutas/ubicaciones.js';
 const app = express();
 const PUERTO = process.env.PUERTO_SERVIDOR || 3001;
 
-// Permitir conexiones desde cualquier puerto local de desarrollo (Vite)
+// Permitir conexiones desde cualquier origen en desarrollo (Vite)
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 

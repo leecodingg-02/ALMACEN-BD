@@ -1,7 +1,8 @@
 // Servicio central de API para conectar el Frontend con el Backend MySQL
 // Hace peticiones a Node/Express (puerto 3001) y mantiene sincronizada la información
 
-const BASE_URL = 'http://localhost:3001/api';
+// Usa rutas relativas para que el proxy de Vite redirija al backend
+const BASE_URL = '/api';
 
 // Petición genérica con reintento y fallback seguro
 async function peticion(endpoint, opciones = {}) {
@@ -15,11 +16,23 @@ async function peticion(endpoint, opciones = {}) {
     });
 
     if (!respuesta.ok) {
-      throw new Error(`Error en el servidor: ${respuesta.status} ${respuesta.statusText}`);
+      // Intentar leer el mensaje de error del backend
+      let detalle = '';
+      try {
+        const cuerpo = await respuesta.json();
+        detalle = cuerpo.error || cuerpo.mensaje || '';
+      } catch {
+        detalle = '';
+      }
+      throw new Error(detalle || `Error en el servidor: ${respuesta.status} ${respuesta.statusText}`);
     }
 
     return await respuesta.json();
   } catch (error) {
+    // Traducir el error de red a un mensaje claro para el usuario
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('No se pudo conectar con el servidor. Verifica que el backend esté en ejecución.');
+    }
     console.warn(`[API] Error al consultar ${endpoint}:`, error.message);
     throw error;
   }

@@ -84,6 +84,14 @@ router.post('/', async (req, res) => {
       detalles = []
     } = req.body;
 
+    // Validar que el usuario esté autenticado con cuenta registrada
+    if (!id_cli) {
+      await conexion.rollback();
+      return res.status(401).json({
+        error: 'Necesitas iniciar sesión con una cuenta registrada para realizar una compra'
+      });
+    }
+
     // 1. Insertar cabecera de la venta
     const [resVenta] = await conexion.query(`
       INSERT INTO venta (id_cli, id_suc, subtotal, impuesto, descuento, total, estado)

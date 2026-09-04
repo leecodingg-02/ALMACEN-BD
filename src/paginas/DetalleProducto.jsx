@@ -8,9 +8,10 @@ import {
 } from "./Productos";
 import { api } from "../servicios/api";
 import { obtenerUsuarioSesion } from "../servicios/usuario";
+import { useAvisoSesion } from "../contextos/AvisoSesionContext";
 import "./DetalleProducto.css";
 
-const DetalleProducto = ({ onAgregarCarrito }) => {
+const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavorito }) => {
   const { id } = useParams();
   const producto = PRODUCTOS_DATA.find((p) => p.id === parseInt(id, 10));
 
@@ -127,7 +128,22 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
                   {producto.etiqueta}
                 </span>
               )}
-              <button className='favorito-detalle'>&#9825;</button>
+              <button 
+                type="button"
+                className={`favorito-detalle ${favoritos.includes(producto.id) ? 'activo' : ''}`}
+                onClick={() => {
+                  const sesion = usuario || obtenerUsuarioSesion();
+                  if (!sesion) {
+                    mostrarAvisoSesion('agregar productos a tus favoritos', 'favoritos');
+                    return;
+                  }
+                  onAlternarFavorito?.(producto.id);
+                }}
+                title={favoritos.includes(producto.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                aria-label={favoritos.includes(producto.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+              >
+                {favoritos.includes(producto.id) ? '❤️' : '♡'}
+              </button>
               <div
                 className='imagen-principal'
                 style={{ backgroundColor: fondosGaleria[imagenActiva] }}
@@ -374,6 +390,9 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
                   key={p.id}
                   producto={p}
                   onAgregarCarrito={onAgregarCarrito}
+                  usuario={usuario}
+                  favoritos={favoritos}
+                  onAlternarFavorito={onAlternarFavorito}
                 />
               ))}
             </div>

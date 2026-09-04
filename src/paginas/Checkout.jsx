@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { crearOrden } from "../servicios/ordenes";
 import { obtenerTotalCarrito } from "../servicios/carrito";
 import { formatearPrecio } from "./Productos";
+import { useAvisoSesion } from "../contextos/AvisoSesionContext";
 import "./Checkout.css";
 
 /* Lista de departamentos — coincide con el ENUM de la tabla ubicacion */
@@ -15,35 +16,48 @@ const DEPARTAMENTOS = [
   "Valle del Cauca", "Vaupés", "Vichada",
 ];
 
-/**
- * Checkout
- * Formulario de datos de envío con validaciones.
- * Al confirmar, crea la orden (mock) y redirige a /confirmacion.
- *
- * Campos alineados a las tablas:
- *  - usuario  : nombre, apellido, tipo_doc, num_ident, telefono, correo
- *  - ubicacion: departamento, ciudad, direccion
- */
-const Checkout = ({ carrito: carrritoProp, onLimpiarCarrito }) => {
+const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { mostrarAvisoSesion } = useAvisoSesion();
 
   /* El carrito puede venir por state (desde Carrito.jsx) o por prop */
   const carrito = location.state?.carrito || carrritoProp || [];
   const total = obtenerTotalCarrito(carrito);
 
+  /* Si no hay usuario autenticado, disparar aviso */
+  useEffect(() => {
+    if (!usuario) {
+      mostrarAvisoSesion("realizar una compra", "checkout");
+    }
+  }, [usuario, mostrarAvisoSesion]);
+
   /* Estado del formulario */
   const [form, setForm] = useState({
-    nombre: "",
-    apellido: "",
-    tipoDoc: "C.C",
-    numIdent: "",
-    telefono: "",
-    correo: "",
-    departamento: "",
-    ciudad: "",
+    nombre: usuario?.nombre || "",
+    apellido: usuario?.apellido || "",
+    tipoDoc: usuario?.tipo_doc || "C.C",
+    numIdent: usuario?.num_ident || "",
+    telefono: usuario?.telefono || "",
+    correo: usuario?.correo || "",
+    departamento: "Bogotá D.C.",
+    ciudad: "Bogotá",
     direccion: "",
   });
+
+  useEffect(() => {
+    if (usuario) {
+      setForm((prev) => ({
+        ...prev,
+        nombre: usuario.nombre || prev.nombre,
+        apellido: usuario.apellido || prev.apellido,
+        tipoDoc: usuario.tipo_doc || prev.tipoDoc,
+        numIdent: usuario.num_ident || prev.numIdent,
+        telefono: usuario.telefono || prev.telefono,
+        correo: usuario.correo || prev.correo,
+      }));
+    }
+  }, [usuario]);
 
   /* Errores de validación */
   const [errores, setErrores] = useState({});
@@ -135,6 +149,10 @@ const Checkout = ({ carrito: carrritoProp, onLimpiarCarrito }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!usuario) {
+      mostrarAvisoSesion("realizar una compra", "checkout");
+      return;
+    }
     if (!validarFormulario()) return;
 
     setEnviando(true);
@@ -142,6 +160,7 @@ const Checkout = ({ carrito: carrritoProp, onLimpiarCarrito }) => {
     const { idOrden, orden } = await crearOrden({
       carrito,
       cliente: {
+        id_usu: usuario.id_usu,
         nombre: form.nombre,
         apellido: form.apellido,
         tipo_doc: form.tipoDoc,

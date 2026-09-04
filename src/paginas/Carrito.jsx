@@ -4,17 +4,23 @@ import {
   obtenerCantidadTotal,
 } from "../servicios/carrito";
 import { formatearPrecio } from "./Productos";
+import { useAvisoSesion } from "../contextos/AvisoSesionContext";
 import "./Carrito.css";
 
 /*  Carrito  */
-const Carrito = ({ carrito, onActualizarCant, onRemoverLinea }) => {
+const Carrito = ({ carrito, usuario, onActualizarCant, onRemoverLinea }) => {
   const navigate = useNavigate();
+  const { mostrarAvisoSesion } = useAvisoSesion();
   const total = obtenerTotalCarrito(carrito);
   const cantidadTotal = obtenerCantidadTotal(carrito);
 
-  /* Navegar al checkout pasando el carrito en state */
+  /* Navegar al pago pasando el carrito en state si tiene cuenta */
   const irAlCheckout = () => {
-    navigate("/checkout", { state: { carrito } });
+    if (!usuario) {
+      mostrarAvisoSesion("realizar una compra", "carrito");
+      return;
+    }
+    navigate("/pasarela-pagos", { state: { carrito } });
   };
 
   /* Carrito vacío */
@@ -150,7 +156,7 @@ const Carrito = ({ carrito, onActualizarCant, onRemoverLinea }) => {
             className='boton-carrito boton-comprar'
             onClick={irAlCheckout}
           >
-            Ir al checkout
+            Proceder a la Pasarela de Pago &rarr;
           </button>
 
           <p className='carrito-nota'>

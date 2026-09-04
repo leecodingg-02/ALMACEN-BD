@@ -29,6 +29,8 @@ import {
   alternarFavoritoUsuario,
   obtenerConfiguracionUsuario,
 } from "./servicios/usuario";
+import PasarelaPagos from "./paginas/PasarelaPagos";
+import { AvisoSesionProvider } from "./contextos/AvisoSesionContext";
 
 // Panel de Administración
 import AdminLayout from './componentes/AdminLayout'
@@ -143,7 +145,7 @@ function App() {
   };
 
   return (
-    <>
+    <AvisoSesionProvider>
       {!esPanel && (
         <Encabezado
           cantidadCarrito={obtenerCantidadTotal(carrito)}
@@ -161,22 +163,40 @@ function App() {
               carrito={carrito}
               onLimpiarCarrito={() => setCarrito([])}
               onAgregarCarrito={agregarAlCarrito}
+              usuario={usuario}
+              favoritos={favoritos}
+              onAlternarFavorito={handleAlternarFavorito}
             />
           }
         />
         <Route
           path='/productos'
-          element={<Productos onAgregarCarrito={agregarAlCarrito} />}
+          element={
+            <Productos
+              onAgregarCarrito={agregarAlCarrito}
+              usuario={usuario}
+              favoritos={favoritos}
+              onAlternarFavorito={handleAlternarFavorito}
+            />
+          }
         />
         <Route
           path='/productos/:id'
-          element={<DetalleProducto onAgregarCarrito={agregarAlCarrito} />}
+          element={
+            <DetalleProducto
+              onAgregarCarrito={agregarAlCarrito}
+              usuario={usuario}
+              favoritos={favoritos}
+              onAlternarFavorito={handleAlternarFavorito}
+            />
+          }
         />
         <Route
           path='/carrito'
           element={
             <Carrito
               carrito={carrito}
+              usuario={usuario}
               onActualizarCant={actualizarCantCarrito}
               onRemoverLinea={removerDelCarrito}
             />
@@ -184,7 +204,23 @@ function App() {
         />
         <Route
           path='/checkout'
-          element={<Checkout carrito={carrito} onLimpiarCarrito={() => setCarrito([])} />}
+          element={
+            <Checkout
+              usuario={usuario}
+              carrito={carrito}
+              onLimpiarCarrito={() => setCarrito([])}
+            />
+          }
+        />
+        <Route
+          path='/pasarela-pagos'
+          element={
+            <PasarelaPagos
+              usuario={usuario}
+              carrito={carrito}
+              onLimpiarCarrito={() => setCarrito([])}
+            />
+          }
         />
         <Route
           path='/confirmacion'
@@ -224,7 +260,7 @@ function App() {
         </Route>
       </Routes>
       {!esPanel && <PiePagina />}
-    </>
+    </AvisoSesionProvider>
   );
 }
 

@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import './Inicio.css';
 import { PRODUCTOS_DATA, TarjetaProducto, formatearPrecio } from './Productos';
 import { api } from '../servicios/api';
-import { crearOrden } from '../servicios/ordenes';
-import { obtenerTotalCarrito } from '../servicios/carrito';
+import { useAvisoSesion } from '../contextos/AvisoSesionContext';
 
 const IMAGENES_CATEGORIAS_DEF = {
   Herramientas: 'https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-1024x682.jpg',
@@ -14,26 +13,17 @@ const IMAGENES_CATEGORIAS_DEF = {
   'Baño y Cocina': 'https://dugal.es/wp-content/uploads/2024/05/Tendencias-en-diseno-de-interiores-2024.jpg'
 };
 
-const Inicio = ({ carrito = [], onLimpiarCarrito }) => {
+const Inicio = ({ 
+  carrito = [], 
+  onLimpiarCarrito, 
+  onAgregarCarrito, 
+  usuario, 
+  favoritos = [], 
+  onAlternarFavorito 
+}) => {
+  const { mostrarAvisoSesion } = useAvisoSesion();
   const [categoriasBD, setCategoriasBD] = useState([]);
   const [productosBD, setProductosBD] = useState([]);
-
-  // Estado del Módulo de Pagos
-  const [formPago, setFormPago] = useState({
-    nombre: '',
-    apellido: '',
-    tipoDoc: 'C.C',
-    numIdent: '',
-    telefono: '',
-    correo: '',
-    direccion: '',
-    ciudad: 'Bogotá',
-    metodoPago: 'Tarjeta'
-  });
-
-  const [procesandoPago, setProcesandoPago] = useState(false);
-  const [mensajeExito, setMensajeExito] = useState(null);
-  const [mensajeError, setMensajeError] = useState(null);
 
   // Cargar categorías y productos directamente desde la base de datos MySQL
   useEffect(() => {
@@ -50,76 +40,7 @@ const Inicio = ({ carrito = [], onLimpiarCarrito }) => {
     });
   }, []);
 
-  const totalCarrito = obtenerTotalCarrito(carrito);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormPago((prev) => ({ ...prev, [name]: value }));
-    if (mensajeError) setMensajeError(null);
-  };
-
-  const handleProcesarPago = async (e) => {
-    e.preventDefault();
-    setMensajeError(null);
-    setMensajeExito(null);
-
-    // Validar formulario de pago
-    if (!formPago.nombre.trim() || !formPago.apellido.trim() || !formPago.numIdent.trim() || !formPago.correo.trim() || !formPago.direccion.trim()) {
-      setMensajeError('Por favor completa todos los campos requeridos (*)');
-      return;
-    }
-
-    if (carrito.length === 0) {
-      setMensajeError('No hay productos en tu carrito de compras para procesar el pago. Agrega algunos productos arriba.');
-      return;
-    }
-
-    setProcesandoPago(true);
-
-    try {
-      const { idOrden } = await crearOrden({
-        carrito,
-        cliente: {
-          nombre: formPago.nombre,
-          apellido: formPago.apellido,
-          tipo_doc: formPago.tipoDoc,
-          num_ident: formPago.numIdent,
-          telefono: formPago.telefono,
-          correo: formPago.correo,
-          departamento: 'Cundinamarca',
-          ciudad: formPago.ciudad,
-          direccion: formPago.direccion,
-          metodoPago: formPago.metodoPago
-        }
-      });
-
-      setProcesandoPago(false);
-      setMensajeExito(`¡Pago de ${formatearPrecio(totalCarrito)} aprobado con éxito! Tu número de orden registrada en MySQL es: ${idOrden}`);
-
-      // Limpiar carrito
-      if (typeof onLimpiarCarrito === 'function') {
-        onLimpiarCarrito();
-      }
-      localStorage.removeItem('almacenweb_carrito');
-
-      // Limpiar formulario
-      setFormPago({
-        nombre: '',
-        apellido: '',
-        tipoDoc: 'C.C',
-        numIdent: '',
-        telefono: '',
-        correo: '',
-        direccion: '',
-        ciudad: 'Bogotá',
-        metodoPago: 'Tarjeta'
-      });
-    } catch (err) {
-      console.error('Error procesando pago:', err);
-      setProcesandoPago(false);
-      setMensajeError('Ocurrió un fallo al conectar con la pasarela de pago o registrar en MySQL.');
-    }
-  };
 
   // Categorías a renderizar (BD o fallback)
   const listaCategorias = categoriasBD.length > 0
@@ -137,15 +58,23 @@ const Inicio = ({ carrito = [], onLimpiarCarrito }) => {
       ];
 
   // Productos destacados (BD o fallback)
+  // Busca imagen coincidente en PRODUCTOS_DATA para evitar imagen genérica única
+  const buscarImagenLocal = (nombreProducto) => {
+    const coincidencia = PRODUCTOS_DATA.find(
+      (pd) => pd.titulo.toLowerCase() === (nombreProducto || '').toLowerCase()
+    );
+    return coincidencia?.imagen || null;
+  };
+
   const productosDestacados = productosBD.length > 0
     ? productosBD.slice(0, 5).map((p) => ({
         id: p.id_pro || p.id,
         titulo: p.nombre,
         precio: p.precio,
-        imagen: p.imagen_url || 'https://admin.wurth.co/uploads/ec5f5dc6_8a5c_45c1_8630_f7dc139a3e30_7b732362fb.jpg',
+        imagen: p.imagen_url || buscarImagenLocal(p.nombre) || PRODUCTOS_DATA[0]?.imagen,
         categoria: p.categoria || 'GENERAL',
-        calificacion: 5,
-        valoraciones: 45
+        calificacion: p.calificacion || 0,
+        valoraciones: p.valoraciones || 0
       }))
     : PRODUCTOS_DATA.slice(0, 5);
 
@@ -237,172 +166,19 @@ const Inicio = ({ carrito = [], onLimpiarCarrito }) => {
           </div>
           <div className="productos-cuadricula">
             {productosDestacados.map((producto) => (
-              <TarjetaProducto key={producto.id} producto={producto} />
+              <TarjetaProducto
+                key={producto.id}
+                producto={producto}
+                onAgregarCarrito={onAgregarCarrito}
+                usuario={usuario}
+                favoritos={favoritos}
+                onAlternarFavorito={onAlternarFavorito}
+              />
             ))}
           </div>
         </section>
 
-        {/* MÓDULO DE PAGOS FUNCIONAL NOVACASA */}
-        <section className="modulo-pagos-seccion" id="modulo-pagos">
-          <div className="tarjeta-modulo-pagos">
-            <div className="encabezado-modulo-pagos">
-              <div className="icono-pago-insignia">⚡</div>
-              <div>
-                <h2>Módulo de Pagos Seguros en Línea</h2>
-                <p>Procesa tu compra de forma instantánea y regístrala directamente en el sistema.</p>
-              </div>
-            </div>
 
-            {/* Alertas de Respuesta */}
-            {mensajeExito && (
-              <div className="alerta-pago exito">
-                <span className="alerta-icono">✓</span>
-                <div>
-                  <strong>¡Pago Aprobado!</strong>
-                  <p>{mensajeExito}</p>
-                </div>
-              </div>
-            )}
-
-            {mensajeError && (
-              <div className="alerta-pago error">
-                <span className="alerta-icono">⚠️</span>
-                <div>
-                  <strong>Atención</strong>
-                  <p>{mensajeError}</p>
-                </div>
-              </div>
-            )}
-
-            <form className="formulario-modulo-pagos" onSubmit={handleProcesarPago}>
-              <div className="grilla-campos-pago">
-                {/* Datos Comprador */}
-                <div className="campo-pago">
-                  <label>Nombre *</label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    placeholder="Ej: Carlos"
-                    value={formPago.nombre}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago">
-                  <label>Apellido *</label>
-                  <input
-                    type="text"
-                    name="apellido"
-                    placeholder="Ej: Gómez"
-                    value={formPago.apellido}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago">
-                  <label>Tipo Documento *</label>
-                  <select name="tipoDoc" value={formPago.tipoDoc} onChange={handleInputChange}>
-                    <option value="C.C">C.C</option>
-                    <option value="C.E">C.E</option>
-                    <option value="NIT">NIT</option>
-                    <option value="PAS">PAS</option>
-                  </select>
-                </div>
-
-                <div className="campo-pago">
-                  <label>N° Documento *</label>
-                  <input
-                    type="text"
-                    name="numIdent"
-                    placeholder="Ej: 1020304050"
-                    value={formPago.numIdent}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago">
-                  <label>Teléfono *</label>
-                  <input
-                    type="text"
-                    name="telefono"
-                    placeholder="Ej: 3001234567"
-                    value={formPago.telefono}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago">
-                  <label>Correo Electrónico *</label>
-                  <input
-                    type="email"
-                    name="correo"
-                    placeholder="cliente@correo.com"
-                    value={formPago.correo}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago campo-completo">
-                  <label>Dirección de Entrega *</label>
-                  <input
-                    type="text"
-                    name="direccion"
-                    placeholder="Ej: Calle 100 #15-20"
-                    value={formPago.direccion}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="campo-pago campo-completo">
-                  <label>Método de Pago *</label>
-                  <div className="selector-metodos-pago">
-                    {[
-                      { id: 'Tarjeta', label: '💳 Tarjeta Crédito/Débito' },
-                      { id: 'PSE', label: '🏦 Transferencia PSE' },
-                      { id: 'Nequi', label: '📱 Nequi / Daviplata' },
-                      { id: 'Efectivo', label: '💵 Efectivo Contra Entrega' }
-                    ].map((met) => (
-                      <button
-                        key={met.id}
-                        type="button"
-                        className={`opcion-metodo-pago ${formPago.metodoPago === met.id ? 'activo' : ''}`}
-                        onClick={() => setFormPago((prev) => ({ ...prev, metodoPago: met.id }))}
-                      >
-                        {met.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Resumen del Carrito y Botón de Pago */}
-              <div className="resumen-pago-pie">
-                <div className="info-total-pago">
-                  <span>Total a pagar ({carrito.length} artículos):</span>
-                  <strong>{formatearPrecio(totalCarrito)}</strong>
-                </div>
-
-                <button
-                  type="submit"
-                  className="boton boton-primario btn-procesar-pago-modulo"
-                  disabled={procesandoPago}
-                >
-                  {procesandoPago ? (
-                    <span className="loader-pago">Procesando pago seguro...</span>
-                  ) : (
-                    <>Completar Pago Seguro &rarr;</>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
 
         {/* Secciones Inferiores (Por qué elegirnos & Inspiración) */}
         <section className="secciones-inferiores">

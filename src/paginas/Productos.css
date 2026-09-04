@@ -208,6 +208,20 @@
 
 .producto-favorito:hover {
     color: #ff4757;
+    transform: scale(1.1);
+}
+
+.producto-favorito.activo {
+    color: #e11d48;
+    background: #fff1f2;
+    border-color: #fecdd3;
+    animation: latidoFavorito 0.35s ease;
+}
+
+@keyframes latidoFavorito {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
 }
 
 .producto-imagen-marcador {

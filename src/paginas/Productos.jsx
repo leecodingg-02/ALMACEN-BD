@@ -1,8 +1,9 @@
-/* eslint-disable react-refresh/only-export-components */
 import { useState, useMemo, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import "./Productos.css";
 import { api } from "../servicios/api";
+import { useAvisoSesion } from "../contextos/AvisoSesionContext";
+import { obtenerUsuarioSesion } from "../servicios/usuario";
 
 // ============================================================
 // FUENTE ÚNICA DE DATOS DE PRODUCTOS
@@ -535,8 +536,30 @@ export const renderizarEstrellas = (calificacion) => {
 // ============================================================
 // COMPONENTE TARJETA (reutilizable + clicable)
 // ============================================================
-export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
+export const TarjetaProducto = ({
+  producto,
+  onAgregarCarrito,
+  usuario,
+  favoritos = [],
+  onAlternarFavorito
+}) => {
   const [imagenDisponible, setImagenDisponible] = useState(true);
+  const { mostrarAvisoSesion } = useAvisoSesion();
+
+  const sesionActiva = usuario || obtenerUsuarioSesion();
+  const esFavorito = Boolean(favoritos && favoritos.includes(producto.id));
+
+  const handleFavoritoClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!sesionActiva) {
+      mostrarAvisoSesion('agregar productos a tus favoritos', 'favoritos');
+      return;
+    }
+    if (typeof onAlternarFavorito === 'function') {
+      onAlternarFavorito(producto.id);
+    }
+  };
 
   return (
     <Link to={`/productos/${producto.id}`} className='tarjeta-producto-link'>
@@ -546,8 +569,14 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
             {producto.etiqueta}
           </span>
         )}
-        <button className='producto-favorito' onClick={(e) => e.preventDefault()}>
-          &#9825;
+        <button
+          type="button"
+          className={`producto-favorito ${esFavorito ? 'activo' : ''}`}
+          onClick={handleFavoritoClick}
+          title={esFavorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+          aria-label={esFavorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+        >
+          {esFavorito ? '❤️' : '♡'}
         </button>
         <div className='producto-imagen-marcador'>
           {imagenDisponible ? (
@@ -597,7 +626,7 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
 // ============================================================
 // PÁGINA PRINCIPAL DE PRODUCTOS
 // ============================================================
-const Productos = ({ onAgregarCarrito }) => {
+const Productos = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavorito }) => {
   const [searchParams] = useSearchParams();
   const categoriaDesdeUrl = searchParams.get("categoria");
   const busquedaDesdeUrl = searchParams.get("buscar");
@@ -824,6 +853,9 @@ const Productos = ({ onAgregarCarrito }) => {
                     key={producto.id}
                     producto={producto}
                     onAgregarCarrito={onAgregarCarrito}
+                    usuario={usuario}
+                    favoritos={favoritos}
+                    onAlternarFavorito={onAlternarFavorito}
                   />
                 ))}
               </div>

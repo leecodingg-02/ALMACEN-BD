@@ -3,6 +3,7 @@
 
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
 
 // Cargar las variables del archivo .env
 dotenv.config();
@@ -19,11 +20,25 @@ const pool = mysql.createPool({
   queueLimit: 0              // Cola de espera ilimitada
 });
 
-// Comprobar la conexión al arrancar el servidor
+// Comprobar la conexión y auto-migrar campos requeridos al arrancar
 async function probarConexion() {
   try {
     const conexion = await pool.getConnection();
     console.log(`✅ Conexión exitosa con MySQL — Base de datos: "${process.env.DB_NAME || 'bd_almacen_1'}"`);
+
+    // Asegurar que la tabla proveedor tenga la columna contrasena_hash
+    try {
+      const [cols] = await conexion.query("SHOW COLUMNS FROM proveedor LIKE 'contrasena_hash'");
+      if (cols.length === 0) {
+        await conexion.query("ALTER TABLE proveedor ADD COLUMN contrasena_hash VARCHAR(255) NULL AFTER direccion");
+        const defaultHash = await bcrypt.hash('123456', 10);
+        await conexion.query("UPDATE proveedor SET contrasena_hash = ? WHERE contrasena_hash IS NULL OR contrasena_hash = ''", [defaultHash]);
+        console.log('✅ Esquema verificado: Columna contrasena_hash agregada a la tabla proveedor.');
+      }
+    } catch {
+      // Ignorar si la tabla aún no ha sido creada
+    }
+
     conexion.release();
   } catch (error) {
     console.error('❌ Error al conectar con MySQL:', error.message);

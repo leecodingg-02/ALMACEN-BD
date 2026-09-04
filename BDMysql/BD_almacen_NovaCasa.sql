@@ -39,6 +39,7 @@ CREATE TABLE proveedor (
     telefono VARCHAR(20) NULL,
     correo VARCHAR(100) NULL,
     direccion VARCHAR(150) NULL,
+    contrasena_hash VARCHAR(255) NULL,
     estado ENUM('Activo','Inactivo') NOT NULL DEFAULT 'Activo',
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -363,13 +364,13 @@ INSERT INTO marca (nombre, pais, contacto, estado) VALUES
     ('Sin Marca Registrada', NULL, NULL, 'Activo'); -- placeholder: el catálogo público no trae marca
 
 
--- proveedor (nombres reales de AdminCompras.jsx; NIT/contacto = FICT
-INSERT INTO proveedor (razon_social, nit, nombre_contacto, telefono, correo, direccion, estado) VALUES
-    ('DeWalt Colombia', '900000001-1', NULL, NULL, NULL, NULL, 'Activo'),
-    ('Bosch Distribuidora', '900000002-1', NULL, NULL, NULL, NULL, 'Activo'),
-    ('HomeStyle S.A.S', '900000003-1', NULL, NULL, NULL, NULL, 'Activo'),
-    ('LumEx México', '900000004-1', NULL, NULL, NULL, NULL, 'Activo'),
-    ('GreenHome', '900000005-1', NULL, NULL, NULL, NULL, 'Activo');
+-- proveedor (nombres reales de AdminCompras.jsx; NIT/contacto = FICT. Contraseña inicial: 123456)
+INSERT INTO proveedor (razon_social, nit, nombre_contacto, telefono, correo, direccion, contrasena_hash, estado) VALUES
+    ('DeWalt Colombia', '900000001-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo'),
+    ('Bosch Distribuidora', '900000002-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo'),
+    ('HomeStyle S.A.S', '900000003-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo'),
+    ('LumEx México', '900000004-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo'),
+    ('GreenHome', '900000005-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo');
 -- NIT arriba son FICTICIOS (el mock de AdminCompras.jsx solo trae el nombre del proveedor).
 
 

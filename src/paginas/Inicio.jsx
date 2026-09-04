@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Inicio.css';
 import { PRODUCTOS_DATA, TarjetaProducto } from './Productos';
 
@@ -11,10 +12,10 @@ const Inicio = () => {
                     <h1>Haz de tu<br />hogar tu mejor<br /><span>versión.</span></h1>
                     <p>Herramientas, muebles y decoración para cada espacio.</p>
                     <div className="portada-botones">
-                        <a href="#" className="boton boton-primario">Explorar productos</a>
-                        <a href="#" className="boton boton-contorno">
+                        <Link to="/productos" className="boton boton-primario">Explorar productos</Link>
+                        <Link to="/ofertas" className="boton boton-contorno">
                         Ver ofertas
-                        </a>
+                        </Link>
                     </div>
                 </div>
                 <div className="portada-imagen">
@@ -26,7 +27,7 @@ const Inicio = () => {
 
             {/* Sección Categorías */}
             <section className="categorias">
-                <div className="tarjeta-categoria destacado">
+                <Link to="/productos?categoria=Herramientas" className="tarjeta-categoria destacado">
                     <div className="categoria-imagen-marcador">
                         {/* Marcador de imagen de taladro */}
                         <img src="https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-1024x682.jpg" alt="Herramientas" />
@@ -36,8 +37,8 @@ const Inicio = () => {
                         <p>Todo para construir y reparar.</p>
                         <span className="categoria-icono">&rarr;</span>
                     </div>
-                </div>
-                <div className="tarjeta-categoria">
+                </Link>
+                <Link to="/productos?categoria=Muebles" className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
                         <img src="https://blog.jamar.com/wp-content/uploads/Juego-sala-Gris-1200x900.jpg" alt="Muebles" />
                     </div>
@@ -46,8 +47,8 @@ const Inicio = () => {
                         <p>Diseños para cada espacio de tu hogar.</p>
                         <span className="categoria-icono">&rarr;</span>
                     </div>
-                </div>
-                <div className="tarjeta-categoria">
+                </Link>
+                <Link to="/productos?categoria=Decoración" className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
                         <img src="https://www.tuoagency.com/uploads/blog/c%C3%B3mo%20decorar%20paredes%20con%20telas/como-decorar-con-telas2.jpg?1646062174189.jpg" alt="Decoración" />
                     </div>
@@ -56,8 +57,8 @@ const Inicio = () => {
                         <p>Detalles que transforman tus espacios.</p>
                         <span className="categoria-icono">&rarr;</span>
                     </div>
-                </div>
-                <div className="tarjeta-categoria">
+                </Link>
+                <Link to="/productos?categoria=Iluminación" className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
                         <img src="https://www.eglo.com/media/wysiwyg/Iluminaci_n_Vintage_Que_es_y_que_estilos_hay_5.jpg" alt="Iluminación" />
                     </div>
@@ -66,8 +67,8 @@ const Inicio = () => {
                         <p>Ambientes que inspiran.</p>
                         <span className="categoria-icono">&rarr;</span>
                     </div>
-                </div>
-                <div className="tarjeta-categoria">
+                </Link>
+                <Link to="/productos?categoria=Baño%20y%20Cocina" className="tarjeta-categoria">
                     <div className="categoria-imagen-marcador">
                         <img src="https://dugal.es/wp-content/uploads/2024/05/Tendencias-en-diseno-de-interiores-2024.jpg" alt="Baño y Cocina" />
                     </div>
@@ -76,7 +77,7 @@ const Inicio = () => {
                         <p>Funcionalidad y estilo.</p>
                         <span className="categoria-icono">&rarr;</span>
                     </div>
-                </div>
+                </Link>
             </section>
 
             {/* Sección Características */}
@@ -123,7 +124,7 @@ const Inicio = () => {
             <section className="productos">
                 <div className="productos-encabezado">
                     <h2>Productos destacados</h2>
-                    <a href="/productos" className="ver-todos">Ver todos &rarr;</a>
+                    <Link to="/productos" className="ver-todos">Ver todos &rarr;</Link>
                 </div>
                 <div className="productos-cuadricula">
                     {PRODUCTOS_DATA.slice(0, 5).map(producto => (
@@ -174,7 +175,7 @@ const Inicio = () => {
                     </div>
                     <div className="inspiracion-contenido">
                         <h2>Inspírate,<br />crea y disfruta<br />tu espacio.</h2>
-                        <a href="productos" className="boton boton-primario">Ver inspiración &rarr;</a>
+                        <Link to="/productos" className="boton boton-primario">Ver inspiración &rarr;</Link>
                     </div>
                 </div>
             </section>

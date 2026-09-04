@@ -10,7 +10,7 @@ function PiePagina() {
         <div className="pie-pagina-col pie-col-marca">
           <div className="encabezado-logo pie-logo-encabezado">
             <Link to="/">
-              <img src="/src/imagenes/logo.png" alt="Logo NovaCasa" />
+              <img src="/src/imagenes/logo_blanco.png" alt="Logo NovaCasa" />
             </Link>
           </div>
 
@@ -94,32 +94,32 @@ function PiePagina() {
           <h4 className="pie-col-titulo">Productos</h4>
           <ul className="pie-enlaces-lista">
             <li>
-              <Link to="/productos" className="pie-enlace">
+              <Link to="/productos?categoria=Herramientas" className="pie-enlace">
                 Herramientas
               </Link>
             </li>
             <li>
-              <Link to="/productos" className="pie-enlace">
+              <Link to="/productos?categoria=Muebles" className="pie-enlace">
                 Muebles
               </Link>
             </li>
             <li>
-              <Link to="/productos" className="pie-enlace">
+              <Link to="/productos?categoria=Decoración" className="pie-enlace">
                 Decoración
               </Link>
             </li>
             <li>
-              <Link to="/productos" className="pie-enlace">
+              <Link to="/productos?categoria=Iluminación" className="pie-enlace">
                 Iluminación
               </Link>
             </li>
             <li>
-              <Link to="/productos" className="pie-enlace">
+              <Link to="/productos?categoria=Baño%20y%20Cocina" className="pie-enlace">
                 Baño y Cocina
               </Link>
             </li>
             <li>
-              <Link to="/productos" className="pie-enlace pie-enlace-destacado">
+              <Link to="/ofertas" className="pie-enlace">
                 Ofertas
               </Link>
             </li>

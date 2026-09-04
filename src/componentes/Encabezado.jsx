@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Encabezado.css";
 import { useState } from "react";
 
@@ -9,6 +9,14 @@ function Encabezado({
   onAlternarSesion,
 }) {
   const [desplegableAbierto, setDesplegableAbierto] = useState(false);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+  const navigate = useNavigate();
+
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    if (!textoBusqueda.trim()) return;
+    navigate(`/productos?buscar=${encodeURIComponent(textoBusqueda.trim())}`);
+  };
 
   return (
     <header className='encabezado-contenedor'>
@@ -135,13 +143,15 @@ function Encabezado({
           </Link>
         </div>
 
-        <div className='busqueda-contenedor'>
+        <form className='busqueda-contenedor' onSubmit={handleBuscar}>
           <input
             type='text'
             className='busqueda'
             placeholder='¿Qué quieres buscar?'
+            value={textoBusqueda}
+            onChange={(e) => setTextoBusqueda(e.target.value)}
           />
-          <button className='buscar-btn'>
+          <button type='submit' className='buscar-btn'>
             <svg
               className='icono-pri'
               xmlns='http://www.w3.org/2000/svg'
@@ -157,7 +167,7 @@ function Encabezado({
               />
             </svg>
           </button>
-        </div>
+        </form>
 
         <div className='encabezado-botones'>
           <NavLink to='/' className='navegacion'>

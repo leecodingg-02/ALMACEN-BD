@@ -63,12 +63,18 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
     setImagenActiva((actual) => (actual + direccion + fondosGaleria.length) % fondosGaleria.length);
   };
 
+  const usuarioSesion = obtenerUsuarioSesion();
+
   const guardarResena = async (e) => {
     e.preventDefault();
     setMensajeResena("");
-    const usuario = obtenerUsuarioSesion();
+    if (!usuarioSesion || !usuarioSesion.id_usu) {
+      setMensajeResena("Debes iniciar sesión para publicar una reseña.");
+      return;
+    }
+
     const respuesta = await api.post(`/productos/${producto.id}/resenas`, {
-      id_usu: usuario?.id_usu || null,
+      id_usu: usuarioSesion.id_usu,
       calificacion: resenaNueva.calificacion,
       comentario: resenaNueva.comentario,
     });
@@ -321,27 +327,36 @@ const DetalleProducto = ({ onAgregarCarrito }) => {
               ))}
             </div>
           )}
-          <form className='formulario-resena' onSubmit={guardarResena}>
-            <h3>Escribe una reseña</h3>
-            <label>
-              Calificación
-              <select
-                value={resenaNueva.calificacion}
-                onChange={(e) => setResenaNueva({ ...resenaNueva, calificacion: Number(e.target.value) })}
-              >
-                {[5, 4, 3, 2, 1].map((valor) => <option key={valor} value={valor}>{valor} estrellas</option>)}
-              </select>
-            </label>
-            <textarea
-              required
-              maxLength={500}
-              placeholder='Comparte tu opinión'
-              value={resenaNueva.comentario}
-              onChange={(e) => setResenaNueva({ ...resenaNueva, comentario: e.target.value })}
-            />
-            <button type='submit' className='boton-resena'>Publicar reseña</button>
-            {mensajeResena && <p className='mensaje-resena'>{mensajeResena}</p>}
-          </form>
+
+          {usuarioSesion ? (
+            <form className='formulario-resena' onSubmit={guardarResena}>
+              <h3>Escribe una reseña</h3>
+              <label>
+                Calificación
+                <select
+                  value={resenaNueva.calificacion}
+                  onChange={(e) => setResenaNueva({ ...resenaNueva, calificacion: Number(e.target.value) })}
+                >
+                  {[5, 4, 3, 2, 1].map((valor) => <option key={valor} value={valor}>{valor} estrellas</option>)}
+                </select>
+              </label>
+              <textarea
+                required
+                maxLength={500}
+                placeholder='Comparte tu opinión'
+                value={resenaNueva.comentario}
+                onChange={(e) => setResenaNueva({ ...resenaNueva, comentario: e.target.value })}
+              />
+              <button type='submit' className='boton-resena'>Publicar reseña</button>
+              {mensajeResena && <p className='mensaje-resena'>{mensajeResena}</p>}
+            </form>
+          ) : (
+            <div className='resena-requiere-login'>
+              <p>
+                Debes <Link to='/inicio-sesion'>iniciar sesión</Link> para escribir una reseña sobre este producto.
+              </p>
+            </div>
+          )}
         </section>
 
         {/* Sección: Completa el look */}

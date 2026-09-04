@@ -506,8 +506,13 @@ export const CATEGORIAS_DISPONIBLES = [
 
 const PRODUCTOS_POR_PAGINA = 8;
 
-const normalizarCategoria = (categoria = "") =>
-  categoria.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const normalizarCategoria = (categoria = "") => {
+  if (!categoria) return "";
+  return String(categoria)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+};
 
 // ============================================================
 // UTILIDADES
@@ -593,17 +598,29 @@ export const TarjetaProducto = ({ producto, onAgregarCarrito }) => {
 // PÁGINA PRINCIPAL DE PRODUCTOS
 // ============================================================
 const Productos = ({ onAgregarCarrito }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const categoriaDesdeUrl = searchParams.get("categoria");
-  const categoriaInicial = CATEGORIAS_DISPONIBLES.find(
-    (categoria) => normalizarCategoria(categoria) === normalizarCategoria(categoriaDesdeUrl),
-  );
+  const busquedaDesdeUrl = searchParams.get("buscar");
+  const categoriaInicial = useMemo(() => {
+    if (!categoriaDesdeUrl) return null;
+    return (
+      CATEGORIAS_DISPONIBLES.find(
+        (categoria) =>
+          normalizarCategoria(categoria) === normalizarCategoria(categoriaDesdeUrl),
+      ) || null
+    );
+  }, [categoriaDesdeUrl]);
+
   const [listaProductos, setListaProductos] = useState(PRODUCTOS_DATA);
-  const [categoriasTemp, setCategoriasTemp] = useState(() => categoriaInicial ? [categoriaInicial] : []);
+  const [categoriasTemp, setCategoriasTemp] = useState(() =>
+    categoriaInicial ? [categoriaInicial] : [],
+  );
   const [precioMinTemp, setPrecioMinTemp] = useState("");
   const [precioMaxTemp, setPrecioMaxTemp] = useState("");
 
-  const [categoriasAplicadas, setCategoriasAplicadas] = useState(() => categoriaInicial ? [categoriaInicial] : []);
+  const [categoriasAplicadas, setCategoriasAplicadas] = useState(() =>
+    categoriaInicial ? [categoriaInicial] : [],
+  );
   const [precioMinAplicado, setPrecioMinAplicado] = useState("");
   const [precioMaxAplicado, setPrecioMaxAplicado] = useState("");
 
@@ -612,17 +629,19 @@ const Productos = ({ onAgregarCarrito }) => {
   const categoriasActivas = categoriasAplicadas;
 
   useEffect(() => {
-    if (!categoriaInicial) return;
-    // Sincroniza una nueva categoría elegida desde el encabezado.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCategoriasTemp([categoriaInicial]);
-    setCategoriasAplicadas([categoriaInicial]);
-  }, [categoriaInicial]);
+    if (categoriaInicial) {
+      setCategoriasTemp([categoriaInicial]);
+      setCategoriasAplicadas([categoriaInicial]);
+    } else {
+      setCategoriasTemp([]);
+      setCategoriasAplicadas([]);
+    }
+  }, [categoriaInicial, categoriaDesdeUrl]);
 
   // Cargar catálogo de productos directamente desde MySQL
   useEffect(() => {
     api.get("/productos", null).then((res) => {
-      if (res && res.length > 0) {
+      if (Array.isArray(res) && res.length > 0) {
         const mapaVisual = new Map(PRODUCTOS_DATA.map((p) => [p.id, p]));
         const sincronizados = res.map((p) => {
           const visual = mapaVisual.get(p.id) || {};
@@ -643,7 +662,6 @@ const Productos = ({ onAgregarCarrito }) => {
   }, []);
 
   const handleCategoriaChange = (categoria) => {
-    if (categoriaInicial) setSearchParams({});
     setCategoriasTemp((prev) =>
       prev.includes(categoria)
         ? prev.filter((c) => c !== categoria)
@@ -652,7 +670,6 @@ const Productos = ({ onAgregarCarrito }) => {
   };
 
   const aplicarFiltros = () => {
-    if (categoriaDesdeUrl) setSearchParams({});
     setCategoriasAplicadas(categoriasTemp);
     setPrecioMinAplicado(precioMinTemp);
     setPrecioMaxAplicado(precioMaxTemp);
@@ -661,6 +678,14 @@ const Productos = ({ onAgregarCarrito }) => {
 
   const productosFiltrados = useMemo(() => {
     let resultado = listaProductos.filter((producto) => {
+      if (busquedaDesdeUrl) {
+        const termino = normalizarCategoria(busquedaDesdeUrl);
+        const coincide =
+          normalizarCategoria(producto.titulo).includes(termino) ||
+          normalizarCategoria(producto.descripcion).includes(termino) ||
+          normalizarCategoria(producto.categoria).includes(termino);
+        if (!coincide) return false;
+      }
       if (categoriasActivas.length > 0) {
         const catMatch = categoriasActivas.some(
           (catSel) => normalizarCategoria(catSel) === normalizarCategoria(producto.categoria),
@@ -686,7 +711,7 @@ const Productos = ({ onAgregarCarrito }) => {
       resultado = [...resultado].sort((a, b) => b.precio - a.precio);
 
     return resultado;
-  }, [listaProductos, categoriasActivas, precioMinAplicado, precioMaxAplicado, ordenar]);
+  }, [listaProductos, busquedaDesdeUrl, categoriasActivas, precioMinAplicado, precioMaxAplicado, ordenar]);
 
   const totalPaginas = Math.ceil(
     productosFiltrados.length / PRODUCTOS_POR_PAGINA,
@@ -707,7 +732,7 @@ const Productos = ({ onAgregarCarrito }) => {
     <>
       <div className='pagina-productos'>
         <header className='productos-header'>
-          <h1>Nuestros Productos</h1>
+          <h1>{busquedaDesdeUrl ? `Resultados para "${busquedaDesdeUrl}"` : "Nuestros Productos"}</h1>
           <p>
             Encuentra herramientas, muebles y decoración de alta calidad para
             cada rincón de tu hogar.

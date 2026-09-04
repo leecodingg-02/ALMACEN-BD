@@ -11,10 +11,9 @@ const Inicio = () => {
                     <h1>Haz de tu<br />hogar tu mejor<br /><span>versión.</span></h1>
                     <p>Herramientas, muebles y decoración para cada espacio.</p>
                     <div className="portada-botones">
-                        <a href="#" className="boton boton-primario">Explorar productos &rarr;</a>
+                        <a href="#" className="boton boton-primario">Explorar productos</a>
                         <a href="#" className="boton boton-contorno">
-                            {/* Marcador de ícono */}
-                            &#127991; Ver ofertas
+                        Ver ofertas
                         </a>
                     </div>
                 </div>
@@ -83,28 +82,36 @@ const Inicio = () => {
             {/* Sección Características */}
             <section className="caracteristicas">
                 <div className="caracteristica-elemento">
-                    <div className="caracteristica-icono-marcador"></div>
+                    <div className="caracteristica-icono-marcador">
+                        <img src="/src/imagenes/entrega.png" alt="Envíos rápidos" />
+                    </div>
                     <div className="caracteristica-texto">
                         <h4>Envíos rápidos</h4>
                         <p>A todo Colombia</p>
                     </div>
                 </div>
                 <div className="caracteristica-elemento">
-                    <div className="caracteristica-icono-marcador"></div>
+                    <div className="caracteristica-icono-marcador">
+                        <img src="/src/imagenes/mano.png" alt="Pagos seguros" />
+                    </div>
                     <div className="caracteristica-texto">
                         <h4>Pagos seguros</h4>
                         <p>Protección garantizada</p>
                     </div>
                 </div>
                 <div className="caracteristica-elemento">
-                    <div className="caracteristica-icono-marcador"></div>
+                    <div className="caracteristica-icono-marcador">
+                        <img src="/src/imagenes/devolucion.png" alt="Devoluciones fáciles" />
+                    </div>
                     <div className="caracteristica-texto">
                         <h4>Devoluciones fáciles</h4>
                         <p>Hasta 30 días</p>
                     </div>
                 </div>
                 <div className="caracteristica-elemento">
-                    <div className="caracteristica-icono-marcador"></div>
+                    <div className="caracteristica-icono-marcador">
+                        <img src="/src/imagenes/calidad.png" alt="Calidad garantizada" />
+                    </div>
                     <div className="caracteristica-texto">
                         <h4>Calidad garantizada</h4>
                         <p>Productos de confianza</p>
@@ -131,22 +138,30 @@ const Inicio = () => {
                     <h2>¿Por qué elegir<br />NovaCasa?</h2>
                     <div className="beneficios-cuadricula">
                         <div className="beneficio-elemento">
-                            <div className="beneficio-icono-marcador"></div>
+                            <div className="beneficio-icono-marcador">
+                                <img src ="/src/imagenes/sitio.png" alt="Todo en un solo lugar" />
+                            </div>
                             <h4>Todo en un solo lugar</h4>
                             <p>Encuentra lo que necesitas.</p>
                         </div>
                         <div className="beneficio-elemento">
-                            <div className="beneficio-icono-marcador"></div>
+                            <div className="beneficio-icono-marcador">
+                                <img src ="/src/imagenes/calidad_1.png" alt="Las mejores marcas" />
+                            </div>
                             <h4>Las mejores marcas</h4>
                             <p>Productos de alta calidad.</p>
                         </div>
                         <div className="beneficio-elemento">
-                            <div className="beneficio-icono-marcador"></div>
+                            <div className="beneficio-icono-marcador">
+                                <img src ="/src/imagenes/dolar.png" alt="Precios que convienen" />
+                            </div>
                             <h4>Precios que convienen</h4>
                             <p>Ofertas exclusivas para ti.</p>
                         </div>
                         <div className="beneficio-elemento">
-                            <div className="beneficio-icono-marcador"></div>
+                            <div className="beneficio-icono-marcador">
+                                <img src ="/src/imagenes/apoyo.png" alt="Atención que te acompaña" />
+                            </div>
                             <h4>Atención que te acompaña</h4>
                             <p>Estamos para ayudarte.</p>
                         </div>
@@ -155,7 +170,7 @@ const Inicio = () => {
 
                 <div className="banner-inspiracion">
                     <div className="inspiracion-fondo-marcador">
-                        {/* Marcador de imagen para sala de estar con plantas */}
+                        <img src="https://media.admagazine.com/photos/63472117052e230ddc1793c3/master/pass/plantas-altas-decoracion-interiores.jpg" alt="Inspiración para tu hogar" />
                     </div>
                     <div className="inspiracion-contenido">
                         <h2>Inspírate,<br />crea y disfruta<br />tu espacio.</h2>

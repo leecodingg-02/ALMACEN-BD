@@ -120,6 +120,10 @@ body {
     gap: 15px;
 }
 
+.portada-botones .boton {
+    width: 190px;
+}
+
 .portada-imagen {
     flex: 1;
     position: relative;
@@ -172,7 +176,7 @@ body {
 }
 
 .tarjeta-categoria.destacado {
-    background-color: var(--color-primario);
+    background-color: var(--color-neutral);
 }
 
 .categoria-informacion h3 {
@@ -235,6 +239,18 @@ body {
     background-color: transparent;
     border: 2px solid var(--color-primario);
     border-radius: 50%;
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.caracteristica-icono-marcador img {
+    width: 24px;
+    height: 24px;
+    display: block;
+    object-fit: contain;
 }
 
 .caracteristica-texto h4 {
@@ -384,6 +400,17 @@ body {
     margin: 0 auto 15px;
     border: 2px solid var(--color-primario);
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.beneficio-icono-marcador img {
+    width: 30px;
+    height: 30px;
+    display: block;
+    object-fit: contain;
 }
 
 .beneficio-elemento h4 {
@@ -417,6 +444,15 @@ body {
     height: 100%;
     background-color: #d0d0d0;
     z-index: 1;
+    overflow: hidden;
+}
+
+.inspiracion-fondo-marcador img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
 }
 
 .inspiracion-contenido {

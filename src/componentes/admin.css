@@ -1241,22 +1241,38 @@
 /* GRAFICO DE VENTAS RESUMEN */
 .resumen-ventas-contenido {
   display: grid;
-  grid-template-columns: 140px 1fr 130px;
-  gap: 20px;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .resumen-ventas-contenido {
+    grid-template-columns: 1fr;
+  }
+}
+
 .resumen-metrica-caja h2 {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--texto-principal);
+  margin-bottom: 2px;
 }
 
 .resumen-metrica-caja p {
   font-size: 11.5px;
   color: var(--texto-secundario);
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.grafico-eje-x {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--texto-secundario);
 }
 
 /* DONUT CHART */
@@ -1368,17 +1384,24 @@
   gap: 14px;
 }
 
+@media (max-width: 1024px) {
+  .grilla-tarjetas-productos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .tarjeta-producto-top {
   background: var(--fondo-contenido);
   border: 1px solid var(--tarjeta-borde);
   border-radius: 14px;
-  padding: 14px;
+  padding: 16px 14px 14px 14px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   transition: var(--transicion);
+  min-height: 220px;
 }
 
 .tarjeta-producto-top:hover {
@@ -1391,8 +1414,8 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   background: var(--amarillo-primario);
   color: #000000;
   font-weight: 800;
@@ -1401,46 +1424,59 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .producto-imagen-box {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
-  margin: 10px 0;
+  font-size: 36px;
+  margin: 6px 0 12px 0;
+  border-radius: 12px;
+  background: var(--fondo-tarjeta, rgba(0, 0, 0, 0.03));
 }
 
 .tarjeta-producto-top h4 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--texto-principal);
-  margin-bottom: 4px;
-  height: 32px;
-  display: flex;
-  align-items: center;
+  margin: 0 0 10px 0;
+  line-height: 1.35;
+  min-height: 36px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  width: 100%;
 }
 
 .tarjeta-producto-top span {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--texto-secundario);
   font-weight: 600;
+  margin-top: auto;
+  margin-bottom: 8px;
+  display: block;
 }
 
 .progreso-producto-barra {
   width: 100%;
-  height: 4px;
+  height: 5px;
   background: var(--tarjeta-borde);
-  border-radius: 2px;
-  margin-top: 10px;
+  border-radius: 3px;
+  margin-top: 2px;
   overflow: hidden;
 }
 
 .progreso-producto-relleno {
   height: 100%;
   background: var(--amarillo-primario);
+  border-radius: 3px;
 }
 
 /* LISTA DE CATEGORIAS DESTACADAS */

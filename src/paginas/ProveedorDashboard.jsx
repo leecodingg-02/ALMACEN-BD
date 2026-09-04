@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
+import { obtenerProveedorSesion } from '../servicios/proveedor';
 
 export default function ProveedorDashboard() {
   const context = useOutletContext();
-  const nombreProveedor = context?.nombreProveedor || localStorage.getItem('novacasa_proveedor_nombre') || 'Distribuidora Central S.A.S.';
+  const nombreProveedor = context?.nombreProveedor || (() => {
+    const s = obtenerProveedorSesion();
+    return s?.razon_social || 'Proveedor';
+  })();
 
   const estadisticas = [
     {

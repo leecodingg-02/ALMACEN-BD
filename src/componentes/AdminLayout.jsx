@@ -49,7 +49,7 @@ export default function PanelLayout() {
   const [editandoPerfil, setEditandoPerfil] = useState(false);
   const [nombreAdmin, setNombreAdmin] = useState(() => {
     const sesion = obtenerUsuarioSesion();
-    return sesion?.nombreCompleto || localStorage.getItem('almacen_admin_nombre') || 'Admin Almacén';
+    return sesion ? (`${sesion.nombre || ''} ${sesion.apellido || ''}`.trim() || sesion.nombreCompleto || 'Administrador') : 'Administrador';
   });
   const [rolAdmin] = useState('Administrador');
   const [fotoAdmin, setFotoAdmin] = useState(() => {

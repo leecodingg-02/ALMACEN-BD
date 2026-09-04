@@ -154,7 +154,16 @@ function App() {
       )}
       <RestaurarScroll />
       <Routes>
-        <Route path='/' element={<Inicio />} />
+        <Route
+          path='/'
+          element={
+            <Inicio
+              carrito={carrito}
+              onLimpiarCarrito={() => setCarrito([])}
+              onAgregarCarrito={agregarAlCarrito}
+            />
+          }
+        />
         <Route
           path='/productos'
           element={<Productos onAgregarCarrito={agregarAlCarrito} />}
@@ -175,7 +184,7 @@ function App() {
         />
         <Route
           path='/checkout'
-          element={<Checkout carrito={carrito} />}
+          element={<Checkout carrito={carrito} onLimpiarCarrito={() => setCarrito([])} />}
         />
         <Route
           path='/confirmacion'

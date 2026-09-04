@@ -17,8 +17,11 @@ const RutaProtegida = ({ rolRequerido, children }) => {
 
   const usuario = obtenerUsuarioSesion();
   const rol = (usuario?.rol || '').toString().toLowerCase();
+  const idRol = Number(usuario?.id_rol || 0);
 
-  const autorizado = rolRequerido === 'admin' && rol === 'administrador';
+  const esAdmin = rol === 'administrador' || rol === 'admin' || idRol === 1;
+
+  const autorizado = rolRequerido === 'admin' && esAdmin;
 
   if (!autorizado) {
     return <Navigate to="/inicio-sesion" replace />;

@@ -71,7 +71,7 @@ export default function Ventas() {
 
         // Filtro por período relativo
         if (filtroPeriodo !== 'todos') {
-          const hoy = new Date('2026-09-02');
+          const hoy = new Date();
           const fechaVenta = new Date(v.fecha);
           const diffDias = Math.floor((hoy - fechaVenta) / (1000 * 60 * 60 * 24));
 

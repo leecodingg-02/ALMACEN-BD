@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { api } from '../servicios/api';
 
@@ -35,40 +35,53 @@ const mapearIconoProducto = (nombre, indice) => {
 
 export default function Tablero() {
   const context = useOutletContext();
-  const nombreAdmin = context?.nombreAdmin || localStorage.getItem('almacen_admin_nombre') || 'Admin';
+  const nombreAdmin = context?.nombreAdmin || (() => {
+    const s = obtenerUsuarioSesion();
+    return s ? (`${s.nombre || ''} ${s.apellido || ''}`.trim() || s.nombreCompleto || 'Administrador') : 'Administrador';
+  })();
   const [filtroTiempo, setFiltroTiempo] = useState('Hoy');
   const [metricasBD, setMetricasBD] = useState(null);
 
-  // Cargar métricas directamente desde MySQL
+  // Cargar métricas dinámicamente desde MySQL según el filtro de tiempo
   useEffect(() => {
-    api.get('/dashboard', null).then((res) => {
+    api.get(`/dashboard?periodo=${filtroTiempo}`).then((res) => {
       if (res) setMetricasBD(res);
     });
+  }, [filtroTiempo]);
+
+  const fechaHoyFormateada = useMemo(() => {
+    const fecha = new Date();
+    return fecha.toLocaleDateString('es-CO', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    }) + ' · ' + fecha.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
   }, []);
 
   const totalVentasFormateado = metricasBD?.totalVentas != null 
     ? `$${Number(metricasBD.totalVentas).toLocaleString('es-CO')}` 
-    : '$12.450.000';
+    : '$0';
 
   const totalProductosFormateado = metricasBD?.totalProductos != null 
     ? String(metricasBD.totalProductos) 
-    : '248';
+    : '0';
 
   const totalOrdenesFormateado = metricasBD?.totalOrdenes != null 
     ? String(metricasBD.totalOrdenes) 
-    : '12';
+    : '0';
 
   const totalClientesFormateado = metricasBD?.totalClientes != null 
     ? String(metricasBD.totalClientes) 
-    : '1.204';
+    : '0';
 
   const estadisticas = [
     {
       id: 'ventas',
       etiqueta: 'Ventas Totales',
       valor: totalVentasFormateado,
-      cambio: '↑ 12.5%',
-      subida: true,
+      cambio: metricasBD?.tendenciaVentas?.cambio || '0%',
+      subida: metricasBD?.tendenciaVentas?.subida ?? true,
       icono: IconoVentas,
       colorClase: 'tarjeta-est-verde',
       colorStroke: '#10B981',
@@ -78,8 +91,8 @@ export default function Tablero() {
       id: 'productos',
       etiqueta: 'Productos Activos',
       valor: totalProductosFormateado,
-      cambio: '↑ 8.2%',
-      subida: true,
+      cambio: metricasBD?.tendenciaProductos?.cambio || '0%',
+      subida: metricasBD?.tendenciaProductos?.subida ?? true,
       icono: IconoProductos,
       colorClase: 'tarjeta-est-azul',
       colorStroke: '#3B82F6',
@@ -89,8 +102,8 @@ export default function Tablero() {
       id: 'clientes',
       etiqueta: 'Clientes Registrados',
       valor: totalClientesFormateado,
-      cambio: '↑ 14.3%',
-      subida: true,
+      cambio: metricasBD?.tendenciaClientes?.cambio || '0%',
+      subida: metricasBD?.tendenciaClientes?.subida ?? true,
       icono: IconoClientes,
       colorClase: 'tarjeta-est-morado',
       colorStroke: '#8B5CF6',
@@ -100,8 +113,8 @@ export default function Tablero() {
       id: 'ordenes',
       etiqueta: 'Órdenes en Sistema',
       valor: totalOrdenesFormateado,
-      cambio: '↓ 6.7%',
-      subida: false,
+      cambio: metricasBD?.tendenciaOrdenes?.cambio || '0%',
+      subida: metricasBD?.tendenciaOrdenes?.subida ?? true,
       icono: IconoOrdenes,
       colorClase: 'tarjeta-est-naranja',
       colorStroke: '#F97316',
@@ -110,51 +123,65 @@ export default function Tablero() {
   ];
 
   const ordenesRecientes = (metricasBD?.ventasRecientes || []).map((v, i) => {
-        const m = mapearEstadoVenta(v.estado);
-        return {
-          id: String(v.id),
-          tiempo: v.fecha || '',
-          estado: m.estado,
-          estadoTexto: m.estadoTexto,
-          monto: `$${Number(v.total || 0).toLocaleString('es-CO')}`,
-          icono: iconoOrdenPorIndice(i),
-        };
-      });
+    const m = mapearEstadoVenta(v.estado);
+    return {
+      id: String(v.id),
+      tiempo: v.fecha || '',
+      estado: m.estado,
+      estadoTexto: m.estadoTexto,
+      monto: `$${Number(v.total || 0).toLocaleString('es-CO')}`,
+      icono: iconoOrdenPorIndice(i),
+    };
+  });
 
-  const topProductos = metricasBD?.topProductos?.length
-    ? (() => {
-        const max = Number(metricasBD.topProductos[0].cantidad) || 1;
-        return metricasBD.topProductos.map((p, i) => ({
-          posicion: i + 1,
-          nombre: p.nombre,
-          ventas: `${p.cantidad} ventas`,
-          icono: mapearIconoProducto(p.nombre, i),
-          progreso: Math.max(5, Math.round((Number(p.cantidad) / max) * 100)),
-        }));
-      })()
-    : [
-        { posicion: 1, nombre: 'Taladro Inalámbrico 20V', ventas: '126 ventas', icono: IconoHerramienta, progreso: 85 },
-        { posicion: 2, nombre: 'Sofá Modular 3 Puestos', ventas: '98 ventas', icono: IconoMueble, progreso: 68 },
-        { posicion: 3, nombre: 'Maceta Moderna Con Base', ventas: '87 ventas', icono: IconoDecoracion, progreso: 55 },
-        { posicion: 4, nombre: 'Lámpara Colgante Minimalista', ventas: '76 ventas', icono: IconoIluminacion, progreso: 42 },
-      ];
+  const topProductos = (metricasBD?.topProductos || []).map((p, i) => {
+    const max = Number(metricasBD.topProductos[0]?.cantidad) || 1;
+    return {
+      posicion: i + 1,
+      nombre: p.nombre,
+      ventas: `${p.cantidad} ${Number(p.cantidad) === 1 ? 'venta' : 'ventas'}`,
+      icono: mapearIconoProducto(p.nombre, i),
+      progreso: Math.max(10, Math.round((Number(p.cantidad) / max) * 100)),
+    };
+  });
 
-  const categorias = metricasBD?.categorias?.length
-    ? (() => {
-        const max = Number(metricasBD.categorias[0].cantidad) || 1;
-        return metricasBD.categorias.map((c) => ({
-          nombre: c.nombre,
-          porcentaje: Math.max(4, Math.round((Number(c.cantidad) / max) * 100)),
-          icono: mapearIconoCategoria(c.nombre),
-        }));
-      })()
-    : [
-        { nombre: 'Herramientas', porcentaje: 32, icono: IconoHerramienta },
-        { nombre: 'Muebles', porcentaje: 24, icono: IconoMueble },
-        { nombre: 'Decoración', porcentaje: 18, icono: IconoDecoracion },
-        { nombre: 'Iluminación', porcentaje: 14, icono: IconoIluminacion },
-        { nombre: 'Baño y Cocina', porcentaje: 12, icono: IconoBano },
-      ];
+  const categorias = (metricasBD?.categorias || []).map((c) => {
+    const totalVentasCat = metricasBD.categorias.reduce((sum, item) => sum + Number(item.cantidad || 0), 0) || 1;
+    return {
+      nombre: c.nombre,
+      porcentaje: Math.max(5, Math.round((Number(c.cantidad) / totalVentasCat) * 100)),
+      icono: mapearIconoCategoria(c.nombre),
+    };
+  });
+
+  // Generador dinámico de coordenadas para el gráfico de resumen de ventas
+  const datosGrafico = useMemo(() => {
+    const puntos = metricasBD?.resumenPeriodo?.puntosGrafico || [];
+    if (puntos.length === 0) {
+      return { pathLine: "M0,110 L350,110", pathArea: "M0,110 L350,110 L350,140 L0,140 Z", coords: [] };
+    }
+    const max = Math.max(...puntos.map((p) => Number(p.total)), 1);
+    const width = 350;
+    const height = 90;
+    const step = width / Math.max(1, puntos.length - 1);
+
+    const coords = puntos.map((p, i) => {
+      const x = i * step;
+      const y = 110 - (Number(p.total) / max) * height;
+      return { x, y, total: p.total, etiqueta: p.etiqueta };
+    });
+
+    const lineD = coords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+    const areaD = `${lineD} L ${width},140 L 0,140 Z`;
+    return { pathLine: lineD, pathArea: areaD, coords };
+  }, [metricasBD]);
+
+  const resumenVentasMonto = metricasBD?.resumenPeriodo?.ventas != null 
+    ? `$${Number(metricasBD.resumenPeriodo.ventas).toLocaleString('es-CO')}` 
+    : '$0';
+
+  const resumenVentasTendencia = metricasBD?.resumenPeriodo?.ventasTendencia || { cambio: '0%', subida: true };
+  const resumenOrdenesTendencia = metricasBD?.resumenPeriodo?.ordenesTendencia || { cambio: '0%', subida: true };
 
   return (
     <>
@@ -166,12 +193,12 @@ export default function Tablero() {
           </div>
           <div className="banner-bienvenida-texto">
             <h2>¡Bienvenido, {nombreAdmin}!</h2>
-            <p>Gestiona tu tienda, analiza el rendimiento y haz crecer tu negocio.</p>
+            <p>Gestiona tu tienda, analiza el rendimiento y haz crecer tu negocio con datos en tiempo real.</p>
           </div>
         </div>
         <div className="banner-fecha-insignia">
           <IconoCalendario width="15" height="15" />
-          <span>Lun, 26 Ago 2026 · 10:24 AM</span>
+          <span>{fechaHoyFormateada}</span>
         </div>
       </div>
 
@@ -192,7 +219,7 @@ export default function Tablero() {
               <div className="tarjeta-est-valor">{est.valor}</div>
             </div>
             <div className="tarjeta-est-pie">
-              <span className="tarjeta-est-comparativa">vs. mes anterior</span>
+              <span className="tarjeta-est-comparativa">vs. período anterior</span>
               <svg className="sparkline-svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
                 <path d={est.sparklineD} stroke={est.colorStroke} strokeWidth="2.8" fill="none" strokeLinecap="round" />
               </svg>
@@ -221,46 +248,47 @@ export default function Tablero() {
 
           <div className="resumen-ventas-contenido">
             <div className="resumen-metrica-caja">
-              <h2>$1.248.000</h2>
-              <p>Ventas de hoy <span style={{ color: '#16A34A', fontWeight: 700 }}>↑ 10.2%</span></p>
+              <h2>{resumenVentasMonto}</h2>
+              <p>Ventas ({filtroTiempo.toLowerCase()}) <span style={{ color: resumenVentasTendencia.subida ? '#16A34A' : '#DC2626', fontWeight: 700 }}>{resumenVentasTendencia.cambio}</span></p>
 
-              <h3 style={{ fontSize: 18, fontWeight: 800 }}>32</h3>
-              <p>Órdenes <span style={{ color: '#16A34A', fontWeight: 700 }}>↑ 5.1%</span></p>
+              <h3 style={{ fontSize: 18, fontWeight: 800 }}>{metricasBD?.resumenPeriodo?.ordenes || 0}</h3>
+              <p>Órdenes <span style={{ color: resumenOrdenesTendencia.subida ? '#16A34A' : '#DC2626', fontWeight: 700 }}>{resumenOrdenesTendencia.cambio}</span></p>
             </div>
 
-            <div style={{ position: 'relative', width: '100%', height: 160 }}>
-              <svg width="100%" height="100%" viewBox="0 0 350 160" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="yellowGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FFC107" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#FFC107" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M0,130 Q40,110 80,125 T160,80 T240,40 T320,60 L350,65 L350,160 L0,160 Z"
-                  fill="url(#yellowGrad)"
-                />
-                <path
-                  d="M0,130 Q40,110 80,125 T160,80 T240,40 T320,60 L350,65"
-                  fill="none"
-                  stroke="#FFC107"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-                <circle cx="240" cy="40" r="5" fill="#FFC107" stroke="#FFFFFF" strokeWidth="2" />
-              </svg>
-              <div className="chart-tooltip-badge">
-                $892.000 <span style={{ fontSize: 9, color: 'var(--texto-secundario)', fontWeight: 400 }}>16:00</span>
+            <div style={{ position: 'relative', width: '100%' }}>
+              <div style={{ position: 'relative', width: '100%', height: 140 }}>
+                <svg width="100%" height="100%" viewBox="0 0 350 140" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="yellowGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#FFC107" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#FFC107" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d={datosGrafico.pathArea}
+                    fill="url(#yellowGrad)"
+                  />
+                  <path
+                    d={datosGrafico.pathLine}
+                    fill="none"
+                    stroke="#FFC107"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                  {datosGrafico.coords.map((pt, i) => (
+                    <g key={i}>
+                      <circle cx={pt.x} cy={pt.y} r="4" fill="#FFC107" stroke="#FFFFFF" strokeWidth="2" />
+                    </g>
+                  ))}
+                </svg>
               </div>
-            </div>
-
-            <div className="donut-chart-container">
-              <div className="donut-circle">
-                <div className="donut-inner">78%</div>
-              </div>
-              <span style={{ fontSize: 11, color: '#666', fontWeight: 600 }}>Meta mensual</span>
-              <span style={{ fontSize: 13, fontWeight: 800 }}>$16.000.000</span>
-              <span style={{ fontSize: 10, color: '#999' }}>/ $20.000.000</span>
+              {datosGrafico.coords.length > 0 && (
+                <div className="grafico-eje-x">
+                  {datosGrafico.coords.map((pt, i) => (
+                    <span key={i}>{pt.etiqueta}</span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -273,26 +301,33 @@ export default function Tablero() {
           </div>
 
           <div className="lista-ordenes-recientes">
-            {ordenesRecientes.map((ord) => (
-              <div className="elemento-orden-reciente" key={ord.id}>
-                <div className="orden-info-izquierda">
-                  <div className="orden-imagen-thumbnail">
-                    <ord.icono width="20" height="20" />
+            {ordenesRecientes.length > 0 ? (
+              ordenesRecientes.map((ord) => (
+                <div className="elemento-orden-reciente" key={ord.id}>
+                  <div className="orden-info-izquierda">
+                    <div className="orden-imagen-thumbnail">
+                      <ord.icono width="20" height="20" />
+                    </div>
+                    <div className="orden-detalles">
+                      <h4>Orden #{ord.id}</h4>
+                      <span>{ord.tiempo}</span>
+                    </div>
                   </div>
-                  <div className="orden-detalles">
-                    <h4>Orden #{ord.id}</h4>
-                    <span>{ord.tiempo}</span>
-                  </div>
-                </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span className={`insignia-estado-novacasa ${ord.estado}`}>
-                    {ord.estadoTexto}
-                  </span>
-                  <span style={{ fontSize: 13.5, fontWeight: 800 }}>{ord.monto}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span className={`insignia-estado-novacasa ${ord.estado}`}>
+                      {ord.estadoTexto}
+                    </span>
+                    <span style={{ fontSize: 13.5, fontWeight: 800 }}>{ord.monto}</span>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div style={{ textAlign: 'center', padding: '30px 20px', color: '#888' }}>
+                <p style={{ fontWeight: 600, fontSize: 14 }}>Sin órdenes recientes</p>
+                <span style={{ fontSize: 12 }}>Las nuevas ventas de la tienda aparecerán aquí.</span>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
@@ -305,21 +340,29 @@ export default function Tablero() {
             <Link className="tarjeta-enlace" to="/admin/productos">Ver todos →</Link>
           </div>
 
-          <div className="grilla-tarjetas-productos">
-            {topProductos.map((p) => (
-              <div className="tarjeta-producto-top" key={p.posicion}>
-                <div className="badge-top-rank">{p.posicion}</div>
-                <div className="producto-imagen-box">
-                  <p.icono width="32" height="32" />
+          {topProductos.length > 0 ? (
+            <div className="grilla-tarjetas-productos">
+              {topProductos.map((p) => (
+                <div className="tarjeta-producto-top" key={p.posicion}>
+                  <div className="badge-top-rank">{p.posicion}</div>
+                  <div className="producto-imagen-box">
+                    <p.icono width="32" height="32" />
+                  </div>
+                  <h4 title={p.nombre}>{p.nombre}</h4>
+                  <span>{p.ventas}</span>
+                  <div className="progreso-producto-barra">
+                    <div className="progreso-producto-relleno" style={{ width: `${p.progreso}%` }} />
+                  </div>
                 </div>
-                <h4>{p.nombre}</h4>
-                <span>{p.ventas}</span>
-                <div className="progreso-producto-barra">
-                  <div className="progreso-producto-relleno" style={{ width: `${p.progreso}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '35px 20px', color: '#888' }}>
+              <IconoProductos width="36" height="36" style={{ opacity: 0.4, marginBottom: 8 }} />
+              <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--texto-principal)' }}>Aún no hay productos vendidos</p>
+              <span style={{ fontSize: 12, color: 'var(--texto-secundario)' }}>Solo se muestran productos que han registrado ventas efectivamente.</span>
+            </div>
+          )}
         </div>
 
         <div className="tarjeta-panel">
@@ -328,20 +371,28 @@ export default function Tablero() {
             <Link className="tarjeta-enlace" to="/admin/categorias">Ver todas →</Link>
           </div>
 
-          <div className="lista-categorias-destacadas">
-            {categorias.map((cat) => (
-              <div className="fila-categoria-item" key={cat.nombre}>
-                <div className="categoria-icono-box">
-                  <cat.icono width="16" height="16" />
+          {categorias.length > 0 ? (
+            <div className="lista-categorias-destacadas">
+              {categorias.map((cat) => (
+                <div className="fila-categoria-item" key={cat.nombre}>
+                  <div className="categoria-icono-box">
+                    <cat.icono width="16" height="16" />
+                  </div>
+                  <span className="categoria-nombre-label">{cat.nombre}</span>
+                  <div className="categoria-pista-barra">
+                    <div className="categoria-relleno-barra" style={{ width: `${cat.porcentaje}%` }} />
+                  </div>
+                  <span className="categoria-porcentaje-val">{cat.porcentaje}%</span>
                 </div>
-                <span className="categoria-nombre-label">{cat.nombre}</span>
-                <div className="categoria-pista-barra">
-                  <div className="categoria-relleno-barra" style={{ width: `${cat.porcentaje}%` }} />
-                </div>
-                <span className="categoria-porcentaje-val">{cat.porcentaje}%</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '35px 20px', color: '#888' }}>
+              <IconoProductos width="36" height="36" style={{ opacity: 0.4, marginBottom: 8 }} />
+              <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--texto-principal)' }}>Sin ventas por categoría</p>
+              <span style={{ fontSize: 12, color: 'var(--texto-secundario)' }}>Las categorías destacadas se actualizarán automáticamente cuando se vendan productos.</span>
+            </div>
+          )}
         </div>
       </div>
     </>

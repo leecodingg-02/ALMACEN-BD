@@ -13,10 +13,14 @@ const CONFIG_DEFAULT = {
   notificacionesEmail: true,
 };
 
-// Obtiene el usuario autenticado (retorna null si no ha iniciado sesión)
+// Obtiene el usuario autenticado (retorna null si no ha iniciado sesión en la sesión actual)
 export const obtenerUsuarioSesion = () => {
   try {
-    const data = localStorage.getItem(CLAVE_USUARIO);
+    // Limpiar residuos previos de localStorage si existen
+    if (localStorage.getItem(CLAVE_USUARIO)) {
+      localStorage.removeItem(CLAVE_USUARIO);
+    }
+    const data = sessionStorage.getItem(CLAVE_USUARIO);
     if (!data) return null;
     return JSON.parse(data);
   } catch {
@@ -28,7 +32,8 @@ export const obtenerUsuarioSesion = () => {
 export const iniciarSesion = async (correo, contrasena) => {
   const usuario = await api.post("/usuarios/login", { correo, contrasena });
   if (usuario && usuario.id_usu) {
-    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    localStorage.removeItem(CLAVE_USUARIO);
     return usuario;
   }
   throw new Error("Credenciales inválidas");
@@ -58,7 +63,8 @@ export const registrarUsuario = async (datos) => {
       rol: "Cliente",
       estado: "Activo",
     };
-    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    localStorage.removeItem(CLAVE_USUARIO);
     return usuario;
   }
   throw new Error("No se pudo registrar el usuario");
@@ -66,6 +72,7 @@ export const registrarUsuario = async (datos) => {
 
 // Cerrar sesión del usuario
 export const cerrarSesion = () => {
+  sessionStorage.removeItem(CLAVE_USUARIO);
   localStorage.removeItem(CLAVE_USUARIO);
   return null;
 };
@@ -88,7 +95,7 @@ export const actualizarPerfilUsuario = async (datosActualizados) => {
     await api.put(`/usuarios/${nuevoPerfil.id_usu}`, nuevoPerfil);
   }
 
-  localStorage.setItem(CLAVE_USUARIO, JSON.stringify(nuevoPerfil));
+  sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(nuevoPerfil));
   return nuevoPerfil;
 };
 

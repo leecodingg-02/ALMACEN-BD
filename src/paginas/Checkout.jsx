@@ -24,7 +24,7 @@ const DEPARTAMENTOS = [
  *  - usuario  : nombre, apellido, tipo_doc, num_ident, telefono, correo
  *  - ubicacion: departamento, ciudad, direccion
  */
-const Checkout = ({ carrito: carrritoProp }) => {
+const Checkout = ({ carrito: carrritoProp, onLimpiarCarrito }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -153,6 +153,11 @@ const Checkout = ({ carrito: carrritoProp }) => {
         direccion: form.direccion,
       },
     });
+
+    if (typeof onLimpiarCarrito === 'function') {
+      onLimpiarCarrito();
+    }
+    localStorage.removeItem("almacenweb_carrito");
 
     /* Redirigir a la página de confirmación */
     navigate("/confirmacion", {

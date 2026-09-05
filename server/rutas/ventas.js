@@ -112,12 +112,7 @@ router.post('/', async (req, res) => {
         VALUES (?, ?, ?, ?, ?)
       `, [idVenta, idPro, cantidad, precio, itemSubtotal]);
 
-      // Descontar inventario de la sucursal si existe
-      await conexion.query(`
-        UPDATE inventario 
-        SET cantidad = GREATEST(0, cantidad - ?)
-        WHERE id_pro = ? AND id_suc = ?
-      `, [cantidad, idPro, id_suc]);
+      // El descuento de inventario lo hace el trigger trg_detalle_venta_after_insert
     }
 
     // 3. Registrar el pago

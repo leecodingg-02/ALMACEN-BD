@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, ConfirmarSuspender } from '../componentes/AdminModals';
 import { api } from '../servicios/api';
 
-const formularioVacio = { fecha: '', proveedor: '', total: '', items: '', estado: 'Pendiente', factura: '' };
+const formularioVacio = { fecha: '', proveedor: '', total: '', items: '', estado: 'Pendiente', factura: '', detalles: [] };
 
 export default function Compras() {
   const [datos, setDatos] = useState([]);
@@ -41,11 +41,29 @@ export default function Compras() {
   const abrirEditar = (elem) => { setFormulario({ ...elem }); setActual(elem); setModal('editar'); };
   const abrirSuspender = (elem) => { setActual(elem); setModal('suspender'); };
 
+  const agregarDetalle = () => {
+    setFormulario((f) => ({ ...f, detalles: [...(f.detalles || []), { nombre: '', cantidad: 1, precio: '' }] }));
+  };
+  const actualizarDetalle = (idx, campo, valor) => {
+    setFormulario((f) => {
+      const detalles = [...(f.detalles || [])];
+      detalles[idx] = { ...detalles[idx], [campo]: valor };
+      return { ...f, detalles };
+    });
+  };
+  const quitarDetalle = (idx) => {
+    setFormulario((f) => ({ ...f, detalles: (f.detalles || []).filter((_, i) => i !== idx) }));
+  };
+
   const guardar = async () => {
     if (!formulario.proveedor.trim()) return;
-    const total = Number(formulario.total) || 0;
-    const items = Number(formulario.items) || 0;
-    const payload = { ...formulario, total, items };
+    const detalles = (formulario.detalles || []).filter((d) => (d.nombre || '').trim() && Number(d.cantidad) > 0);
+    const total =
+      formulario.total !== '' && formulario.total != null
+        ? Number(formulario.total) || 0
+        : detalles.reduce((s, d) => s + (Number(d.precio) || 0) * (Number(d.cantidad) || 0), 0);
+    const items = Number(formulario.items) || detalles.length || 0;
+    const payload = { ...formulario, total, items, detalles };
 
     if (modal === 'crear') {
       try {
@@ -211,6 +229,20 @@ export default function Compras() {
               <label>Cantidad de Ítems</label>
               <input type="number" value={formulario.items} onChange={(e) => setFormulario({ ...formulario, items: e.target.value })} placeholder="0" min="1" />
             </div>
+          </div>
+          <div className="grupo-campo">
+            <label>Productos de la compra</label>
+            {(formulario.detalles || []).map((d, idx) => (
+              <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                <input value={d.nombre} onChange={(e) => actualizarDetalle(idx, 'nombre', e.target.value)} placeholder="Nombre del producto" style={{ flex: 2 }} />
+                <input type="number" value={d.cantidad} onChange={(e) => actualizarDetalle(idx, 'cantidad', e.target.value)} placeholder="Cant." min="1" style={{ width: 80 }} />
+                <input type="number" value={d.precio} onChange={(e) => actualizarDetalle(idx, 'precio', e.target.value)} placeholder="Precio" style={{ width: 110 }} />
+                <button type="button" className="btn-accion suspender" onClick={() => quitarDetalle(idx)} title="Quitar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+              </div>
+            ))}
+            <button type="button" className="btn-primario" onClick={agregarDetalle} style={{ marginTop: 8 }}>+ Agregar producto</button>
           </div>
           <div className="grupo-campo">
             <label>Estado</label>

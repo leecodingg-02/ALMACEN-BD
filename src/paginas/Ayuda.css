@@ -686,23 +686,44 @@
 }
 
 /* =========================================================
-   ALTO CONTRASTE
+   MODO OSCURO / ALTO CONTRASTE
    ========================================================= */
+html.modo-oscuro .ayuda-pagina,
 html.modo-alto-contraste .ayuda-pagina {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: #0e1117 !important;
+  color: #f0f6fc !important;
 }
 
+html.modo-oscuro .ayuda-seccion-card,
+html.modo-oscuro .nosotros-tarjeta,
+html.modo-oscuro .contacto-formulario-caja,
+html.modo-oscuro .ayuda-pestanas,
+html.modo-oscuro .faq-item,
 html.modo-alto-contraste .ayuda-seccion-card,
 html.modo-alto-contraste .nosotros-tarjeta,
-html.modo-alto-contraste .contacto-formulario-caja {
-  background-color: #111111 !important;
-  border-color: #ffc107 !important;
-  color: #ffffff !important;
+html.modo-alto-contraste .contacto-formulario-caja,
+html.modo-alto-contraste .ayuda-pestanas,
+html.modo-alto-contraste .faq-item {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
 }
 
+html.modo-oscuro h2,
+html.modo-oscuro h3,
+html.modo-oscuro label,
+html.modo-oscuro .faq-pregunta-txt,
 html.modo-alto-contraste h2,
 html.modo-alto-contraste h3,
-html.modo-alto-contraste label {
-  color: #ffffff !important;
+html.modo-alto-contraste label,
+html.modo-alto-contraste .faq-pregunta-txt {
+  color: #f0f6fc !important;
 }
+
+html.modo-oscuro .ayuda-pestana-btn,
+html.modo-oscuro .btn-faq-cat,
+html.modo-alto-contraste .ayuda-pestana-btn,
+html.modo-alto-contraste .btn-faq-cat {
+  color: #8b949e;
+}
+

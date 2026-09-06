@@ -720,4 +720,143 @@ input:checked + .slider-round:before {
     align-items: flex-start;
     gap: 12px;
   }
+
+  .pagina-usuario {
+    padding: 24px 16px 60px;
+  }
+
+  .usuario-seccion {
+    padding: 20px 16px;
+  }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN PÁGINA MI CUENTA (USUARIO)        */
+/* ================================================ */
+html.modo-oscuro .pagina-usuario,
+html.modo-alto-contraste .pagina-usuario {
+  background-color: #0e1117 !important;
+  color: #f0f6fc !important;
+}
+
+html.modo-oscuro .usuario-cabecera,
+html.modo-oscuro .usuario-seccion,
+html.modo-oscuro .tarjeta-pedido,
+html.modo-oscuro .tarjeta-favorito,
+html.modo-oscuro .tarjeta-direccion,
+html.modo-oscuro .form-usuario-direccion,
+html.modo-oscuro .usuario-tarjeta-alerta,
+html.modo-alto-contraste .usuario-cabecera,
+html.modo-alto-contraste .usuario-seccion,
+html.modo-alto-contraste .tarjeta-pedido,
+html.modo-alto-contraste .tarjeta-favorito,
+html.modo-alto-contraste .tarjeta-direccion,
+html.modo-alto-contraste .form-usuario-direccion,
+html.modo-alto-contraste .usuario-tarjeta-alerta {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.modo-oscuro .usuario-saludo h1,
+html.modo-oscuro .usuario-seccion h2,
+html.modo-oscuro .tarjeta-favorito h3,
+html.modo-oscuro .favorito-precio,
+html.modo-oscuro .pedido-id,
+html.modo-oscuro .campo-grupo label,
+html.modo-oscuro .opcion-item h4,
+html.modo-oscuro .direccion-info strong,
+html.modo-oscuro .pedido-detalles h4,
+html.modo-alto-contraste .usuario-saludo h1,
+html.modo-alto-contraste .usuario-seccion h2,
+html.modo-alto-contraste .tarjeta-favorito h3,
+html.modo-alto-contraste .favorito-precio,
+html.modo-alto-contraste .pedido-id,
+html.modo-alto-contraste .campo-grupo label,
+html.modo-alto-contraste .opcion-item h4,
+html.modo-alto-contraste .direccion-info strong,
+html.modo-alto-contraste .pedido-detalles h4 {
+  color: #f0f6fc !important;
+}
+
+html.modo-oscuro .usuario-saludo p,
+html.modo-oscuro .descripcion-seccion,
+html.modo-oscuro .pedido-fecha,
+html.modo-oscuro .favorito-categoria,
+html.modo-oscuro .direccion-info p,
+html.modo-oscuro .opcion-item p,
+html.modo-oscuro .pedido-detalles li,
+html.modo-oscuro .tab-btn,
+html.modo-alto-contraste .usuario-saludo p,
+html.modo-alto-contraste .descripcion-seccion,
+html.modo-alto-contraste .pedido-fecha,
+html.modo-alto-contraste .favorito-categoria,
+html.modo-alto-contraste .direccion-info p,
+html.modo-alto-contraste .opcion-item p,
+html.modo-alto-contraste .pedido-detalles li,
+html.modo-alto-contraste .tab-btn {
+  color: #8b949e !important;
+}
+
+html.modo-oscuro .tab-btn.activo,
+html.modo-alto-contraste .tab-btn.activo {
+  color: #ffc107 !important;
+  border-bottom-color: #ffc107 !important;
+}
+
+html.modo-oscuro .campo-grupo input,
+html.modo-oscuro .campo-grupo select,
+html.modo-alto-contraste .campo-grupo input,
+html.modo-alto-contraste .campo-grupo select {
+  background-color: #1c2128 !important;
+  color: #f0f6fc !important;
+  border-color: #30363d !important;
+}
+
+html.modo-oscuro .campo-grupo input:focus,
+html.modo-oscuro .campo-grupo select:focus,
+html.modo-alto-contraste .campo-grupo input:focus,
+html.modo-alto-contraste .campo-grupo select:focus {
+  border-color: #ffc107 !important;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25) !important;
+}
+
+html.modo-oscuro .btn-tamano,
+html.modo-alto-contraste .btn-tamano {
+  background-color: #1c2128 !important;
+  color: #8b949e !important;
+  border-color: #30363d !important;
+}
+
+html.modo-oscuro .btn-tamano.activo,
+html.modo-alto-contraste .btn-tamano.activo {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+  border-color: #ffc107 !important;
+}
+
+html.modo-oscuro .favorito-imagen,
+html.modo-alto-contraste .favorito-imagen {
+  background-color: #1c2128 !important;
+}
+
+html.modo-oscuro .boton-cerrar-sesion,
+html.modo-alto-contraste .boton-cerrar-sesion {
+  background-color: transparent !important;
+  border: 2px solid #ffc107 !important;
+  color: #ffc107 !important;
+}
+
+html.modo-oscuro .boton-cerrar-sesion:hover,
+html.modo-alto-contraste .boton-cerrar-sesion:hover {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+}
+
+html.modo-oscuro .btn-quitar-favorito,
+html.modo-alto-contraste .btn-quitar-favorito {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #f0f6fc !important;
+}
+

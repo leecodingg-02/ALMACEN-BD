@@ -688,3 +688,72 @@
     color: inherit;
     display: block;
 }
+
+/* ================================================ */
+/* MODO OSCURO EN DETALLE DE PRODUCTO               */
+/* ================================================ */
+html.modo-oscuro .pagina-detalle,
+html.modo-alto-contraste .pagina-detalle {
+    background-color: #0e1117;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .detalle-titulo,
+html.modo-oscuro .detalle-precio-actual,
+html.modo-oscuro .acordeon-cabecera,
+html.modo-oscuro .resenas-cabecera h2,
+html.modo-oscuro .relacionados-cabecera h2,
+html.modo-oscuro .spec-valor,
+html.modo-alto-contraste .detalle-titulo,
+html.modo-alto-contraste .detalle-precio-actual,
+html.modo-alto-contraste .acordeon-cabecera,
+html.modo-alto-contraste .resenas-cabecera h2,
+html.modo-alto-contraste .relacionados-cabecera h2,
+html.modo-alto-contraste .spec-valor {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .breadcrumb a,
+html.modo-oscuro .breadcrumb-actual,
+html.modo-oscuro .detalle-descripcion,
+html.modo-oscuro .acordeon-contenido,
+html.modo-oscuro .badge,
+html.modo-oscuro .resenas-vacio,
+html.modo-oscuro .resena p,
+html.modo-alto-contraste .breadcrumb a,
+html.modo-alto-contraste .breadcrumb-actual,
+html.modo-alto-contraste .detalle-descripcion,
+html.modo-alto-contraste .acordeon-contenido,
+html.modo-alto-contraste .badge,
+html.modo-alto-contraste .resenas-vacio,
+html.modo-alto-contraste .resena p {
+    color: #8b949e;
+}
+
+html.modo-oscuro .imagen-principal,
+html.modo-oscuro .miniatura,
+html.modo-oscuro .resena,
+html.modo-oscuro .resena-requiere-login,
+html.modo-alto-contraste .imagen-principal,
+html.modo-alto-contraste .miniatura,
+html.modo-alto-contraste .resena,
+html.modo-alto-contraste .resena-requiere-login {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+html.modo-oscuro .selector-cantidad button,
+html.modo-oscuro .selector-cantidad span,
+html.modo-alto-contraste .selector-cantidad button,
+html.modo-alto-contraste .selector-cantidad span {
+    background-color: #1c2128;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .favorito-detalle,
+html.modo-alto-contraste .favorito-detalle {
+    background-color: #1c2128;
+    border-color: #30363d;
+    color: #8b949e;
+}
+

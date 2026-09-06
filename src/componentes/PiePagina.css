@@ -206,18 +206,24 @@
   }
 }
 
-/* MODO OSCURO */
+/* MODO OSCURO / ALTO CONTRASTE */
+html.modo-oscuro .pie-pagina-contenedor,
 html.modo-alto-contraste .pie-pagina-contenedor {
-  background-color: #000000 !important;
-  border-top: 2px solid #ffc107 !important;
+  background-color: #0c0c0e !important;
+  border-top: 1px solid #30363d !important;
 }
 
+html.modo-oscuro .pie-pagina-inferior,
 html.modo-alto-contraste .pie-pagina-inferior {
-  border-top: 1px solid #ffc107 !important;
+  border-top: 1px solid #30363d !important;
 }
 
+html.modo-oscuro .pie-enlace,
+html.modo-oscuro .pie-descripcion,
+html.modo-oscuro .pie-inferior-izq p,
 html.modo-alto-contraste .pie-enlace,
 html.modo-alto-contraste .pie-descripcion,
 html.modo-alto-contraste .pie-inferior-izq p {
-  color: #ffffff !important;
+  color: #c9d1d9 !important;
 }
+

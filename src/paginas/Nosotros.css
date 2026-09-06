@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     gap: 40px;
-    margin-bottom: 100px;
+    margin-bottom: 80px;
     padding-top: 20px;
 }
 
@@ -22,10 +22,11 @@
     letter-spacing: 1px;
     display: inline-block;
     margin-bottom: 25px;
+    border-radius: 4px;
 }
 
 .nosotros-hero-contenido h1 {
-    font-size: 4.5rem;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
     line-height: 1.1;
     font-weight: 800;
     color: #1a1a1a;
@@ -90,17 +91,18 @@
 .nosotros-mision-vision {
     display: flex;
     gap: 30px;
-    margin-bottom: 120px;
+    margin-bottom: 100px;
 }
 
 .tarjeta-mv {
     flex: 1;
     background-color: #fafafa;
     border: 1px solid #eee;
-    padding: 60px 50px;
+    padding: 50px 40px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    border-radius: 12px;
 }
 
 .icono-mv {
@@ -182,11 +184,12 @@
 .caja-flotante {
     position: absolute;
     bottom: 0;
-    right: -20px;
+    right: 0;
     background-color: #1a1a1a;
     color: white;
     padding: 25px 35px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 8px 0 12px 0;
 }
 
 .caja-flotante h3 {
@@ -234,9 +237,91 @@
     font-size: 0.9rem;
     text-decoration: none;
     letter-spacing: 0.5px;
+    border-radius: 6px;
     transition: background-color 0.2s;
 }
 
 .boton-sucursales:hover {
     background-color: #f39c12;
+}
+
+/* Responsividad Móvil y Tablet */
+@media (max-width: 992px) {
+    .nosotros-hero,
+    .nosotros-mision-vision,
+    .motor-contenido {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .nosotros-hero-contenido p {
+        max-width: 100%;
+    }
+
+    .imagen-placeholder-tienda,
+    .imagen-placeholder-equipo {
+        height: 320px;
+    }
+
+    .nosotros-hero-imagen::after {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .tarjeta-mv {
+        padding: 30px 20px;
+    }
+
+    .caja-flotante {
+        position: relative;
+        right: 0;
+        bottom: 0;
+        border-radius: 0 0 12px 12px;
+        padding: 16px 20px;
+    }
+
+    .caja-flotante h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* MODO OSCURO EN PAGINA NOSOTROS */
+html.modo-oscuro .nosotros-hero-contenido h1,
+html.modo-oscuro .tarjeta-mv h2,
+html.modo-oscuro .titulo-motor,
+html.modo-oscuro .caja-flotante h3,
+html.modo-alto-contraste .nosotros-hero-contenido h1,
+html.modo-alto-contraste .tarjeta-mv h2,
+html.modo-alto-contraste .titulo-motor,
+html.modo-alto-contraste .caja-flotante h3 {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .nosotros-hero-contenido p,
+html.modo-oscuro .tarjeta-mv p,
+html.modo-oscuro .texto-principal,
+html.modo-oscuro .cita-motor p,
+html.modo-alto-contraste .nosotros-hero-contenido p,
+html.modo-alto-contraste .tarjeta-mv p,
+html.modo-alto-contraste .texto-principal,
+html.modo-alto-contraste .cita-motor p {
+    color: #8b949e;
+}
+
+html.modo-oscuro .tarjeta-mv,
+html.modo-alto-contraste .tarjeta-mv {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+html.modo-oscuro .caja-flotante,
+html.modo-alto-contraste .caja-flotante {
+    background-color: #1c2128;
+    border: 1px solid #30363d;
+}
+
+html.modo-oscuro .etiqueta-mv,
+html.modo-alto-contraste .etiqueta-mv {
+    color: #ffc107;
 }

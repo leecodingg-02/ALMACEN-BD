@@ -222,3 +222,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN CHECKOUT                          */
+/* ================================================ */
+html.modo-oscuro .pagina-checkout,
+html.modo-alto-contraste .pagina-checkout {
+    background-color: #0e1117;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .checkout-form,
+html.modo-oscuro .checkout-resumen,
+html.modo-alto-contraste .checkout-form,
+html.modo-alto-contraste .checkout-resumen {
+    background-color: #161b22;
+    border-color: #30363d;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .checkout-cabecera h1,
+html.modo-oscuro .checkout-resumen h2,
+html.modo-oscuro .checkout-producto-nombre,
+html.modo-oscuro .checkout-producto-precio,
+html.modo-oscuro .campo-grupo label,
+html.modo-alto-contraste .checkout-cabecera h1,
+html.modo-alto-contraste .checkout-resumen h2,
+html.modo-alto-contraste .checkout-producto-nombre,
+html.modo-alto-contraste .checkout-producto-precio,
+html.modo-alto-contraste .campo-grupo label {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .checkout-producto-cant,
+html.modo-alto-contraste .checkout-producto-cant {
+    color: #8b949e;
+}
+

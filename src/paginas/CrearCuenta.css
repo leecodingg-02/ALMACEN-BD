@@ -401,3 +401,55 @@
     font-size: 24px;
   }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN CREAR CUENTA                      */
+/* ================================================ */
+html.modo-oscuro .crear-cuenta-page,
+html.modo-alto-contraste .crear-cuenta-page {
+    background-color: #0e1117;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .crear-cuenta-title,
+html.modo-oscuro .logo-brand-text,
+html.modo-oscuro .form-label,
+html.modo-oscuro .form-input,
+html.modo-oscuro .form-select,
+html.modo-oscuro .link-iniciar-sesion,
+html.modo-alto-contraste .crear-cuenta-title,
+html.modo-alto-contraste .logo-brand-text,
+html.modo-alto-contraste .form-label,
+html.modo-alto-contraste .form-input,
+html.modo-alto-contraste .form-select,
+html.modo-alto-contraste .link-iniciar-sesion {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .crear-cuenta-subtitle,
+html.modo-oscuro .crear-cuenta-footer,
+html.modo-alto-contraste .crear-cuenta-subtitle,
+html.modo-alto-contraste .crear-cuenta-footer {
+    color: #8b949e;
+}
+
+html.modo-oscuro .form-input,
+html.modo-oscuro .form-select,
+html.modo-alto-contraste .form-input,
+html.modo-alto-contraste .form-select {
+    border-bottom-color: #30363d;
+}
+
+html.modo-oscuro .form-input:focus,
+html.modo-oscuro .form-select:focus,
+html.modo-alto-contraste .form-input:focus,
+html.modo-alto-contraste .form-select:focus {
+    border-bottom-color: #ffc107;
+}
+
+html.modo-oscuro .form-select option,
+html.modo-alto-contraste .form-select option {
+    background-color: #161b22;
+    color: #f0f6fc;
+}
+

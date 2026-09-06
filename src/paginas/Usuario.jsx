@@ -677,11 +677,11 @@ const Usuario = ({
           </p>
 
           <div className="opciones-configuracion">
-            {/* Alto contraste */}
+            {/* Alto contraste / Modo Oscuro */}
             <div className="opcion-item">
               <div>
-                <h4>Modo Alto Contraste</h4>
-                <p>Aumenta el contraste en toda la aplicación (incluye encabezado).</p>
+                <h4>Modo Oscuro & Alto Contraste</h4>
+                <p>Activa la interfaz oscura y de alto contraste en toda la aplicación (productos, inicio, nosotros, ofertas, etc.).</p>
               </div>
               <label className="switch-toggle">
                 <input

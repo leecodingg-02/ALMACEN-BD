@@ -80,6 +80,12 @@ function AppContenido() {
   const [favoritos, setFavoritos] = useState([]);
   const [configuracion, setConfiguracion] = useState(obtenerConfiguracionUsuario);
 
+  /* Estado del Modo Oscuro sincronizado globalmente */
+  const [modoOscuro, setModoOscuro] = useState(() => {
+    const config = obtenerConfiguracionUsuario();
+    return config?.altoContraste || localStorage.getItem('modo-oscuro') === 'true';
+  });
+
   /* Cargar favoritos del usuario autenticado directamente desde MySQL */
   useEffect(() => {
     if (usuario?.id_usu) {
@@ -95,21 +101,40 @@ function AppContenido() {
     localStorage.setItem("almacenweb_carrito", JSON.stringify(carrito));
   }, [carrito]);
 
-  /* Aplicar preferencias globales de accesibilidad (Alto contraste y escala de fuente) */
+  /* Aplicar preferencias globales (Modo Oscuro, Alto Contraste y Escala Tipográfica) */
   useEffect(() => {
     const root = document.documentElement;
 
-    /* Activar o desactivar alto contraste globalmente */
-    if (configuracion?.altoContraste) {
-      root.classList.add("modo-alto-contraste");
+    if (modoOscuro || configuracion?.altoContraste) {
+      root.classList.add("modo-oscuro", "modo-alto-contraste");
     } else {
-      root.classList.remove("modo-alto-contraste");
+      root.classList.remove("modo-oscuro", "modo-alto-contraste");
     }
 
     /* Aplicar tamaño de fuente global en la raíz HTML */
     root.classList.remove("fuente-normal", "fuente-grande", "fuente-extra-grande");
     root.classList.add(`fuente-${configuracion?.tamanoFuente || "normal"}`);
-  }, [configuracion]);
+  }, [modoOscuro, configuracion]);
+
+  /* Alternar Modo Oscuro global */
+  const handleAlternarModoOscuro = () => {
+    setModoOscuro((prev) => {
+      const nuevo = !prev;
+      localStorage.setItem('modo-oscuro', nuevo ? 'true' : 'false');
+      const nuevaConfig = { ...configuracion, altoContraste: nuevo };
+      setConfiguracion(nuevaConfig);
+      localStorage.setItem('almacenweb_configuracion', JSON.stringify(nuevaConfig));
+      return nuevo;
+    });
+  };
+
+  const handleActualizarConfig = (nuevaConfig) => {
+    setConfiguracion(nuevaConfig);
+    if (typeof nuevaConfig?.altoContraste === 'boolean') {
+      setModoOscuro(nuevaConfig.altoContraste);
+      localStorage.setItem('modo-oscuro', nuevaConfig.altoContraste ? 'true' : 'false');
+    }
+  };
 
   /* Agregar línea al carrito */
   const agregarAlCarrito = (producto, cantidad = 1) => {
@@ -185,6 +210,8 @@ function AppContenido() {
           cantidadCarrito={obtenerCantidadTotal(carrito)}
           usuario={usuario}
           cantidadFavoritos={favoritos.length}
+          modoOscuro={modoOscuro}
+          onAlternarModoOscuro={handleAlternarModoOscuro}
           onAlternarSesion={handleAlternarSesion}
         />
       )}
@@ -260,7 +287,7 @@ function AppContenido() {
           path='/confirmacion'
           element={<Confirmacion />}
         />
-        <Route path='/usuario' element={<Usuario usuario={usuario} favoritos={favoritos} configuracion={configuracion} onAlternarFavorito={handleAlternarFavorito} onAgregarCarrito={agregarAlCarrito} onActualizarUsuario={setUsuario} onActualizarConfig={setConfiguracion} onAlternarSesion={handleAlternarSesion} />} />
+        <Route path='/usuario' element={<Usuario usuario={usuario} favoritos={favoritos} configuracion={configuracion} onAlternarFavorito={handleAlternarFavorito} onAgregarCarrito={agregarAlCarrito} onActualizarUsuario={setUsuario} onActualizarConfig={handleActualizarConfig} onAlternarSesion={handleAlternarSesion} />} />
         <Route path='/inicio-sesion' element={<InicioSesion onIniciarSesion={setUsuario} />} />
         <Route path='/crear-cuenta' element={<CrearCuenta onIniciarSesion={setUsuario} />} />
         <Route path='/nosotros' element={<Nosotros />} />

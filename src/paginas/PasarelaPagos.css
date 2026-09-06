@@ -723,3 +723,64 @@
   font-size: 11.5px;
   color: #9ca3af;
 }
+
+/* ================================================ */
+/* MODO OSCURO EN PASARELA DE PAGOS                 */
+/* ================================================ */
+html.modo-oscuro .pagina-pasarela,
+html.modo-alto-contraste .pagina-pasarela {
+  background-color: #0e1117;
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .pasarela-seccion-card,
+html.modo-oscuro .pasarela-resumen-card,
+html.modo-oscuro .tarjeta-bloqueo-pasarela,
+html.modo-alto-contraste .pasarela-seccion-card,
+html.modo-alto-contraste .pasarela-resumen-card,
+html.modo-alto-contraste .tarjeta-bloqueo-pasarela {
+  background-color: #161b22;
+  border-color: #30363d;
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .pasarela-cabecera h1,
+html.modo-oscuro .seccion-card-encabezado h2,
+html.modo-oscuro .pasarela-resumen-card h3,
+html.modo-oscuro .resumen-prod-nombre,
+html.modo-oscuro .resumen-prod-subtotal,
+html.modo-oscuro .campo-grupo-pasarela label,
+html.modo-oscuro .tab-metodo-nombre,
+html.modo-alto-contraste .pasarela-cabecera h1,
+html.modo-alto-contraste .seccion-card-encabezado h2,
+html.modo-alto-contraste .pasarela-resumen-card h3,
+html.modo-alto-contraste .resumen-prod-nombre,
+html.modo-alto-contraste .resumen-prod-subtotal,
+html.modo-alto-contraste .campo-grupo-pasarela label,
+html.modo-alto-contraste .tab-metodo-nombre {
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .pasarela-subtitulo,
+html.modo-oscuro .seccion-card-encabezado p,
+html.modo-oscuro .resumen-prod-precio,
+html.modo-oscuro .sello-item,
+html.modo-alto-contraste .pasarela-subtitulo,
+html.modo-alto-contraste .seccion-card-encabezado p,
+html.modo-alto-contraste .resumen-prod-precio,
+html.modo-alto-contraste .sello-item {
+  color: #8b949e;
+}
+
+html.modo-oscuro .tab-metodo,
+html.modo-alto-contraste .tab-metodo {
+  background-color: #1c2128;
+  border-color: #30363d;
+}
+
+html.modo-oscuro .tab-metodo.activo,
+html.modo-alto-contraste .tab-metodo.activo {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+}
+

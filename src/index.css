@@ -17,152 +17,152 @@ html.fuente-extra-grande {
     font-size: 22px;
 }
 
-/* Accesibilidad: Modo Alto Contraste Global */
+/* Variables globales de color en Modo Oscuro */
+html.modo-oscuro,
+html.modo-alto-contraste {
+    --bg-main: #0e1117;
+    --bg-card: #161b22;
+    --bg-surface: #1c2128;
+    --text-primary: #f0f6fc;
+    --text-secondary: #8b949e;
+    --border-color: #30363d;
+    --primary-accent: #ffc107;
+}
+
+/* Fondo global y textos en Modo Oscuro / Alto Contraste */
+html.modo-oscuro,
+html.modo-oscuro body,
 html.modo-alto-contraste,
 html.modo-alto-contraste body {
-    background-color: #000000 !important;
-    color: #ffffff !important;
+    background-color: #0e1117 !important;
+    color: #f0f6fc !important;
 }
 
-/* Encabezado en Modo Alto Contraste */
-html.modo-alto-contraste .encabezado-contenedor,
-html.modo-alto-contraste .encabezado-barra-sup {
-    background-color: #000000 !important;
-    border-bottom: 2px solid #ffc107 !important;
+/* Encabezado en Modo Oscuro / Alto Contraste */
+html.modo-oscuro .encabezado-contenedor,
+html.modo-alto-contraste .encabezado-contenedor {
+    background-color: #12161f !important;
+    border-bottom: 1px solid #30363d !important;
 }
 
-html.modo-alto-contraste .encabezado-barra-sup *,
-html.modo-alto-contraste .contenedor-encabezado-pri *,
-html.modo-alto-contraste .navegacion {
-    color: #ffffff !important;
-}
-
-html.modo-alto-contraste .busqueda-contenedor {
-    border-color: #ffc107 !important;
-    background-color: #111111 !important;
-}
-
-html.modo-alto-contraste .busqueda {
-    color: #ffffff !important;
-}
-
-/* Contenedores de páginas en Alto Contraste */
+/* Contenedores de páginas principales en Modo Oscuro */
+html.modo-oscuro .pagina-productos,
+html.modo-oscuro .pagina-usuario,
+html.modo-oscuro .pagina-carrito,
+html.modo-oscuro .pagina-checkout,
+html.modo-oscuro .pagina-confirmacion,
+html.modo-oscuro .ayuda-pagina,
+html.modo-oscuro .ubicaciones-pagina,
+html.modo-oscuro .pagina-detalle,
+html.modo-oscuro .pagina-pasarela,
+html.modo-oscuro .login-pagina-wrapper,
+html.modo-oscuro .login-main-container,
+html.modo-oscuro .crear-cuenta-page,
+html.modo-alto-contraste .pagina-productos,
 html.modo-alto-contraste .pagina-usuario,
 html.modo-alto-contraste .pagina-carrito,
 html.modo-alto-contraste .pagina-checkout,
-html.modo-alto-contraste .pagina-confirmacion {
-    background-color: #000000 !important;
-    color: #ffffff !important;
+html.modo-alto-contraste .pagina-confirmacion,
+html.modo-alto-contraste .ayuda-pagina,
+html.modo-alto-contraste .ubicaciones-pagina,
+html.modo-alto-contraste .pagina-detalle,
+html.modo-alto-contraste .pagina-pasarela,
+html.modo-alto-contraste .login-pagina-wrapper,
+html.modo-alto-contraste .login-main-container,
+html.modo-alto-contraste .crear-cuenta-page {
+    background-color: #0e1117 !important;
+    color: #f0f6fc !important;
 }
 
-/* Tarjetas y secciones de usuario en Alto Contraste */
-html.modo-alto-contraste .usuario-cabecera,
-html.modo-alto-contraste .usuario-seccion,
-html.modo-alto-contraste .tarjeta-pedido,
-html.modo-alto-contraste .tarjeta-favorito,
-html.modo-alto-contraste .tarjeta-direccion,
-html.modo-alto-contraste .form-usuario-direccion,
-html.modo-alto-contraste .usuario-tarjeta-alerta {
-    background-color: #111111 !important;
-    color: #ffffff !important;
+/* Textos generales */
+html.modo-oscuro h1, html.modo-oscuro h2, html.modo-oscuro h3, html.modo-oscuro h4, html.modo-oscuro strong, html.modo-oscuro label,
+html.modo-alto-contraste h1, html.modo-alto-contraste h2, html.modo-alto-contraste h3, html.modo-alto-contraste h4, html.modo-alto-contraste strong, html.modo-alto-contraste label {
+    color: #f0f6fc !important;
+}
+
+html.modo-oscuro p, html.modo-oscuro span, html.modo-oscuro li,
+html.modo-alto-contraste p, html.modo-alto-contraste span, html.modo-alto-contraste li {
+    color: #c9d1d9;
+}
+
+/* Inputs, selects y textareas */
+html.modo-oscuro input:not([type="checkbox"]):not([type="radio"]),
+html.modo-oscuro select,
+html.modo-oscuro textarea,
+html.modo-alto-contraste input:not([type="checkbox"]):not([type="radio"]),
+html.modo-alto-contraste select,
+html.modo-alto-contraste textarea {
+    background-color: #1c2128 !important;
+    color: #f0f6fc !important;
+    border-color: #30363d !important;
+}
+
+html.modo-oscuro input:focus, html.modo-oscuro select:focus, html.modo-oscuro textarea:focus,
+html.modo-alto-contraste input:focus, html.modo-alto-contraste select:focus, html.modo-alto-contraste textarea:focus {
     border-color: #ffc107 !important;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25) !important;
 }
 
-/* Textos e íconos en Alto Contraste para garantizar visibilidad legibilidad */
-html.modo-alto-contraste h1,
-html.modo-alto-contraste h2,
-html.modo-alto-contraste h3,
-html.modo-alto-contraste h4,
-html.modo-alto-contraste strong,
-html.modo-alto-contraste label {
-    color: #ffffff !important;
+/* Botones secundarios / contorno */
+html.modo-oscuro .boton-contorno,
+html.modo-alto-contraste .boton-contorno {
+    border-color: #30363d !important;
+    color: #f0f6fc !important;
 }
 
-html.modo-alto-contraste p,
-html.modo-alto-contraste span,
-html.modo-alto-contraste li,
-html.modo-alto-contraste .descripcion-seccion,
-html.modo-alto-contraste .pedido-fecha,
-html.modo-alto-contraste .favorito-categoria,
-html.modo-alto-contraste .direccion-info p {
-    color: #e0e0e0 !important;
-}
-
-html.modo-alto-contraste .usuario-kicker,
-html.modo-alto-contraste .favorito-precio,
-html.modo-alto-contraste .pedido-id {
-    color: #ffc107 !important;
-}
-
-/* Entradas de formulario (inputs y selects) en Alto Contraste */
-html.modo-alto-contraste input,
-html.modo-alto-contraste select {
-    background-color: #1a1a1a !important;
-    color: #ffffff !important;
-    border-color: #ffc107 !important;
-}
-
-html.modo-alto-contraste input:focus,
-html.modo-alto-contraste select:focus {
-    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.4) !important;
-}
-
-/* Pestañas (tabs) en Alto Contraste */
-html.modo-alto-contraste .tab-btn {
-    color: #dddddd !important;
-}
-
-html.modo-alto-contraste .tab-btn.activo {
-    color: #ffc107 !important;
-    border-bottom-color: #ffc107 !important;
-}
-
+html.modo-oscuro code,
 html.modo-alto-contraste code {
-    background-color: #222222 !important;
+    background-color: #161b22 !important;
     color: #ffc107 !important;
-    border: 1px solid #444444;
+    border: 1px solid #30363d;
 }
 
 h1,
 h2 {
-  font-family: var(--heading);
+  font-family: var(--heading, inherit);
   font-weight: 500;
-  color: var(--text-h);
+  color: var(--text-h, inherit);
 }
 
 h1 {
   font-size: 3.5rem;
   letter-spacing: -1.68px;
   margin: 32px 0;
-  @media (max-width: 1024px) {
+}
+
+@media (max-width: 1024px) {
+  h1 {
     font-size: 2.25rem;
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 1.5rem;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
+}
+
+@media (max-width: 1024px) {
+  h2 {
     font-size: 1.25rem;
   }
 }
+
 p {
   margin: 0;
 }
 
 code,
 .counter {
-  font-family: var(--mono);
+  font-family: var(--mono, monospace);
   display: inline-flex;
   border-radius: 4px;
-  color: var(--text-h);
 }
 
 code {
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;
-  background: var(--code-bg);
 }

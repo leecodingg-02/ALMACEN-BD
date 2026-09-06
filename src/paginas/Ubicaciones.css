@@ -596,21 +596,37 @@
   }
 }
 
-/* ALTO CONTRASTE */
+/* MODO OSCURO / ALTO CONTRASTE */
+html.modo-oscuro .ubicaciones-pagina,
 html.modo-alto-contraste .ubicaciones-pagina {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  background-color: #0e1117 !important;
+  color: #f0f6fc !important;
 }
 
+html.modo-oscuro .tarjeta-sucursal,
+html.modo-oscuro .mapa-tarjeta-fija,
 html.modo-alto-contraste .tarjeta-sucursal,
 html.modo-alto-contraste .mapa-tarjeta-fija {
-  background-color: #111111 !important;
-  border-color: #ffc107 !important;
-  color: #ffffff !important;
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
 }
 
+html.modo-oscuro .sucursal-nombre,
+html.modo-oscuro .item-detalle strong,
+html.modo-oscuro .ubicaciones-contador h2,
 html.modo-alto-contraste .sucursal-nombre,
 html.modo-alto-contraste .item-detalle strong,
 html.modo-alto-contraste .ubicaciones-contador h2 {
-  color: #ffffff !important;
+  color: #f0f6fc !important;
 }
+
+html.modo-oscuro .item-detalle,
+html.modo-oscuro .txt-referencia,
+html.modo-oscuro .txt-secundario,
+html.modo-alto-contraste .item-detalle,
+html.modo-alto-contraste .txt-referencia,
+html.modo-alto-contraste .txt-secundario {
+  color: #8b949e !important;
+}
+

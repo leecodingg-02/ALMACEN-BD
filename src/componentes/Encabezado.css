@@ -1,57 +1,69 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
+
 /* VAR COLORES */
 :root {
   --primario: #ffc107;
-  --secundario: black;
-  --blanco: white;
-  --gris: #00000056;
+  --secundario: #000000;
+  --blanco: #ffffff;
+  --gris: rgba(0, 0, 0, 0.35);
+  --encabezado-fondo: #ffffff;
+  --encabezado-borde: rgba(0, 0, 0, 0.08);
+}
+
+.encabezado-contenedor {
+  width: 100%;
+  background-color: var(--encabezado-fondo);
+  position: relative;
+  z-index: 100;
+  border-bottom: 1px solid var(--encabezado-borde);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Estilos Contenedor Barra superior navegacion general */
-
 .encabezado-barra-sup {
   display: flex;
   justify-content: space-between;
-  background-color: var(--secundario);
-  padding: 8px 6vh;
+  align-items: center;
+  background-color: #0c0c0e;
+  padding: 10px 4%;
+  font-size: 0.85rem;
 }
 
-/* Contenedor elementos lado izquiero barra superior */
 .contenedor-barra-supizq {
   display: flex;
   flex-direction: row;
   color: var(--blanco);
-  gap: 6vh;
+  gap: 1.5rem;
+  align-items: center;
 }
 
 .item-barrasup-izq {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 2vh;
+  gap: 8px;
 }
 
 .icono-barra-supizq {
   color: var(--primario);
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
-.item-barrasup-izq {
-  display: flex;
-  align-items: center;
+.barra-supi-txt {
+  font-size: 0.83rem;
 }
-
-/* Estilos barra superior lado derecho*/
 
 .contenedor-barra-supder {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8vh;
+  gap: 1.5rem;
 }
 
 .item-barrasup-der {
@@ -61,25 +73,58 @@
 }
 
 .icono-barra-supder {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   color: var(--blanco);
+  flex-shrink: 0;
 }
-
-/* Botones lado derecho barra superior*/
 
 .botones-barra-sup {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: var(--blanco);
-  gap: 2vh;
+  gap: 6px;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.botones-barra-sup:hover {
+  color: var(--primario);
+}
+
+/* Botón conmutador Modo Oscuro */
+.btn-modo-oscuro-encabezado {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--blanco);
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all 0.25s ease;
+}
+
+.btn-modo-oscuro-encabezado:hover {
+  background: var(--primario);
+  color: #000000;
+  border-color: var(--primario);
+  transform: translateY(-1px);
+}
+
+.icono-modo-sun,
+.icono-modo-moon {
+  width: 16px;
+  height: 16px;
 }
 
 /* Estilo btn Iniciar sesion / Registro */
 .separador-sesion {
-  color: var(--blanco);
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .barra-sup-regini {
@@ -89,35 +134,35 @@
   color: var(--blanco);
 }
 
-/* Encabezado */
-
-.encabezado-logo img {
-  width: auto;
-  height: 100px;
-}
-
+/* Encabezado principal */
 .contenedor-encabezado-pri {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10vh;
-  min-height: 12vh;
-  gap: 2%;
+  padding: 12px 4%;
+  min-height: 80px;
+  gap: 20px;
 }
 
-/* Busqueda estilos y configuracion */
+.encabezado-logo img {
+  width: auto;
+  height: 75px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Búsqueda estilos y configuración */
 .busqueda-contenedor {
   display: flex;
   align-items: center;
-  border: 2px solid #00000030;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
   border-radius: 30px;
   width: 100%;
   max-width: 420px;
   padding: 4px 12px 4px 16px;
   background-color: #fafaf8;
   transition: all 0.25s ease;
-  margin-left: auto;
 }
 
 .busqueda-contenedor:focus-within {
@@ -132,8 +177,8 @@
   outline: none;
   width: 100%;
   font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--secundario);
+  font-size: 0.92rem;
+  color: inherit;
 }
 
 .busqueda::placeholder {
@@ -155,42 +200,63 @@
   transform: scale(1.1);
 }
 
-/* Todos los botones del encabezado respetan la fuente principal del proyecto. */
-.encabezado-contenedor button {
-  font-family: var(--fuente-principal);
+.encabezado-acciones-derecha {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
-/* Estilos navegacion botones */
+.encabezado-botones {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.8rem;
+}
+
+.navegacion {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+  padding: 6px 0;
+  transition: color 0.2s ease;
+}
 
 .navegacion.active {
-  color: #000;
-  font-weight: bold;
-  transform: translate(0, -3px);
-  transition: transform 220ms ease-out;
+  color: var(--primario);
+  font-weight: 700;
 }
 
 .navegacion.active::after {
   content: "";
   position: absolute;
-  bottom: -12px;
+  bottom: -4px;
   left: 0;
   width: 100%;
-  height: 4px;
-  border-radius: 20px;
+  height: 3px;
+  border-radius: 10px;
   background-color: var(--primario);
 }
 
-/* Iconos Encabezado principal */
-
-.icono-pri {
-  width: 32px;
-  height: 32px;
-  color: var(--secundario);
+/* Iconos directos (favoritos + carrito) */
+.encabezado-iconos-directos {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
 }
 
-/* El numero queda sobre el carrito sin mover el resto de la navegacion. */
-.encabezado-botones > a:last-child {
+.icono-pri {
+  width: 28px;
+  height: 28px;
+  color: inherit;
+}
+
+.enlace-carrito-icono {
   position: relative;
+  display: flex;
+  align-items: center;
+  color: inherit;
 }
 
 .contador-carrito {
@@ -205,29 +271,13 @@
   justify-content: center;
   border-radius: 50%;
   background-color: var(--primario);
-  color: var(--secundario);
+  color: #000000;
   font-size: 11px;
   font-weight: bold;
   line-height: 1;
 }
 
-/* Botones encabezado principal */
-
-.encabezado-botones {
-  display: flex;
-  flex-direction: row;
-  justify-self: flex-start;
-  align-items: center;
-  gap: 5vh;
-}
-
-.navegacion {
-  text-decoration: none;
-  color: var(--secundario);
-}
-
-/* Estilos Boton desplegable */
-
+/* Botón desplegable Categorías */
 .btn-desplegable {
   position: relative;
 }
@@ -241,42 +291,36 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+  color: inherit;
+  font-weight: 600;
 }
 
 .btn-productos {
   display: flex;
+  align-items: center;
   gap: 4px;
-  padding: 10px 0px;
-  font-size: 1rem;
+  padding: 6px 0;
+  font-size: 0.95rem;
 }
 
 .btn-desplegable-conte {
   display: none;
   position: absolute;
-  z-index: 1;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
   background-color: #ffffff;
-  min-width: 180px;
-  border-radius: 6px;
+  min-width: 200px;
+  border-radius: 8px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 
-.btn-productos.activo {
-  font-weight: bold;
-  transform: translate(0, -3px);
-  transition: transform 220ms ease-out;
-}
-
 .btn-productos.activo svg {
-  transform: scale(1.2);
   color: var(--primario);
   transform: rotate(180deg);
-  transition: transform 320ms ease-out;
-}
-
-/* Contenido dentro del boton desplegable*/
-
-.btn-desplegable-conte {
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
 
 .btn-desplegable-conte.mostrar {
@@ -286,22 +330,24 @@
 
 .btn-desplegable-conte a {
   text-decoration: none;
-  color: var(--secundario);
-  padding: 12px 8px;
+  color: #171717;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .btn-desplegable-conte a:hover {
-  background-color: #00000010;
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #000000;
 }
-
-/* Estilo para botón de iniciar/cerrar sesión en la barra superior */
 
 .btn-texto-sesion {
   background: transparent;
   border: none;
   color: var(--blanco);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   padding: 0;
 }
@@ -311,14 +357,152 @@
   color: var(--primario);
 }
 
-/* Posicionamiento para badge en icono de favoritos */
 .enlace-favoritos {
   position: relative;
   display: flex;
   align-items: center;
+  color: inherit;
 }
 
 .contador-favoritos {
   top: -8px;
   right: -10px;
+}
+
+.btn-hamburguesa-mobile {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 4px;
+}
+
+.mostrar-solo-mobile {
+  display: none;
+}
+
+/* ================================================ */
+/* MODO OSCURO (GLOBAL)                             */
+/* ================================================ */
+html.modo-oscuro .encabezado-contenedor,
+html.modo-alto-contraste .encabezado-contenedor {
+  background-color: #12161f;
+  color: #f0f6fc;
+  border-bottom-color: #30363d;
+}
+
+html.modo-oscuro .busqueda-contenedor,
+html.modo-alto-contraste .busqueda-contenedor {
+  background-color: #1c2128;
+  border-color: #30363d;
+}
+
+html.modo-oscuro .busqueda,
+html.modo-alto-contraste .busqueda {
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .busqueda::placeholder,
+html.modo-alto-contraste .busqueda::placeholder {
+  color: #8b949e;
+}
+
+html.modo-oscuro .btn-desplegable-conte,
+html.modo-alto-contraste .btn-desplegable-conte {
+  background-color: #1c2128;
+  border-color: #30363d;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+html.modo-oscuro .btn-desplegable-conte a,
+html.modo-alto-contraste .btn-desplegable-conte a {
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .btn-desplegable-conte a:hover,
+html.modo-alto-contraste .btn-desplegable-conte a:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+/* ================================================ */
+/* RESPONSIVIDAD MÓVIL Y TABLET                      */
+/* ================================================ */
+@media (max-width: 1024px) {
+  .contenedor-encabezado-pri {
+    gap: 12px;
+  }
+  .encabezado-botones {
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ocultar-mobile {
+    display: none !important;
+  }
+
+  .mostrar-solo-mobile {
+    display: block !important;
+  }
+
+  .btn-hamburguesa-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contenedor-encabezado-pri {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+
+  .encabezado-logo img {
+    height: 55px;
+  }
+
+  .busqueda-contenedor {
+    order: 3;
+    max-width: 100%;
+    margin-top: 6px;
+  }
+
+  .encabezado-acciones-derecha {
+    margin-left: auto;
+  }
+
+  .encabezado-botones {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+    gap: 14px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-bottom: 2px solid var(--primario);
+    z-index: 999;
+  }
+
+  html.modo-oscuro .encabezado-botones,
+  html.modo-alto-contraste .encabezado-botones {
+    background-color: #161b22;
+    border-bottom-color: var(--primario);
+  }
+
+  .encabezado-botones.mostrar-mobile {
+    display: flex;
+  }
+
+  .btn-desplegable-conte {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding-left: 14px;
+  }
 }

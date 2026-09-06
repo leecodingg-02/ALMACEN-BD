@@ -318,3 +318,58 @@
     margin-bottom: 30px;
   }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN INICIO DE SESIÓN                  */
+/* ================================================ */
+html.modo-oscuro .login-pagina-wrapper,
+html.modo-oscuro .login-main-container,
+html.modo-alto-contraste .login-pagina-wrapper,
+html.modo-alto-contraste .login-main-container {
+    background-color: #0e1117;
+    background-image: none;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .login-card,
+html.modo-alto-contraste .login-card {
+    background-color: #161b22;
+    border-color: #30363d;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .login-card-title,
+html.modo-oscuro .btn-volver-inicio,
+html.modo-oscuro .login-forgot-link,
+html.modo-oscuro .login-register-link,
+html.modo-alto-contraste .login-card-title,
+html.modo-alto-contraste .btn-volver-inicio,
+html.modo-alto-contraste .login-forgot-link,
+html.modo-alto-contraste .login-register-link {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .login-card-subtitle,
+html.modo-oscuro .login-register-prompt,
+html.modo-alto-contraste .login-card-subtitle,
+html.modo-alto-contraste .login-register-prompt {
+    color: #8b949e;
+}
+
+html.modo-oscuro .login-input,
+html.modo-alto-contraste .login-input {
+    color: #f0f6fc;
+    border-bottom-color: #30363d;
+}
+
+html.modo-oscuro .login-input:focus,
+html.modo-alto-contraste .login-input:focus {
+    border-bottom-color: #ffc107;
+}
+
+html.modo-oscuro .btn-toggle-eye,
+html.modo-alto-contraste .btn-toggle-eye {
+    color: #8b949e;
+}
+

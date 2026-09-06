@@ -415,3 +415,60 @@
     justify-content: space-between;
   }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN CARRITO                           */
+/* ================================================ */
+html.modo-oscuro .pagina-carrito,
+html.modo-alto-contraste .pagina-carrito {
+    background-color: #0e1117;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .carrito-lista,
+html.modo-oscuro .carrito-resumen,
+html.modo-oscuro .carrito-vacio,
+html.modo-alto-contraste .carrito-lista,
+html.modo-alto-contraste .carrito-resumen,
+html.modo-alto-contraste .carrito-vacio {
+    background-color: #161b22;
+    border-color: #30363d;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .carrito-linea:hover,
+html.modo-alto-contraste .carrito-linea:hover {
+    background-color: #1c2128;
+}
+
+html.modo-oscuro .carrito-cabecera h1,
+html.modo-oscuro .carrito-linea-info h2,
+html.modo-oscuro .carrito-resumen h2,
+html.modo-oscuro .carrito-subtotal,
+html.modo-oscuro .cantidad-valor,
+html.modo-alto-contraste .carrito-cabecera h1,
+html.modo-alto-contraste .carrito-linea-info h2,
+html.modo-alto-contraste .carrito-resumen h2,
+html.modo-alto-contraste .carrito-subtotal,
+html.modo-alto-contraste .cantidad-valor {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .carrito-linea-info p,
+html.modo-oscuro .carrito-cantidad-total,
+html.modo-oscuro .resumen-desglose li,
+html.modo-oscuro .carrito-nota,
+html.modo-alto-contraste .carrito-linea-info p,
+html.modo-alto-contraste .carrito-cantidad-total,
+html.modo-alto-contraste .resumen-desglose li,
+html.modo-alto-contraste .carrito-nota {
+    color: #8b949e;
+}
+
+html.modo-oscuro .btn-cantidad,
+html.modo-alto-contraste .btn-cantidad {
+    background-color: #1c2128;
+    color: #f0f6fc;
+    border-color: #30363d;
+}
+

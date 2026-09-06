@@ -6,9 +6,12 @@ function Encabezado({
   cantidadCarrito,
   usuario,
   cantidadFavoritos = 0,
+  modoOscuro,
+  onAlternarModoOscuro,
   onAlternarSesion,
 }) {
   const [desplegableAbierto, setDesplegableAbierto] = useState(false);
+  const [menuMobileAbierto, setMenuMobileAbierto] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState("");
   const desplegableRef = useRef(null);
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ function Encabezado({
     e.preventDefault();
     if (!textoBusqueda.trim()) return;
     navigate(`/productos?buscar=${encodeURIComponent(textoBusqueda.trim())}`);
+    setMenuMobileAbierto(false);
   };
 
   return (
@@ -57,7 +61,7 @@ function Encabezado({
             <p className='barra-supi-txt'> Envios a toda Colombia</p>
           </div>
 
-          <div className='item-barrasup-izq'>
+          <div className='item-barrasup-izq ocultar-mobile'>
             <svg
               className='icono-barra-supizq'
               xmlns='http://www.w3.org/2000/svg'
@@ -78,7 +82,31 @@ function Encabezado({
         </div>
 
         <div className='contenedor-barra-supder'>
-          <div className='item-barrasup-der'>
+          {/* Botón de alternar Modo Oscuro global */}
+          <button
+            className='btn-modo-oscuro-encabezado'
+            onClick={onAlternarModoOscuro}
+            title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+            aria-label='Alternar modo oscuro'
+          >
+            {modoOscuro ? (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="icono-modo-sun">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25M4.284 12h-2.25m15.364-6.364l-1.591 1.591M6.758 17.242l-1.591 1.591m12.728 0l-1.591-1.591M6.758 6.758L5.167 5.167M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
+                </svg>
+                <span className="texto-btn-modo">Claro</span>
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="icono-modo-moon">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+                <span className="texto-btn-modo">Oscuro</span>
+              </>
+            )}
+          </button>
+
+          <div className='item-barrasup-der ocultar-mobile'>
             <Link to='/ubicaciones' className='botones-barra-sup'>
               <svg
                 className='icono-barra-supder'
@@ -99,7 +127,7 @@ function Encabezado({
             </Link>
           </div>
 
-          <Link to='/ayuda' className='botones-barra-sup'>
+          <Link to='/ayuda' className='botones-barra-sup ocultar-mobile'>
             <p className='bara-sup-texto-ayu'> Ayuda </p>
           </Link>
 
@@ -162,7 +190,7 @@ function Encabezado({
             value={textoBusqueda}
             onChange={(e) => setTextoBusqueda(e.target.value)}
           />
-          <button type='submit' className='buscar-btn'>
+          <button type='submit' className='buscar-btn' aria-label="Buscar">
             <svg
               className='icono-pri'
               xmlns='http://www.w3.org/2000/svg'
@@ -180,138 +208,162 @@ function Encabezado({
           </button>
         </form>
 
-        <div className='encabezado-botones'>
-          <NavLink to='/' className='navegacion'>
-            {" "}
-            Inicio{" "}
-          </NavLink>
+        <div className='encabezado-acciones-derecha'>
+          <div className={`encabezado-botones ${menuMobileAbierto ? 'mostrar-mobile' : ''}`}>
+            <NavLink to='/' className='navegacion' onClick={() => setMenuMobileAbierto(false)}>
+              Inicio
+            </NavLink>
 
-          <div className='btn-desplegable' ref={desplegableRef}>
-            <button
-              className={`btn-productos${desplegableAbierto ? " activo" : ""}`}
-              onClick={() => setDesplegableAbierto(!desplegableAbierto)}
+            <div className='btn-desplegable' ref={desplegableRef}>
+              <button
+                className={`btn-productos${desplegableAbierto ? " activo" : ""}`}
+                onClick={() => setDesplegableAbierto(!desplegableAbierto)}
+              >
+                Categorias
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='size-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m19.5 8.25-7.5 7.5-7.5-7.5'
+                  />
+                </svg>
+              </button>
+
+              <div
+                className={`btn-desplegable-conte${desplegableAbierto ? " mostrar" : ""}`}
+              >
+                <NavLink
+                  to='/productos?categoria=Herramientas'
+                  onClick={() => { setDesplegableAbierto(false); setMenuMobileAbierto(false); }}
+                >
+                  Herramientas
+                </NavLink>
+
+                <NavLink
+                  to='/productos?categoria=Muebles'
+                  onClick={() => { setDesplegableAbierto(false); setMenuMobileAbierto(false); }}
+                >
+                  Muebles
+                </NavLink>
+
+                <NavLink
+                  to='/productos?categoria=Decoración'
+                  onClick={() => { setDesplegableAbierto(false); setMenuMobileAbierto(false); }}
+                >
+                  Decoracion
+                </NavLink>
+
+                <NavLink
+                  to='/productos?categoria=Iluminación'
+                  onClick={() => { setDesplegableAbierto(false); setMenuMobileAbierto(false); }}
+                >
+                  Iluminacion
+                </NavLink>
+
+                <NavLink
+                  to='/productos?categoria=Baño%20y%20Cocina'
+                  onClick={() => { setDesplegableAbierto(false); setMenuMobileAbierto(false); }}
+                >
+                  Baño y Cocina
+                </NavLink>
+              </div>
+            </div>
+
+            <NavLink to='/ofertas' className='navegacion' onClick={() => setMenuMobileAbierto(false)}>
+              Ofertas
+            </NavLink>
+
+            <NavLink to='/productos' className='navegacion' onClick={() => setMenuMobileAbierto(false)}>
+              Productos
+            </NavLink>
+
+            <NavLink to='/nosotros' className='navegacion' onClick={() => setMenuMobileAbierto(false)}>
+              Nosotros
+            </NavLink>
+
+            <Link to='/ubicaciones' className='navegacion mostrar-solo-mobile' onClick={() => setMenuMobileAbierto(false)}>
+              Ubicaciones
+            </Link>
+
+            <Link to='/ayuda' className='navegacion mostrar-solo-mobile' onClick={() => setMenuMobileAbierto(false)}>
+              Ayuda
+            </Link>
+          </div>
+
+          <div className="encabezado-iconos-directos">
+            {/* Enlace de Favoritos */}
+            <Link
+              to={usuario ? "/usuario?tab=favoritos" : "/usuario"}
+              className='enlace-favoritos'
+              title={
+                usuario
+                  ? "Ver mis productos favoritos"
+                  : "Inicia sesión para ver favoritos"
+              }
             >
-              Categorias
+              {usuario && cantidadFavoritos > 0 && (
+                <span className='contador-carrito contador-favoritos'>
+                  {cantidadFavoritos}
+                </span>
+              )}
               <svg
+                className='icono-pri'
+                xmlns='http://www.w3.org/2000/svg'
+                fill={cantidadFavoritos > 0 ? "#ffc107" : "none"}
+                viewBox='0 0 24 24'
+                strokeWidth='1.5'
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'
+                />
+              </svg>
+            </Link>
+
+            <Link to='/carrito' className="enlace-carrito-icono">
+              <span className='contador-carrito'>{cantidadCarrito}</span>
+              <svg
+                className='icono-pri'
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
                 strokeWidth='1.5'
                 stroke='currentColor'
-                className='size-6'
               >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='m19.5 8.25-7.5 7.5-7.5-7.5'
+                  d='M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'
                 />
               </svg>
+            </Link>
+
+            {/* Botón Hamburguesa Responsivo para Móviles */}
+            <button
+              className="btn-hamburguesa-mobile"
+              onClick={() => setMenuMobileAbierto(!menuMobileAbierto)}
+              aria-label="Abrir menú de navegación"
+            >
+              {menuMobileAbierto ? (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="icono-pri">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="icono-pri">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              )}
             </button>
-
-            <div
-              className={`btn-desplegable-conte${desplegableAbierto ? " mostrar" : ""}`}
-            >
-              <NavLink
-                to='/productos?categoria=Herramientas'
-                onClick={() => setDesplegableAbierto(false)}
-              >
-                Herramientas
-              </NavLink>
-
-              <NavLink
-                to='/productos?categoria=Muebles'
-                onClick={() => setDesplegableAbierto(false)}
-              >
-                Muebles
-              </NavLink>
-
-              <NavLink
-                to='/productos?categoria=Decoración'
-                onClick={() => setDesplegableAbierto(false)}
-              >
-                Decoracion
-              </NavLink>
-
-              <NavLink
-                to='/productos?categoria=Iluminación'
-                onClick={() => setDesplegableAbierto(false)}
-              >
-                Iluminacion
-              </NavLink>
-
-              <NavLink
-                to='/productos?categoria=Baño%20y%20Cocina'
-                onClick={() => setDesplegableAbierto(false)}
-              >
-                Baño y Cocina
-              </NavLink>
-            </div>
           </div>
-
-          <NavLink to='/ofertas' className='navegacion'>
-            {" "}
-            Ofertas
-          </NavLink>
-
-          <NavLink to='/productos' className='navegacion'>
-            {" "}
-            Productos{" "}
-          </NavLink>
-
-          <NavLink to='/nosotros' className='navegacion'>
-            {" "}
-            Nosotros{" "}
-          </NavLink>
-
-          {/* Enlace de Favoritos conectado a la pestaña de usuario registrado */}
-          <Link
-            to={usuario ? "/usuario?tab=favoritos" : "/usuario"}
-            className='enlace-favoritos'
-            title={
-              usuario
-                ? "Ver mis productos favoritos"
-                : "Inicia sesión para ver favoritos"
-            }
-          >
-            {usuario && cantidadFavoritos > 0 && (
-              <span className='contador-carrito contador-favoritos'>
-                {cantidadFavoritos}
-              </span>
-            )}
-            <svg
-              className='icono-pri'
-              xmlns='http://www.w3.org/2000/svg'
-              fill={cantidadFavoritos > 0 ? "#ffc107" : "none"}
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'
-              />
-            </svg>
-          </Link>
-
-          <Link to='/carrito'>
-            {/* El contador permanece visible para mostrar tambien el estado inicial. */}
-            <span className='contador-carrito'>{cantidadCarrito}</span>
-            <svg
-              className='icono-pri'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'
-              />
-            </svg>
-          </Link>
         </div>
       </div>
     </header>

@@ -408,3 +408,90 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ================================================ */
+/* MODO OSCURO / ALTO CONTRASTE                     */
+/* ================================================ */
+html.modo-oscuro .pagina-productos,
+html.modo-alto-contraste .pagina-productos {
+    background-color: #0e1117;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .productos-header h1,
+html.modo-oscuro .filtro-grupo h3,
+html.modo-oscuro .producto-titulo,
+html.modo-oscuro .precio-actual,
+html.modo-oscuro .paginacion-btn,
+html.modo-alto-contraste .productos-header h1,
+html.modo-alto-contraste .filtro-grupo h3,
+html.modo-alto-contraste .producto-titulo,
+html.modo-alto-contraste .precio-actual,
+html.modo-alto-contraste .paginacion-btn {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .productos-header p,
+html.modo-oscuro .productos-barra-superior,
+html.modo-oscuro .producto-categoria,
+html.modo-oscuro .producto-calificacion,
+html.modo-oscuro .checkbox-label,
+html.modo-alto-contraste .productos-header p,
+html.modo-alto-contraste .productos-barra-superior,
+html.modo-alto-contraste .producto-categoria,
+html.modo-alto-contraste .producto-calificacion,
+html.modo-alto-contraste .checkbox-label {
+    color: #8b949e;
+}
+
+html.modo-oscuro .tarjeta-producto,
+html.modo-alto-contraste .tarjeta-producto {
+    background-color: #161b22;
+    border-color: #30363d;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+html.modo-oscuro .producto-imagen-marcador,
+html.modo-alto-contraste .producto-imagen-marcador {
+    background-color: #1c2128;
+}
+
+html.modo-oscuro .boton-aplicar,
+html.modo-oscuro .ordenar-por select,
+html.modo-oscuro .precio-inputs input,
+html.modo-oscuro .paginacion-btn,
+html.modo-alto-contraste .boton-aplicar,
+html.modo-alto-contraste .ordenar-por select,
+html.modo-alto-contraste .precio-inputs input,
+html.modo-alto-contraste .paginacion-btn {
+    background-color: #1c2128;
+    color: #f0f6fc;
+    border-color: #30363d;
+}
+
+html.modo-oscuro .boton-contorno,
+html.modo-alto-contraste .boton-contorno {
+    background-color: transparent;
+    border-color: #30363d;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .boton-contorno:hover,
+html.modo-alto-contraste .boton-contorno:hover {
+    background-color: #1c2128;
+}
+
+html.modo-oscuro .producto-favorito,
+html.modo-alto-contraste .producto-favorito {
+    background-color: #1c2128;
+    border-color: #30363d;
+    color: #8b949e;
+}
+
+html.modo-oscuro .paginacion-btn.activo,
+html.modo-alto-contraste .paginacion-btn.activo {
+    background-color: var(--color-primario);
+    color: #000000;
+    border-color: var(--color-primario);
+    font-weight: 700;
+}

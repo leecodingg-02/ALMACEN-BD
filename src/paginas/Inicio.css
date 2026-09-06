@@ -499,6 +499,26 @@ body {
         flex-direction: column;
         gap: 20px;
     }
+
+    .portada h1 {
+        font-size: 2.5rem;
+    }
+
+    .portada-contenido {
+        padding-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .portada-imagen-marcador {
+        position: relative;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 250px;
+        clip-path: none;
+        border-radius: 12px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -508,7 +528,74 @@ body {
     .beneficios-cuadricula {
         grid-template-columns: 1fr;
     }
+
+    .contenedor {
+        padding: 0 16px;
+    }
+
+    .portada {
+        padding: 30px 20px;
+    }
 }
+
+/* ================================================ */
+/* MODO OSCURO EN PAGINA INICIO                     */
+/* ================================================ */
+html.modo-oscuro .portada,
+html.modo-oscuro .tarjeta-categoria,
+html.modo-oscuro .tarjeta-producto,
+html.modo-oscuro .banner-inspiracion,
+html.modo-alto-contraste .portada,
+html.modo-alto-contraste .tarjeta-categoria,
+html.modo-alto-contraste .tarjeta-producto,
+html.modo-alto-contraste .banner-inspiracion {
+    background-color: #161b22;
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .portada h1,
+html.modo-oscuro .productos-encabezado h2,
+html.modo-oscuro .por-que-elegirnos h2,
+html.modo-oscuro .categoria-informacion h3,
+html.modo-oscuro .beneficio-elemento h4,
+html.modo-oscuro .producto-titulo,
+html.modo-oscuro .producto-precio,
+html.modo-alto-contraste .portada h1,
+html.modo-alto-contraste .productos-encabezado h2,
+html.modo-alto-contraste .por-que-elegirnos h2,
+html.modo-alto-contraste .categoria-informacion h3,
+html.modo-alto-contraste .beneficio-elemento h4,
+html.modo-alto-contraste .producto-titulo,
+html.modo-alto-contraste .producto-precio {
+    color: #f0f6fc;
+}
+
+html.modo-oscuro .portada p,
+html.modo-oscuro .categoria-informacion p,
+html.modo-oscuro .beneficio-elemento p,
+html.modo-oscuro .ver-todos,
+html.modo-oscuro .producto-calificacion,
+html.modo-alto-contraste .portada p,
+html.modo-alto-contraste .categoria-informacion p,
+html.modo-alto-contraste .beneficio-elemento p,
+html.modo-alto-contraste .ver-todos,
+html.modo-alto-contraste .producto-calificacion {
+    color: #8b949e;
+}
+
+html.modo-oscuro .producto-categoria,
+html.modo-alto-contraste .producto-categoria {
+    background-color: #1c2128;
+    color: #8b949e;
+}
+
+html.modo-oscuro .producto-imagen-marcador,
+html.modo-oscuro .categoria-imagen-marcador,
+html.modo-alto-contraste .producto-imagen-marcador,
+html.modo-alto-contraste .categoria-imagen-marcador {
+    background-color: #1c2128;
+}
+
 
 /* ===== MÓDULO DE PAGOS SEGUROS NOVACASA ===== */
 .modulo-pagos-seccion {

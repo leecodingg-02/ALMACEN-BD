@@ -46,6 +46,7 @@ import AdminUsuarios from './paginas/AdminUsuarios'
 import AdminRoles from './paginas/AdminRoles'
 import AdminSucursales from './paginas/AdminSucursales'
 import AdminUbicaciones from './paginas/AdminUbicaciones'
+import AdminEnvios from './paginas/AdminEnvios'
 
 // Panel de Proveedores
 import ProveedorLayout from './componentes/ProveedorLayout'
@@ -308,6 +309,7 @@ function AppContenido() {
           <Route path='roles' element={<AdminRoles />} />
           <Route path='sucursales' element={<AdminSucursales />} />
           <Route path='ubicaciones' element={<AdminUbicaciones />} />
+          <Route path='envios' element={<AdminEnvios />} />
         </Route>
 
         {/* Panel de Proveedores */}

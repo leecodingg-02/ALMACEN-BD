@@ -26,10 +26,27 @@ export const crearOrden = async ({ carrito, cliente }) => {
   try {
     // Intentar guardar directamente en la base de datos MySQL
     const respuesta = await api.post('/ventas', payload);
-    const idOrden = respuesta.idOrden || `ORD-${respuesta.id_venta}`;
+    const idVenta = respuesta.id_venta;
+    const idOrden = respuesta.idOrden || `ORD-${idVenta}`;
     const orden = { ...payload, id_venta: idOrden, fecha_venta: new Date().toISOString(), cliente };
     ordenesEnMemoria.push(orden);
-    return { idOrden, orden };
+
+    // Registrar el despacho en la tabla envio si la compra maneja envío a domicilio
+    if (cliente?.requiereEnvio !== false && cliente?.direccion && idVenta) {
+      try {
+        await api.post('/envios', {
+          id_venta: idVenta,
+          costo_envio: Number(cliente.costoEnvio) || 0,
+          observacion: `Entrega: ${cliente.direccion}${cliente.ciudad ? ', ' + cliente.ciudad : ''}`,
+          estado: 'Preparando'
+        });
+      } catch (e) {
+        // El envío es opcional; si falla, no se bloquea la confirmación de la orden
+        console.warn('No se pudo registrar el envío asociado:', e.message);
+      }
+    }
+
+    return { idOrden, orden, idVenta };
   } catch {
     // Si la base de datos está desconectada, guardar en memoria local
     console.warn("No se pudo conectar a la base de datos. Guardando orden en memoria local.");

@@ -106,6 +106,51 @@ const SUCURSALES_DATA = [
 const normalizarTexto = (texto = "") =>
   texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+/* Formatea una hora "HH:MM:SS" (de MySQL) a "H:MM AM/PM" */
+const formatearHora = (hora) => {
+  if (!hora) return null;
+  const partes = String(hora).split(":").map(Number);
+  if (partes.some((n) => Number.isNaN(n))) return null;
+  const [h, m] = partes;
+  const sufijo = h >= 12 ? "PM" : "AM";
+  const hora12 = h % 12 === 0 ? 12 : h % 12;
+  return `${hora12}:${String(m).padStart(2, "0")} ${sufijo}`;
+};
+
+/* Determina si una sucursal está abierta "ahora" según sus horarios reales */
+const calcularEstadoAbierto = (sucursal) => {
+  if (sucursal.estado === "Inactivo" || sucursal.estado === "Suspendido") {
+    return "Cerrado temporalmente";
+  }
+  const haySemana =
+    sucursal.hora_apertura_semana && sucursal.hora_cierre_semana;
+  const hayFinde = sucursal.hora_apertura_finde && sucursal.hora_cierre_finde;
+  if (!haySemana && !hayFinde) {
+    return "Consultar horario";
+  }
+
+  const ahora = new Date();
+  const dia = ahora.getDay(); // 0 = domingo, 6 = sábado
+  const esFinDeSemana = dia === 0 || dia === 6;
+  const apertura = esFinDeSemana
+    ? sucursal.hora_apertura_finde || sucursal.hora_apertura_semana
+    : sucursal.hora_apertura_semana;
+  const cierre = esFinDeSemana
+    ? sucursal.hora_cierre_finde || sucursal.hora_cierre_semana
+    : sucursal.hora_cierre_semana;
+  if (!apertura || !cierre) return "Consultar horario";
+
+  const aMin = apertura
+    .split(":")
+    .reduce((acc, n, i) => acc + Number(n) * (i === 0 ? 60 : 1), 0);
+  const cMin = cierre
+    .split(":")
+    .reduce((acc, n, i) => acc + Number(n) * (i === 0 ? 60 : 1), 0);
+  const actual = ahora.getHours() * 60 + ahora.getMinutes();
+
+  return actual >= aMin && actual <= cMin ? "Abierto ahora" : "Cerrado ahora";
+};
+
 function Ubicaciones() {
   const [sucursales, setSucursales] = useState(SUCURSALES_DATA);
   const [busqueda, setBusqueda] = useState("");
@@ -115,7 +160,12 @@ function Ubicaciones() {
   );
   const [copiadoId, setCopiadoId] = useState(null);
 
-  const ciudades = ["Todas", "Bogotá", "Medellín", "Cali", "Barranquilla"];
+  const ciudades = [
+    "Todas",
+    ...Array.from(
+      new Set(sucursales.map((s) => s.ciudad).filter(Boolean)),
+    ),
+  ];
 
   useEffect(() => {
     api.get("/sucursales", []).then((datos) => {
@@ -126,6 +176,10 @@ function Ubicaciones() {
           (local) => local.id === sucursal.id ||
             normalizarTexto(local.ciudad).includes(normalizarTexto(sucursal.ciudad) || "__"),
         );
+        const horaSem = formatearHora(sucursal.hora_apertura_semana);
+        const horaCierreSem = formatearHora(sucursal.hora_cierre_semana);
+        const horaFd = formatearHora(sucursal.hora_apertura_finde);
+        const horaCierreFd = formatearHora(sucursal.hora_cierre_finde);
         return {
           ...datosVisuales,
           ...sucursal,
@@ -133,7 +187,26 @@ function Ubicaciones() {
           nombre: sucursal.nombre || datosVisuales?.nombre || "Sucursal NovaCasa",
           ciudad: sucursal.ciudad || datosVisuales?.ciudad || "Ciudad no disponible",
           direccion: sucursal.direccion || datosVisuales?.direccion || "Dirección no disponible",
-          estado: sucursal.estado || datosVisuales?.estado || "Consultar horario",
+          servicios: datosVisuales?.servicios || [],
+          referencia: datosVisuales?.referencia || "",
+          celular: datosVisuales?.celular || sucursal.telefono || "",
+          horarioSemana:
+            horaSem && horaCierreSem
+              ? `Lunes a Sábado: ${horaSem} - ${horaCierreSem}`
+              : datosVisuales?.horarioSemana || "Consultar horario",
+          horarioFinSemana:
+            horaFd && horaCierreFd
+              ? `Domingos y Festivos: ${horaFd} - ${horaCierreFd}`
+              : datosVisuales?.horarioFinSemana || "",
+          mapaEmbedUrl:
+            datosVisuales?.mapaEmbedUrl ||
+            `https://maps.google.com/maps?q=${encodeURIComponent(
+              `${sucursal.nombre || ""} ${sucursal.direccion || ""}`,
+            )}&t=&z=15&ie=UTF8&iwloc=&output=embed`,
+          estado:
+            calcularEstadoAbierto(sucursal) ||
+            datosVisuales?.estado ||
+            "Consultar horario",
         };
       });
       setSucursales(sucursalesCompletas);

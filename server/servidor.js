@@ -21,6 +21,7 @@ import rutasVentas from './rutas/ventas.js';
 import rutasCompras from './rutas/compras.js';
 import rutasProveedores from './rutas/proveedores.js';
 import rutasUbicaciones from './rutas/ubicaciones.js';
+import rutasEnvios from './rutas/envios.js';
 
 const app = express();
 const PUERTO = process.env.PUERTO_SERVIDOR || 3001;
@@ -274,6 +275,7 @@ app.use('/api/ventas', rutasVentas);
 app.use('/api/compras', rutasCompras);
 app.use('/api/proveedores', rutasProveedores);
 app.use('/api/ubicaciones', rutasUbicaciones);
+app.use('/api/envios', rutasEnvios);
 
 // Iniciar el servidor backend
 app.listen(PUERTO, () => {

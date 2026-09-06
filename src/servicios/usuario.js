@@ -50,9 +50,11 @@ export const rutaPanelSegunRol = (usuario) => {
 // Registrar una nueva cuenta de cliente en MySQL
 export const registrarUsuario = async (datos) => {
   const respuesta = await api.post("/usuarios", datos);
-  if (respuesta && respuesta.id_usu) {
+  if (respuesta && (respuesta.id_usu || respuesta.id)) {
+    // Guardar el objeto completo devuelto por el backend para no perder campos
+    // como fecha_registro, id_suc, estado, etc.
     const usuario = {
-      id_usu: respuesta.id_usu,
+      id_usu: respuesta.id_usu || respuesta.id,
       nombre: respuesta.nombre,
       apellido: respuesta.apellido,
       correo: respuesta.correo,
@@ -60,8 +62,9 @@ export const registrarUsuario = async (datos) => {
       tipo_doc: respuesta.tipo_doc,
       num_ident: respuesta.num_ident,
       id_rol: respuesta.id_rol || 2,
-      rol: "Cliente",
-      estado: "Activo",
+      rol: respuesta.rol || "Cliente",
+      estado: respuesta.estado || "Activo",
+      fecha_registro: respuesta.fecha_registro || new Date().toISOString(),
     };
     sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
     localStorage.removeItem(CLAVE_USUARIO);

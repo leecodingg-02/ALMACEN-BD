@@ -48,7 +48,11 @@ CREATE TABLE sucursal (
     direccion VARCHAR(120) NOT NULL,
     telefono VARCHAR(20) NULL,
     id_gerente INT NULL,
-    estado ENUM('Activo','Inactivo') NOT NULL DEFAULT 'Activo'
+    estado ENUM('Activo','Inactivo') NOT NULL DEFAULT 'Activo',
+    hora_apertura_semana TIME NULL,
+    hora_cierre_semana TIME NULL,
+    hora_apertura_finde TIME NULL,
+    hora_cierre_finde TIME NULL
 );
 
 CREATE TABLE producto (
@@ -327,20 +331,20 @@ INSERT INTO proveedor (razon_social, nit, nombre_contacto, telefono, correo, dir
     ('LumEx México', '900000004-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo'),
     ('GreenHome', '900000005-1', NULL, NULL, NULL, NULL, '$2b$10$vpFi2M7MLydkQv/dTrPOCOOy9SgwFEPNJ7XHfXGqrdrY.qkQuXkkm', 'Activo');
 
-INSERT INTO sucursal (nombre, departamento, ciudad, direccion, telefono, estado) VALUES
-    ('Sede Principal', 'Bogotá D.C.', 'Bogotá', 'Cra 15 # 93-75', '601-234-5678', 'Activo'),
-    ('Sucursal Norte', 'Antioquia', 'Medellín', 'Calle 10 # 43-22', '604-567-8901', 'Activo'),
-    ('Sucursal Sur', 'Valle del Cauca', 'Cali', 'Av. 6N # 23-45', '602-345-6789', 'Activo'),
-    ('Sucursal Oriente', 'Santander', 'Bucaramanga', 'Calle 36 # 12-08', '607-456-7890', 'Inactivo');
+INSERT INTO sucursal (nombre, departamento, ciudad, direccion, telefono, estado, hora_apertura_semana, hora_cierre_semana, hora_apertura_finde, hora_cierre_finde) VALUES
+    ('Sede Principal', 'Bogotá D.C.', 'Bogotá', 'Cra 15 # 93-75', '601-234-5678', 'Activo', '08:00:00', '18:00:00', '09:00:00', '14:00:00'),
+    ('Sucursal Norte', 'Antioquia', 'Medellín', 'Calle 10 # 43-22', '604-567-8901', 'Activo', '08:30:00', '19:00:00', '10:00:00', '15:00:00'),
+    ('Sucursal Sur', 'Valle del Cauca', 'Cali', 'Av. 6N # 23-45', '602-345-6789', 'Activo', '09:00:00', '18:30:00', '10:00:00', '16:00:00'),
+    ('Sucursal Oriente', 'Santander', 'Bucaramanga', 'Calle 36 # 12-08', '607-456-7890', 'Inactivo', '08:00:00', '17:00:00', NULL, NULL);
 
 INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, contrasena_hash, id_rol, id_suc, estado, fecha_registro) VALUES
-    ('C.C', 'PLACEHOLDER-001', 'Carlos', 'Rodríguez', 'carlos@email.com', '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
+    ('C.C', 'PLACEHOLDER-001', 'Carlos', 'Rodríguez', 'carlos@email.com', '$2b$10$yMwI6KQ.BxmiEksSeCFYkugZStEBLrdzxYELndH8YSn5MmauZAFO2',
         (SELECT id_rol FROM rol WHERE nombre = 'Administrador'),
         (SELECT id_suc FROM sucursal WHERE nombre = 'Sede Principal'), 'Activo', '2024-01-15');
 
 INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, telefono, correo, contrasena_hash, id_rol, id_suc, estado) VALUES
     ('C.C', '1020304050', 'Juan', 'Pérez', '3001234567', 'juan.perez@almacen.com',
-        '$2y$10$PLACEHOLDER_HASH_CAMBIAR_EN_PRODUCCION',
+        '$2b$10$xmGBEF2HCWHFxxYhBWnXN.egOb0eHhCbSh9aPV0FyDMQMXcPRZKX6',
         (SELECT id_rol FROM rol WHERE nombre = 'Cliente'), NULL, 'Activo');
 
 INSERT INTO ubicacion (id_usu, departamento, ciudad, direccion, es_principal) VALUES

@@ -9,7 +9,7 @@ const datosIniciales = [
   { id: 4, nombre: 'Sucursal Oriente', ciudad: 'Bucaramanga', direccion: 'Calle 36 # 12-08', telefono: '607-456-7890', gerente: 'Diana Pérez', estado: 'Suspendido' },
 ];
 
-const formularioVacio = { nombre: '', ciudad: '', direccion: '', telefono: '', gerente: '', estado: 'Activo' };
+const formularioVacio = { nombre: '', ciudad: '', direccion: '', telefono: '', gerente: '', estado: 'Activo', hora_apertura_semana: '', hora_cierre_semana: '', hora_apertura_finde: '', hora_cierre_finde: '' };
 
 export default function Sucursales() {
   const [datos, setDatos] = useState(datosIniciales);
@@ -215,6 +215,32 @@ export default function Sucursales() {
             <div className="grupo-campo">
               <label>Gerente</label>
               <input value={formulario.gerente} onChange={(e) => setFormulario({ ...formulario, gerente: e.target.value })} placeholder="Nombre del gerente" />
+            </div>
+          </div>
+          <div className="grupo-campo">
+            <label>Horario Lunes a Sábado</label>
+            <div className="fila-campos">
+              <div className="grupo-campo">
+                <label>Apertura</label>
+                <input type="time" value={formulario.hora_apertura_semana} onChange={(e) => setFormulario({ ...formulario, hora_apertura_semana: e.target.value })} />
+              </div>
+              <div className="grupo-campo">
+                <label>Cierre</label>
+                <input type="time" value={formulario.hora_cierre_semana} onChange={(e) => setFormulario({ ...formulario, hora_cierre_semana: e.target.value })} />
+              </div>
+            </div>
+          </div>
+          <div className="grupo-campo">
+            <label>Horario Domingos y Festivos</label>
+            <div className="fila-campos">
+              <div className="grupo-campo">
+                <label>Apertura</label>
+                <input type="time" value={formulario.hora_apertura_finde} onChange={(e) => setFormulario({ ...formulario, hora_apertura_finde: e.target.value })} />
+              </div>
+              <div className="grupo-campo">
+                <label>Cierre</label>
+                <input type="time" value={formulario.hora_cierre_finde} onChange={(e) => setFormulario({ ...formulario, hora_cierre_finde: e.target.value })} />
+              </div>
             </div>
           </div>
         </Modal>

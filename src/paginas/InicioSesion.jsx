@@ -66,6 +66,7 @@ const InicioSesion = ({ onIniciarSesion }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (cargando) return;
     if (!validarFormulario()) return;
 
     setCargando(true);

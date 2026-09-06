@@ -192,12 +192,13 @@ router.post('/login', async (req, res) => {
     if (!proveedor.contrasena_hash) {
       contrasenaValida = (contrasena === '123456' || contrasena === 'admin123' || contrasena === 'proveedor123');
     } else if (proveedor.contrasena_hash.startsWith('$2')) {
-      contrasenaValida = await bcrypt.compare(contrasena, proveedor.contrasena_hash);
-      if (!contrasenaValida && (contrasena === '123456' || contrasena === 'admin' || contrasena === 'admin123')) {
-        contrasenaValida = true;
+      try {
+        contrasenaValida = await bcrypt.compare(contrasena, proveedor.contrasena_hash);
+      } catch {
+        contrasenaValida = false;
       }
     } else {
-      contrasenaValida = (proveedor.contrasena_hash === contrasena || contrasena === '123456');
+      contrasenaValida = proveedor.contrasena_hash === contrasena;
     }
 
     if (!contrasenaValida) {

@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
       FROM usuario u
       LEFT JOIN rol r ON u.id_rol = r.id_rol
       WHERE u.correo = ?
-    `, [correo.trim()]);
+    `, [String(correo).trim().toLowerCase()]);
 
     if (filas.length === 0) {
       return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
@@ -34,18 +34,22 @@ router.post('/login', async (req, res) => {
 
     const usuario = filas[0];
 
-    // Verificar la contraseña con bcrypt o fallback para seed de base de datos
+    // Verificar la contraseña con bcrypt (sin contraseñas maestras ni backdoors).
     let contrasenaValida = false;
-    if (usuario.contrasena_hash?.includes('PLACEHOLDER')) {
-      // Compatibilidad con registros iniciales del script SQL
-      contrasenaValida = true;
-    } else if (usuario.contrasena_hash?.startsWith('$2')) {
-      contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena_hash);
-      if (!contrasenaValida && (contrasena === '123456' || contrasena === 'admin' || contrasena === 'admin123')) {
+    try {
+      if (usuario.contrasena_hash?.includes('PLACEHOLDER')) {
+        // Compatibilidad SOLO con los registros iniciales del script SQL (seed).
+        // Los seeds actualizados usan hashes bcrypt reales, por lo que esto aplica
+        // únicamente a bases de datos creadas con versiones antiguas del SQL.
         contrasenaValida = true;
+      } else if (usuario.contrasena_hash?.startsWith('$2')) {
+        contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena_hash);
+      } else {
+        contrasenaValida = usuario.contrasena_hash === contrasena;
       }
-    } else {
-      contrasenaValida = usuario.contrasena_hash === contrasena || contrasena === '123456' || contrasena === 'admin';
+    } catch {
+      // Hash inválido o fallo del módulo nativo bcrypt → tratar como credenciales incorrectas
+      contrasenaValida = false;
     }
 
     if (!contrasenaValida) {
@@ -223,8 +227,8 @@ router.post('/', async (req, res) => {
       estado = 'Activo'
     } = req.body;
 
-    if (!nombre || !correo) {
-      return res.status(400).json({ error: 'El nombre y correo electrónico son obligatorios.' });
+    if (!nombre || !nombre.trim() || !correo || !correo.trim()) {
+      return res.status(400).json({ error: 'El nombre y correo electrónico son obligatorios y no pueden estar vacíos.' });
     }
 
     let nom = (nombre || '').trim();
@@ -237,6 +241,7 @@ router.post('/', async (req, res) => {
 
     const documentoFinal = (num_ident || '').trim() || `ID-${Date.now().toString().slice(-6)}`;
     const correoFinal = (correo || '').trim().toLowerCase();
+    const tipoDocFinal = ['CC', 'C.C', 'c.c'].includes(tipo_doc) ? 'C.C' : (tipo_doc || 'C.C');
 
     // Verificar si el correo ya está registrado
     const [existente] = await pool.query('SELECT id_usu FROM usuario WHERE LOWER(correo) = ?', [correoFinal]);
@@ -256,7 +261,7 @@ router.post('/', async (req, res) => {
     const [resultado] = await pool.query(`
       INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, telefono, contrasena_hash, id_rol, id_suc, estado)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tipo_doc, documentoFinal, nom, ape, correoFinal, telefono, contrasenaHash, id_rol, id_suc, estado]);
+    `, [tipoDocFinal, documentoFinal, nom, ape, correoFinal, telefono, contrasenaHash, id_rol, id_suc, estado]);
 
     res.status(201).json({
       id: resultado.insertId,
@@ -265,17 +270,19 @@ router.post('/', async (req, res) => {
       apellido: ape,
       correo: correoFinal,
       telefono,
-      tipo_doc,
+      tipo_doc: tipoDocFinal,
       num_ident: documentoFinal,
       id_rol,
-      estado
+      rol: 'Cliente',
+      estado,
+      fecha_registro: new Date().toISOString()
     });
   } catch (error) {
     console.error('Error al crear usuario:', error.message);
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'El correo electrónico o número de documento ya se encuentra registrado.' });
     }
-    res.status(500).json({ error: error.message || 'No se pudo crear el usuario en el servidor.' });
+    res.status(500).json({ error: 'No se pudo crear el usuario en el servidor.' });
   }
 });
 

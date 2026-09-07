@@ -18,12 +18,22 @@ const Ofertas = () => {
 
     // Base local que mantiene etiquetas y precios de oferta (demo),
     // enriquecida con las calificaciones y reseñas reales de la base de datos.
+    const mapaVisual = new Map(PRODUCTOS_DATA.map(p => [Number(p.id), p]));
+
     const fuente = productosBD.length > 0
-        ? PRODUCTOS_DATA.map((p) => {
-            const bd = productosBD.find((b) => Number(b.id) === Number(p.id));
-            return bd
-                ? { ...p, calificacion: Number(bd.calificacion) || 0, valoraciones: Number(bd.valoraciones) || 0, stock: bd.stock !== undefined ? Number(bd.stock) : undefined }
-                : p;
+        ? productosBD.map((bd) => {
+            const visual = mapaVisual.get(Number(bd.id)) || {};
+            return {
+                ...visual,
+                ...bd,
+                id: bd.id,
+                titulo: bd.titulo || bd.nombre || visual.titulo,
+                precio: Number(bd.precio) || visual.precio,
+                imagen: bd.imagen || visual.imagen,
+                calificacion: Number(bd.calificacion) || 0,
+                valoraciones: Number(bd.valoraciones) || 0,
+                stock: bd.stock !== undefined ? Number(bd.stock) : undefined
+            };
         })
         : PRODUCTOS_DATA;
 

@@ -56,25 +56,25 @@ const Inicio = ({
     ];
 
   // Productos destacados (BD o fallback)
-  // Busca imagen coincidente en PRODUCTOS_DATA para evitar imagen genérica única
-  const buscarImagenLocal = (nombreProducto) => {
-    const coincidencia = PRODUCTOS_DATA.find(
-      (pd) => pd.titulo.toLowerCase() === (nombreProducto || '').toLowerCase()
-    );
-    return coincidencia?.imagen || null;
-  };
+    const mapaVisual = new Map(PRODUCTOS_DATA.map(p => [Number(p.id), p]));
 
-  const productosDestacados = productosBD.length > 0
-    ? productosBD.slice(0, 5).map((p) => ({
-      id: p.id_pro || p.id,
-      titulo: p.nombre,
-      precio: p.precio,
-      imagen: p.imagen_url || buscarImagenLocal(p.nombre) || PRODUCTOS_DATA[0]?.imagen,
-      categoria: p.categoria || 'GENERAL',
-      calificacion: p.calificacion || 0,
-      valoraciones: p.valoraciones || 0
-    }))
-    : PRODUCTOS_DATA.slice(0, 5);
+    const productosDestacados = productosBD.length > 0
+      ? productosBD.slice(0, 5).map((p) => {
+          const visual = mapaVisual.get(Number(p.id)) || {};
+          return {
+            ...visual,
+            ...p,
+            id: p.id,
+            titulo: p.nombre,
+            precio: Number(p.precio) || visual.precio,
+            imagen: p.imagen_url || p.imagen || visual.imagen,
+            categoria: p.categoria || 'GENERAL',
+            calificacion: Number(p.calificacion) || 0,
+            valoraciones: Number(p.valoraciones) || 0,
+            stock: p.stock !== undefined ? Number(p.stock) : undefined
+          };
+      })
+      : PRODUCTOS_DATA.slice(0, 5);
 
   return (
     <>

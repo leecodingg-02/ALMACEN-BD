@@ -13,7 +13,10 @@ import "./DetalleProducto.css";
 
 const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavorito }) => {
   const { id } = useParams();
-  const producto = PRODUCTOS_DATA.find((p) => p.id === parseInt(id, 10));
+  
+  const [producto, setProducto] = useState(null);
+  const [cargandoProducto, setCargandoProducto] = useState(true);
+  
   const { mostrarAvisoSesion } = useAvisoSesion();
 
   const [colorSeleccionado, setColorSeleccionado] = useState(0);
@@ -29,6 +32,26 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
   const fondosGaleria = ["#e0e0e0", "#d0d0d0", "#c8c8c8", "#bebebe"];
 
   useEffect(() => {
+    // Cargar producto de la BD
+    api.get(`/productos/${id}`).then((bd) => {
+      const visual = PRODUCTOS_DATA.find((p) => p.id === parseInt(id, 10)) || {};
+      if (bd) {
+        setProducto({
+          ...visual,
+          ...bd,
+          id: bd.id_pro || bd.id || visual.id,
+          titulo: bd.nombre || bd.titulo || visual.titulo,
+          precio: Number(bd.precio) || visual.precio,
+          imagen: bd.imagen_url || bd.imagen || visual.imagen,
+          categoria: bd.categoria || visual.categoria || "Herramientas",
+          stock: bd.stock !== undefined ? Number(bd.stock) : undefined
+        });
+      } else {
+        setProducto(null);
+      }
+      setCargandoProducto(false);
+    });
+
     api.get(`/productos/${id}/resenas`, []).then((datos) => {
       setResenas(datos || []);
       setCargandoResenas(false);
@@ -37,6 +60,10 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
     setCantidad(1);
     setImagenActiva(0);
   }, [id]);
+
+  if (cargandoProducto) {
+    return <div className="detalle-no-encontrado"><h2>Cargando producto...</h2></div>;
+  }
 
   if (!producto) {
     return (
@@ -52,9 +79,10 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
     );
   }
 
-  const productosRelacionados = PRODUCTOS_DATA.filter((p) =>
-    producto.relacionados.includes(p.id),
-  );
+  // Para los productos relacionados, filtramos desde PRODUCTOS_DATA solo visualmente si existen en `producto.relacionados`
+  const productosRelacionados = (producto.relacionados || []).map(relId => {
+    return PRODUCTOS_DATA.find(p => p.id === relId);
+  }).filter(Boolean);
 
   const promedioResenas = resenas.length
     ? resenas.reduce((total, resena) => total + Number(resena.calificacion), 0) / resenas.length
@@ -227,23 +255,23 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
             )}
 
             {/* Cantidad + Agregar al carrito */}
-            <div className='detalle-accion'>
-              <div className='selector-cantidad'>
-                <button onClick={() => setCantidad((q) => Math.max(1, q - 1))}>
-                  -
+            <div className='detalle-acciones'>
+                <div className='selector-cantidad'>
+                  <button onClick={() => setCantidad((q) => Math.max(1, q - 1))} disabled={cantidad <= 1}>
+                    -
+                  </button>
+                  <span>{cantidad}</span>
+                  <button onClick={() => setCantidad((q) => Math.min(producto.stock !== undefined ? producto.stock : 10, q + 1))} disabled={cantidad >= (producto.stock !== undefined ? producto.stock : 10)}>+</button>
+                </div>
+                <button
+                  className='boton-carrito-detalle'
+                  onClick={() => onAgregarCarrito?.(producto, cantidad)}
+                  disabled={cantidad > (producto.stock !== undefined ? producto.stock : 10) || (producto.stock !== undefined && producto.stock <= 0)}
+                >
+                  {producto.stock !== undefined && producto.stock <= 0 ? "Agotado" : "🛒 Añadir al carrito"}
                 </button>
-                <span>{cantidad}</span>
-                <button onClick={() => setCantidad((q) => Math.min(producto.stock !== undefined ? producto.stock : 10, q + 1))} disabled={cantidad >= (producto.stock !== undefined ? producto.stock : 10)}>+</button>
+                {(producto.stock !== undefined ? producto.stock : 10) > 0 && <span style={{fontSize: '0.85em', color: '#666', marginTop: '5px', display: 'block'}}>Stock disponible: {producto.stock !== undefined ? producto.stock : 10}</span>}
               </div>
-              <button
-                className='boton-carrito-detalle'
-                onClick={() => onAgregarCarrito?.(producto, cantidad)}
-                disabled={cantidad > (producto.stock !== undefined ? producto.stock : 10) || (producto.stock !== undefined && producto.stock <= 0)}
-              >
-                {producto.stock !== undefined && producto.stock <= 0 ? "Agotado" : "🛒 Añadir al carrito"}
-              </button>
-              {(producto.stock !== undefined ? producto.stock : 10) > 0 && <span style={{fontSize: '0.85em', color: '#666', marginTop: '5px', display: 'block'}}>Stock disponible: {producto.stock !== undefined ? producto.stock : 10}</span>}
-            </div>
 
             {/* Acordeones */}
             <div className='acordeones'>

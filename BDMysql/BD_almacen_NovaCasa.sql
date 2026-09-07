@@ -408,17 +408,31 @@ INSERT INTO inventario (id_pro, id_suc, ubicacion_fisica, cantidad, stock_minimo
 CREATE TRIGGER trg_detalle_venta_after_insert
 AFTER INSERT ON detalle_venta
 FOR EACH ROW
-INSERT INTO inventario (id_pro, id_suc, cantidad, stock_minimo)
-VALUES (NEW.id_pro, (SELECT id_suc FROM venta WHERE id_venta = NEW.id_venta), 0, 0)
-ON DUPLICATE KEY UPDATE cantidad = GREATEST(0, inventario.cantidad - NEW.cantidad);
+BEGIN
+    DECLARE v_estado VARCHAR(20);
+    DECLARE v_id_suc INT;
+    SELECT estado, id_suc INTO v_estado, v_id_suc FROM venta WHERE id_venta = NEW.id_venta;
+    
+    IF v_estado = 'Completada' THEN
+        INSERT INTO inventario (id_pro, id_suc, cantidad, stock_minimo)
+        VALUES (NEW.id_pro, v_id_suc, 0, 0)
+        ON DUPLICATE KEY UPDATE cantidad = GREATEST(0, inventario.cantidad - NEW.cantidad);
+    END IF;
+END;
 
 CREATE TRIGGER trg_detalle_venta_after_insert_movimiento
 AFTER INSERT ON detalle_venta
 FOR EACH ROW
-INSERT INTO movimiento_inventario (id_pro, id_suc, tipo_movimiento, cantidad, referencia_tipo, referencia_id, observacion)
-SELECT NEW.id_pro, v.id_suc, 'Venta', NEW.cantidad, 'venta', NEW.id_venta, CONCAT('Venta #', NEW.id_venta)
-FROM venta v
-WHERE v.id_venta = NEW.id_venta;
+BEGIN
+    DECLARE v_estado VARCHAR(20);
+    DECLARE v_id_suc INT;
+    SELECT estado, id_suc INTO v_estado, v_id_suc FROM venta WHERE id_venta = NEW.id_venta;
+    
+    IF v_estado = 'Completada' THEN
+        INSERT INTO movimiento_inventario (id_pro, id_suc, tipo_movimiento, cantidad, referencia_tipo, referencia_id, observacion)
+        VALUES (NEW.id_pro, v_id_suc, 'Venta', NEW.cantidad, 'venta', NEW.id_venta, CONCAT('Venta #', NEW.id_venta));
+    END IF;
+END;
 
 CREATE TRIGGER trg_detalle_compra_after_insert
 AFTER INSERT ON detalle_compra

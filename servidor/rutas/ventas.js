@@ -170,17 +170,17 @@ router.put('/:id/estado', async (req, res) => {
       const [detalles] = await conexion.query('SELECT id_pro, cantidad FROM detalle_venta WHERE id_venta = ?', [idVenta]);
       for (const item of detalles) {
         // Reducir inventario
-        await conexion.query(\`
+        await conexion.query(`
           INSERT INTO inventario (id_pro, id_suc, cantidad, stock_minimo)
           VALUES (?, ?, 0, 0)
           ON DUPLICATE KEY UPDATE cantidad = GREATEST(0, inventario.cantidad - ?)
-        \`, [item.id_pro, idSuc, item.cantidad]);
+        `, [item.id_pro, idSuc, item.cantidad]);
 
         // Registrar movimiento
-        await conexion.query(\`
+        await conexion.query(`
           INSERT INTO movimiento_inventario (id_pro, id_suc, tipo_movimiento, cantidad, referencia_tipo, referencia_id, observacion)
           VALUES (?, ?, 'Venta', ?, 'venta', ?, ?)
-        \`, [item.id_pro, idSuc, item.cantidad, idVenta, \`Venta #\${idVenta}\`]);
+        `, [item.id_pro, idSuc, item.cantidad, idVenta, `Venta #${idVenta}`]);
       }
     }
 

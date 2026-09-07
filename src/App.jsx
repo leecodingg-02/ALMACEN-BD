@@ -119,6 +119,19 @@ function AppContenido() {
     /* Aplicar tamaño de fuente global en la raíz HTML */
     root.classList.remove("fuente-normal", "fuente-grande", "fuente-extra-grande");
     root.classList.add(`fuente-${configuracion?.tamanoFuente || "normal"}`);
+
+    /* Filtros adicionales */
+    if (configuracion?.escalaGrises) {
+      root.classList.add("modo-escala-grises");
+    } else {
+      root.classList.remove("modo-escala-grises");
+    }
+
+    if (configuracion?.modoSepia) {
+      root.classList.add("modo-sepia");
+    } else {
+      root.classList.remove("modo-sepia");
+    }
   }, [modoOscuro, configuracion]);
 
   /* Alternar Modo Oscuro global */
@@ -357,6 +370,30 @@ function AppContenido() {
                   type="checkbox"
                   checked={modoOscuro || false}
                   onChange={handleAlternarModoOscuro}
+                />
+                <span className="slider-round"></span>
+              </label>
+            </div>
+
+            <div className="opcion-accesibilidad">
+              <span>Escala de Grises</span>
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={configuracion?.escalaGrises || false}
+                  onChange={(e) => handleActualizarConfig({ ...configuracion, escalaGrises: e.target.checked })}
+                />
+                <span className="slider-round"></span>
+              </label>
+            </div>
+
+            <div className="opcion-accesibilidad">
+              <span>Modo Sepia (Lectura)</span>
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={configuracion?.modoSepia || false}
+                  onChange={(e) => handleActualizarConfig({ ...configuracion, modoSepia: e.target.checked })}
                 />
                 <span className="slider-round"></span>
               </label>

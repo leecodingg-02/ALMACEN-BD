@@ -230,19 +230,19 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
             <div className='detalle-accion'>
               <div className='selector-cantidad'>
                 <button onClick={() => setCantidad((q) => Math.max(1, q - 1))}>
-                  −
+                  -
                 </button>
                 <span>{cantidad}</span>
-                <button onClick={() => setCantidad((q) => Math.min(producto.stock || 10, q + 1))} disabled={cantidad >= (producto.stock || 10)}>+</button>
+                <button onClick={() => setCantidad((q) => Math.min(producto.stock !== undefined ? producto.stock : 10, q + 1))} disabled={cantidad >= (producto.stock !== undefined ? producto.stock : 10)}>+</button>
               </div>
               <button
                 className='boton-carrito-detalle'
                 onClick={() => onAgregarCarrito?.(producto, cantidad)}
-                disabled={cantidad > (producto.stock || 10) || (producto.stock || 10) === 0}
+                disabled={cantidad > (producto.stock !== undefined ? producto.stock : 10) || (producto.stock !== undefined && producto.stock <= 0)}
               >
-                { (producto.stock || 10) === 0 ? "Agotado" : "🛒 Añadir al carrito" }
+                {producto.stock !== undefined && producto.stock <= 0 ? "Agotado" : "🛒 Añadir al carrito"}
               </button>
-              { (producto.stock || 10) > 0 && <span style={{fontSize: '0.85em', color: '#666', marginTop: '5px', display: 'block'}}>Stock disponible: {producto.stock || 10}</span> }
+              {(producto.stock !== undefined ? producto.stock : 10) > 0 && <span style={{fontSize: '0.85em', color: '#666', marginTop: '5px', display: 'block'}}>Stock disponible: {producto.stock !== undefined ? producto.stock : 10}</span>}
             </div>
 
             {/* Acordeones */}

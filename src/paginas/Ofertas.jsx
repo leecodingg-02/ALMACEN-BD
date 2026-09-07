@@ -22,7 +22,7 @@ const Ofertas = () => {
         ? PRODUCTOS_DATA.map((p) => {
             const bd = productosBD.find((b) => Number(b.id) === Number(p.id));
             return bd
-                ? { ...p, calificacion: Number(bd.calificacion) || 0, valoraciones: Number(bd.valoraciones) || 0 }
+                ? { ...p, calificacion: Number(bd.calificacion) || 0, valoraciones: Number(bd.valoraciones) || 0, stock: bd.stock !== undefined ? Number(bd.stock) : undefined }
                 : p;
         })
         : PRODUCTOS_DATA;

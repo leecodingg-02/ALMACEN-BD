@@ -72,7 +72,7 @@ router.post('/', async (req, res) => {
   try {
     await conexion.beginTransaction();
 
-    const {
+    let {
       id_cli = null,
       id_suc = 1,
       total,
@@ -83,6 +83,11 @@ router.post('/', async (req, res) => {
       estado = 'Completada',
       detalles = []
     } = req.body;
+
+    const metodosPendientes = ['Nequi', 'Daviplata', 'Contra entrega'];
+    if (metodosPendientes.some(m => metodo.toLowerCase().includes(m.toLowerCase()))) {
+      estado = 'Pendiente';
+    }
 
     // Validar que el usuario esté autenticado con cuenta registrada
     if (!id_cli) {
@@ -140,13 +145,53 @@ router.post('/', async (req, res) => {
 
 // Cambiar estado de una venta (Completada, Pendiente, Cancelada)
 router.put('/:id/estado', async (req, res) => {
+  const conexion = await pool.getConnection();
   try {
+    await conexion.beginTransaction();
+
     const { estado } = req.body;
-    await pool.query('UPDATE venta SET estado = ? WHERE id_venta = ?', [estado, req.params.id]);
+    const idVenta = req.params.id;
+
+    // Obtener estado actual
+    const [ventaActual] = await conexion.query('SELECT estado, id_suc FROM venta WHERE id_venta = ?', [idVenta]);
+    if (ventaActual.length === 0) {
+      await conexion.rollback();
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+
+    const estadoAnterior = ventaActual[0].estado;
+    const idSuc = ventaActual[0].id_suc;
+
+    await conexion.query('UPDATE venta SET estado = ? WHERE id_venta = ?', [estado, idVenta]);
+    await conexion.query('UPDATE pago SET estado = ? WHERE id_venta = ?', [estado === 'Completada' ? 'Aprobado' : 'Pendiente', idVenta]);
+
+    // Si pasa de Pendiente a Completada, deducir el inventario manualmente
+    if (estadoAnterior === 'Pendiente' && estado === 'Completada') {
+      const [detalles] = await conexion.query('SELECT id_pro, cantidad FROM detalle_venta WHERE id_venta = ?', [idVenta]);
+      for (const item of detalles) {
+        // Reducir inventario
+        await conexion.query(\`
+          INSERT INTO inventario (id_pro, id_suc, cantidad, stock_minimo)
+          VALUES (?, ?, 0, 0)
+          ON DUPLICATE KEY UPDATE cantidad = GREATEST(0, inventario.cantidad - ?)
+        \`, [item.id_pro, idSuc, item.cantidad]);
+
+        // Registrar movimiento
+        await conexion.query(\`
+          INSERT INTO movimiento_inventario (id_pro, id_suc, tipo_movimiento, cantidad, referencia_tipo, referencia_id, observacion)
+          VALUES (?, ?, 'Venta', ?, 'venta', ?, ?)
+        \`, [item.id_pro, idSuc, item.cantidad, idVenta, \`Venta #\${idVenta}\`]);
+      }
+    }
+
+    await conexion.commit();
     res.json({ mensaje: 'Estado actualizado', estado });
   } catch (error) {
+    await conexion.rollback();
     console.error('Error al cambiar estado:', error.message);
     res.status(500).json({ error: 'No se pudo actualizar el estado de la venta' });
+  } finally {
+    conexion.release();
   }
 });
 

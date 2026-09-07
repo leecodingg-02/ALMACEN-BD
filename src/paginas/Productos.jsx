@@ -619,9 +619,9 @@ export const TarjetaProducto = ({
                 e.preventDefault();
                 onAgregarCarrito?.(producto, 1);
               }}
-              disabled={(producto.stock || 0) === 0}
+              disabled={producto.stock !== undefined && producto.stock <= 0}
             >
-              {(producto.stock || 0) === 0 ? "Agotado" : "Agregar al carrito"}
+              {producto.stock !== undefined && producto.stock <= 0 ? "Agotado" : "Agregar al carrito"}
             </button>
           </div>
         </div>
@@ -692,6 +692,7 @@ const Productos = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavori
             descripcion: p.descripcion || visual.descripcion,
             calificacion: Number(p.calificacion) || 0,
             valoraciones: Number(p.valoraciones) || 0,
+            stock: p.stock !== undefined ? Number(p.stock) : undefined,
           };
         });
         setListaProductos(sincronizados);

@@ -234,15 +234,6 @@ export default function ProveedorLayout({ modoOscuro, onAlternarModoOscuro }) {
             </div>
 
             <div className="barra-sup-derecha">
-              {/* BOTON MODO OSCURO */}
-              <button
-                className="barra-sup-icono-btn btn-tema-toggle"
-                title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
-                onClick={onAlternarModoOscuro}
-                aria-label="Alternar modo oscuro"
-              >
-                {modoOscuro ? <IconoSol /> : <IconoLuna />}
-              </button>
 
               <BandejaSuperior />
 
@@ -506,3 +497,5 @@ function IconoMartillo({ className }) {
     </svg>
   );
 }
+
+

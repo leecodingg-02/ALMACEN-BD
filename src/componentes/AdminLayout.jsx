@@ -211,17 +211,6 @@ export default function AdminLayout({ modoOscuro, onAlternarModoOscuro }) {
 
             <div className="barra-sup-derecha">
 
-
-              {/* BOTON MODO OSCURO */}
-              <button
-                className="barra-sup-icono-btn btn-tema-toggle"
-                title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
-                onClick={onAlternarModoOscuro}
-                aria-label="Alternar modo oscuro"
-              >
-                {modoOscuro ? <IconoSol /> : <IconoLuna />}
-              </button>
-
               <BandejaSuperior />
 
               {/* PERFIL CON DROPDOWN */}
@@ -519,5 +508,7 @@ function IconoMartillo({ className }) {
     </svg>
   );
 }
+
+
 
 

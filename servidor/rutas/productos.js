@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
         p.imagen_url AS imagen,
         p.garantia_dias,
         p.estado,
-        COALESCE(SUM(i.cantidad), 10) AS stock,
+        COALESCE(SUM(i.cantidad), 100) AS stock,
         DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha_creacion,
         COALESCE(r.calificacion, 0) AS calificacion,
         COALESCE(r.valoraciones, 0) AS valoraciones
@@ -59,7 +59,7 @@ router.get('/:id', async (req, res) => {
         CAST(p.precio AS DECIMAL(10,2)) AS precio,
         p.imagen_url AS imagen,
         p.garantia_dias, p.estado,
-        COALESCE(SUM(i.cantidad), 10) AS stock
+        COALESCE(SUM(i.cantidad), 100) AS stock
       FROM producto p
       LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
       LEFT JOIN marca m ON p.id_marca = m.id_marca
@@ -264,3 +264,5 @@ router.post('/:id/resenas', async (req, res) => {
 });
 
 export default router;
+
+

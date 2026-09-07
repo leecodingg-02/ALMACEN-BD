@@ -82,29 +82,6 @@ function Encabezado({
         </div>
 
         <div className='contenedor-barra-supder'>
-          {/* Botón de alternar Modo Oscuro global */}
-          <button
-            className='btn-modo-oscuro-encabezado'
-            onClick={onAlternarModoOscuro}
-            title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
-            aria-label='Alternar modo oscuro'
-          >
-            {modoOscuro ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="icono-modo-sun">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25M4.284 12h-2.25m15.364-6.364l-1.591 1.591M6.758 17.242l-1.591 1.591m12.728 0l-1.591-1.591M6.758 6.758L5.167 5.167M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
-                </svg>
-                <span className="texto-btn-modo">Claro</span>
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="icono-modo-moon">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                </svg>
-                <span className="texto-btn-modo">Oscuro</span>
-              </>
-            )}
-          </button>
 
           <div className='item-barrasup-der ocultar-mobile'>
             <Link to='/ubicaciones' className='botones-barra-sup'>
@@ -374,3 +351,4 @@ function Encabezado({
 }
 
 export default Encabezado;
+

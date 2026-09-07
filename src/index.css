@@ -193,3 +193,14 @@ html.modo-oscuro .menu-accesibilidad-flotante h4 { border-bottom-color: #30363d;
 html.modo-oscuro .selector-tamano-mini button { background: #0d1117; border-color: #30363d; color: #f0f6fc; }
 html.modo-oscuro .selector-tamano-mini button.activo { background: var(--primario, #ffc107); color: #000; }
 
+
+/* Filtros de accesibilidad adicionales */
+html.modo-escala-grises {
+  filter: grayscale(100%);
+}
+html.modo-sepia {
+  filter: sepia(100%);
+}
+html.modo-escala-grises.modo-sepia {
+  filter: grayscale(100%) sepia(100%);
+}

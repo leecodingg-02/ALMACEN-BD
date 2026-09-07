@@ -33,6 +33,9 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
       setResenas(datos || []);
       setCargandoResenas(false);
     });
+    setColorSeleccionado(0);
+    setCantidad(1);
+    setImagenActiva(0);
   }, [id]);
 
   if (!producto) {
@@ -230,14 +233,16 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
                   −
                 </button>
                 <span>{cantidad}</span>
-                <button onClick={() => setCantidad((q) => q + 1)}>+</button>
+                <button onClick={() => setCantidad((q) => Math.min(producto.stock || 10, q + 1))} disabled={cantidad >= (producto.stock || 10)}>+</button>
               </div>
               <button
                 className='boton-carrito-detalle'
                 onClick={() => onAgregarCarrito?.(producto, cantidad)}
+                disabled={cantidad > (producto.stock || 10) || (producto.stock || 10) === 0}
               >
-                🛒 Añadir al carrito
+                { (producto.stock || 10) === 0 ? "Agotado" : "🛒 Añadir al carrito" }
               </button>
+              { (producto.stock || 10) > 0 && <span style={{fontSize: '0.85em', color: '#666', marginTop: '5px', display: 'block'}}>Stock disponible: {producto.stock || 10}</span> }
             </div>
 
             {/* Acordeones */}
@@ -316,15 +321,21 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
             {/* Badges de confianza */}
             <div className='confianza-badges'>
               <div className='badge'>
-                <span className='badge-icono'>🚚</span>
+                <span className='badge-icono' aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </span>
                 <span>Envío seguro</span>
               </div>
               <div className='badge'>
-                <span className='badge-icono'>🛡️</span>
+                <span className='badge-icono' aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
                 <span>Garantía 1 año</span>
               </div>
               <div className='badge'>
-                <span className='badge-icono'>💳</span>
+                <span className='badge-icono' aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </span>
                 <span>Pago seguro</span>
               </div>
             </div>

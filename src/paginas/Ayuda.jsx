@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { enviarTicketSoporte } from "../servicios/ayuda";
+import { api } from "../servicios/api";
 import "./Ayuda.css";
 
 const PREGUNTAS_FRECUENTES_DATA = [
@@ -56,6 +57,18 @@ function Ayuda() {
   const [busqueda, setBusqueda] = useState("");
   const [faqAbierta, setFaqAbierta] = useState(1);
   const [categoriaFaq, setCategoriaFaq] = useState("todas");
+  const [cantidadSucursales, setCantidadSucursales] = useState(4); // Fallback inicial
+
+  useEffect(() => {
+    // Obtener la cantidad de sucursales dinámica
+    api.get("/sucursales")
+      .then((data) => {
+        if (data && data.length) {
+          setCantidadSucursales(data.length);
+        }
+      })
+      .catch((err) => console.error("Error obteniendo sucursales:", err));
+  }, []);
 
   /* Formulario de Soporte y Validaciones */
   const [formSoporte, setFormSoporte] = useState({
@@ -759,7 +772,7 @@ function Ayuda() {
                   <div>
                     <strong>Centros de Soporte:</strong>
                     <Link to="/ubicaciones" className="btn-primario-inicio" style={{ display: 'inline-block', marginTop: '8px' }}>
-                      Ver nuestras 4 sucursales principales &rarr;
+                      Ver nuestras {cantidadSucursales} sucursales principales &rarr;
                     </Link>
                   </div>
                 </div>

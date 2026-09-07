@@ -105,8 +105,9 @@ const Carrito = ({ carrito, usuario, onActualizarCant, onRemoverLinea }) => {
                   <button
                     className='btn-cantidad'
                     onClick={() =>
-                      onActualizarCant(linea.id_pro, linea.cantidad + 1)
+                      onActualizarCant(linea.id_pro, Math.min(linea.stock || 10, linea.cantidad + 1))
                     }
+                    disabled={linea.cantidad >= (linea.stock || 10)}
                     aria-label='Aumentar cantidad'
                   >
                     +

@@ -316,7 +316,7 @@ function AppContenido() {
         <Route path='/ayuda' element={<Ayuda />} />
 
         {/* Panel de Administración */}
-        <Route path='/admin' element={<RutaProtegida rolRequerido="admin"><AdminLayout /></RutaProtegida>}>
+        <Route path='/admin' element={<RutaProtegida rolRequerido="admin"><AdminLayout modoOscuro={modoOscuro} onAlternarModoOscuro={handleAlternarModoOscuro} /></RutaProtegida>}>
           <Route index element={<AdminDashboard />} />
           <Route path='productos' element={<AdminProductos />} />
           <Route path='categorias' element={<AdminCategorias />} />
@@ -332,7 +332,7 @@ function AppContenido() {
         </Route>
 
         {/* Panel de Proveedores */}
-        <Route path='/proveedor' element={<RutaProtegida rolRequerido="proveedor"><ProveedorLayout /></RutaProtegida>}>
+        <Route path='/proveedor' element={<RutaProtegida rolRequerido="proveedor"><ProveedorLayout modoOscuro={modoOscuro} onAlternarModoOscuro={handleAlternarModoOscuro} /></RutaProtegida>}>
           <Route index element={<ProveedorDashboard />} />
           <Route path='productos' element={<ProveedorProductos />} />
           <Route path='pedidos' element={<ProveedorPedidos />} />

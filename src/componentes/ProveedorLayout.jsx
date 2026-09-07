@@ -32,7 +32,7 @@ const seccionesProveedor = [
   },
 ];
 
-export default function ProveedorLayout() {
+export default function ProveedorLayout({ modoOscuro, onAlternarModoOscuro }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [perfilAbierto, setPerfilAbierto] = useState(false);
@@ -47,9 +47,6 @@ export default function ProveedorLayout() {
   });
   const [nombreTemporal, setNombreTemporal] = useState('');
 
-  const [modoOscuro, setModoOscuro] = useState(() => {
-    return localStorage.getItem('modo-oscuro') === 'true';
-  });
 
   // Estado para la animación del martillo al hacer clic
   const [golpeandoRuta, setGolpeandoRuta] = useState(null);
@@ -64,9 +61,7 @@ export default function ProveedorLayout() {
 
   const inputFotoRef = useRef(null);
 
-  useEffect(() => {
-    localStorage.setItem('modo-oscuro', modoOscuro);
-  }, [modoOscuro]);
+
 
   useEffect(() => {
     localStorage.setItem('novacasa_proveedor_nombre', nombreProveedor);
@@ -78,9 +73,6 @@ export default function ProveedorLayout() {
     }
   }, [fotoProveedor]);
 
-  const toggleModoOscuro = () => {
-    setModoOscuro((prev) => !prev);
-  };
 
   const abrirEdicion = () => {
     setNombreTemporal(nombreProveedor);
@@ -246,7 +238,7 @@ export default function ProveedorLayout() {
               <button
                 className="barra-sup-icono-btn btn-tema-toggle"
                 title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
-                onClick={toggleModoOscuro}
+                onClick={onAlternarModoOscuro}
                 aria-label="Alternar modo oscuro"
               >
                 {modoOscuro ? <IconoSol /> : <IconoLuna />}

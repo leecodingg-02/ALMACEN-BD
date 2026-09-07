@@ -377,12 +377,12 @@ function Ubicaciones() {
                       <h3 className='sucursal-nombre'>{sucursal.nombre}</h3>
                     </div>
 
-                    {/* Botón "Abierto ahora" estilizado según Inicio.css / proyecto */}
+                    {/* Botón "Abierto ahora" o cerrado */}
                     <span
-                      className='btn-abierto-ahora'
-                      title='Atención presencial disponible'
+                      className={`btn-abierto-ahora ${sucursal.estado.includes('Cerrado') ? 'cerrado-btn' : ''}`}
+                      title='Atención presencial'
                     >
-                      <span className='punto-verde-inicio'></span>
+                      <span className={sucursal.estado.includes('Cerrado') ? 'punto-rojo-inicio' : 'punto-verde-inicio'}></span>
                       {sucursal.estado}
                     </span>
                   </div>

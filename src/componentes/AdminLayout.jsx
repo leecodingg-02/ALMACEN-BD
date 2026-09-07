@@ -38,12 +38,11 @@ const secciones = [
       { etiqueta: 'Usuarios', ruta: '/admin/usuarios', icono: IconoUsuarios },
       { etiqueta: 'Roles', ruta: '/admin/roles', icono: IconoEscudo },
       { etiqueta: 'Sucursales', ruta: '/admin/sucursales', icono: IconoEdificio },
-      { etiqueta: 'Ubicaciones', ruta: '/admin/ubicaciones', icono: IconoUbicacion },
     ],
   },
 ];
 
-export default function PanelLayout() {
+export default function AdminLayout({ modoOscuro, onAlternarModoOscuro }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [perfilAbierto, setPerfilAbierto] = useState(false);
@@ -58,9 +57,6 @@ export default function PanelLayout() {
   });
   const [nombreTemporal, setNombreTemporal] = useState('');
 
-  const [modoOscuro, setModoOscuro] = useState(() => {
-    return localStorage.getItem('modo-oscuro') === 'true';
-  });
 
   // Estado para la animación del martillo al hacer clic
   const [golpeandoRuta, setGolpeandoRuta] = useState(null);
@@ -75,9 +71,7 @@ export default function PanelLayout() {
 
   const inputFotoRef = useRef(null);
 
-  useEffect(() => {
-    localStorage.setItem('modo-oscuro', modoOscuro);
-  }, [modoOscuro]);
+
 
   useEffect(() => {
     localStorage.setItem('almacen_admin_nombre', nombreAdmin);
@@ -89,9 +83,6 @@ export default function PanelLayout() {
     }
   }, [fotoAdmin]);
 
-  const toggleModoOscuro = () => {
-    setModoOscuro((prev) => !prev);
-  };
 
   const abrirEdicion = () => {
     setNombreTemporal(nombreAdmin);
@@ -225,7 +216,7 @@ export default function PanelLayout() {
               <button
                 className="barra-sup-icono-btn btn-tema-toggle"
                 title={modoOscuro ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
-                onClick={toggleModoOscuro}
+                onClick={onAlternarModoOscuro}
                 aria-label="Alternar modo oscuro"
               >
                 {modoOscuro ? <IconoSol /> : <IconoLuna />}

@@ -586,6 +586,7 @@ export const TarjetaProducto = ({
               src={producto.imagen}
               alt={producto.titulo}
               loading='lazy'
+              decoding='async'
               onError={() => setImagenDisponible(false)}
             />
           ) : (

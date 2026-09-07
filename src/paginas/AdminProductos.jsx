@@ -389,7 +389,7 @@ export default function Productos() {
 
           <div className="grupo-campo">
             <label>Nombre del Producto *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Taladro Inalámbrico 20V" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Taladro Inalámbrico 20V" maxLength="120" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">

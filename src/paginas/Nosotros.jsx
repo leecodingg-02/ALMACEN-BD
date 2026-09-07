@@ -51,7 +51,7 @@ const Nosotros = () => {
                     <div className="motor-contenido">
                         <div className="motor-imagen-container">
                             <div className="imagen-placeholder-equipo">
-                                <img src="https://libertis-solutions.com/wp-content/uploads/2024/04/mejora-de-la-productividad-del-almacen.jpg" alt="imagen_equipo" />
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="imagen_equipo" />
                             </div>
                             <div className="caja-flotante">
                                 <h3>Expertos en <span className="texto-amarillo">soluciones.</span></h3>

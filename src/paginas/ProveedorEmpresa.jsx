@@ -78,6 +78,7 @@ export default function ProveedorEmpresa() {
               <input
                 value={empresa.razonSocial}
                 onChange={(e) => handleChange('razonSocial', e.target.value)}
+                maxLength="100"
                 required
               />
             </div>
@@ -88,6 +89,7 @@ export default function ProveedorEmpresa() {
                 <input
                   value={empresa.nit}
                   onChange={(e) => handleChange('nit', e.target.value)}
+                  maxLength="20"
                   required
                 />
               </div>
@@ -96,6 +98,7 @@ export default function ProveedorEmpresa() {
                 <input
                   value={empresa.telefono}
                   onChange={(e) => handleChange('telefono', e.target.value)}
+                  maxLength="20"
                 />
               </div>
             </div>
@@ -106,6 +109,7 @@ export default function ProveedorEmpresa() {
                 type="email"
                 value={empresa.correo}
                 onChange={(e) => handleChange('correo', e.target.value)}
+                maxLength="100"
                 required
               />
             </div>
@@ -115,6 +119,7 @@ export default function ProveedorEmpresa() {
               <input
                 value={empresa.direccionDespacho}
                 onChange={(e) => handleChange('direccionDespacho', e.target.value)}
+                maxLength="100"
               />
             </div>
           </div>
@@ -139,6 +144,7 @@ export default function ProveedorEmpresa() {
                 <input
                   value={empresa.contactoPrincipal}
                   onChange={(e) => handleChange('contactoPrincipal', e.target.value)}
+                  maxLength="60"
                 />
               </div>
               <div className="grupo-campo">
@@ -146,6 +152,7 @@ export default function ProveedorEmpresa() {
                 <input
                   value={empresa.cargo}
                   onChange={(e) => handleChange('cargo', e.target.value)}
+                  maxLength="60"
                 />
               </div>
             </div>
@@ -156,6 +163,7 @@ export default function ProveedorEmpresa() {
                 <input
                   value={empresa.banco}
                   onChange={(e) => handleChange('banco', e.target.value)}
+                  maxLength="60"
                 />
               </div>
               <div className="grupo-campo">
@@ -175,6 +183,7 @@ export default function ProveedorEmpresa() {
               <input
                 value={empresa.numeroCuenta}
                 onChange={(e) => handleChange('numeroCuenta', e.target.value)}
+                maxLength="30"
               />
             </div>
 
@@ -183,6 +192,7 @@ export default function ProveedorEmpresa() {
               <input
                 value={empresa.tiempoLeadTime}
                 onChange={(e) => handleChange('tiempoLeadTime', e.target.value)}
+                maxLength="60"
               />
             </div>
           </div>

@@ -218,6 +218,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: Juan"
               className={errores.nombre ? "campo-error" : ""}
+              maxLength="60"
             />
             {errores.nombre && <span className="error-msg">{errores.nombre}</span>}
           </div>
@@ -233,6 +234,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: Pérez"
               className={errores.apellido ? "campo-error" : ""}
+              maxLength="60"
             />
             {errores.apellido && <span className="error-msg">{errores.apellido}</span>}
           </div>
@@ -265,6 +267,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
                 onChange={handleChange}
                 placeholder="Ej: 1234567890"
                 className={errores.numIdent ? "campo-error" : ""}
+                maxLength="20"
               />
               {errores.numIdent && <span className="error-msg">{errores.numIdent}</span>}
             </div>
@@ -282,6 +285,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: 3001234567"
               className={errores.telefono ? "campo-error" : ""}
+              maxLength="20"
             />
             {errores.telefono && <span className="error-msg">{errores.telefono}</span>}
           </div>
@@ -297,6 +301,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: correo@ejemplo.com"
               className={errores.correo ? "campo-error" : ""}
+              maxLength="100"
             />
             {errores.correo && <span className="error-msg">{errores.correo}</span>}
           </div>
@@ -330,6 +335,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: Bogotá"
               className={errores.ciudad ? "campo-error" : ""}
+              maxLength="60"
             />
             {errores.ciudad && <span className="error-msg">{errores.ciudad}</span>}
           </div>
@@ -345,6 +351,7 @@ const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
               onChange={handleChange}
               placeholder="Ej: Calle 123 #45-67"
               className={errores.direccion ? "campo-error" : ""}
+              maxLength="100"
             />
             {errores.direccion && <span className="error-msg">{errores.direccion}</span>}
           </div>

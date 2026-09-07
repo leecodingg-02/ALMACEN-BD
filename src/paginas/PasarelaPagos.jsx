@@ -335,7 +335,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
       </div>
 
       <div className="pasarela-cabecera">
-        <span className="pasarela-kicker">CHECKOUT &amp; CHECKIN</span>
+        <span className="pasarela-kicker">FINALIZAR COMPRA</span>
         <h1>Pasarela de Pagos NovaCasa</h1>
         <p className="pasarela-subtitulo">Completa tu información y elige tu método de pago preferido para finalizar tu compra.</p>
       </div>
@@ -409,6 +409,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                   value={formEnvio.num_ident}
                   onChange={handleEnvioChange}
                   placeholder="Ej: 1020304050"
+                  maxLength="20"
                   required
                 />
               </div>
@@ -423,6 +424,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                   value={formEnvio.correo}
                   onChange={handleEnvioChange}
                   placeholder="correo@ejemplo.com"
+                  maxLength="100"
                   required
                 />
               </div>
@@ -435,6 +437,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                   value={formEnvio.telefono}
                   onChange={handleEnvioChange}
                   placeholder="Ej: 3101234567"
+                  maxLength="20"
                   required
                 />
               </div>
@@ -458,6 +461,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                   value={formEnvio.ciudad}
                   onChange={handleEnvioChange}
                   placeholder="Ej: Bogotá"
+                  maxLength="60"
                   required
                 />
               </div>
@@ -501,6 +505,7 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                 value={formEnvio.direccion}
                 onChange={handleEnvioChange}
                 placeholder="Ej: Carrera 15 # 85-32 Apto 401"
+                maxLength="100"
                 required
               />
             </div>

@@ -191,7 +191,7 @@ export default function Marcas() {
         <Modal titulo={modal === 'crear' ? 'Nueva Marca' : 'Editar Marca'} alCerrar={() => setModal(null)} alGuardar={guardar}>
           <div className="grupo-campo">
             <label>Nombre de la Marca *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: DeWalt" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: DeWalt" maxLength="60" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">
@@ -217,7 +217,7 @@ export default function Marcas() {
           </div>
           <div className="grupo-campo">
             <label>Correo de Contacto</label>
-            <input type="email" value={formulario.contacto} onChange={(e) => setFormulario({ ...formulario, contacto: e.target.value })} placeholder="contacto@marca.com" />
+            <input type="email" value={formulario.contacto} onChange={(e) => setFormulario({ ...formulario, contacto: e.target.value })} placeholder="contacto@marca.com" maxLength="100" />
           </div>
         </Modal>
       )}

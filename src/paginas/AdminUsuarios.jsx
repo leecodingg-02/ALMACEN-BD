@@ -221,11 +221,11 @@ export default function Usuarios() {
         <Modal titulo={modal === 'crear' ? 'Nuevo Usuario' : 'Editar Usuario'} alCerrar={() => setModal(null)} alGuardar={guardar}>
           <div className="grupo-campo">
             <label>Nombre Completo *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Carlos Rodríguez" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Carlos Rodríguez" maxLength="120" />
           </div>
           <div className="grupo-campo">
             <label>Correo Electrónico</label>
-            <input type="email" value={formulario.correo} onChange={(e) => setFormulario({ ...formulario, correo: e.target.value })} placeholder="usuario@correo.com" />
+            <input type="email" value={formulario.correo} onChange={(e) => setFormulario({ ...formulario, correo: e.target.value })} placeholder="usuario@correo.com" maxLength="100" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">

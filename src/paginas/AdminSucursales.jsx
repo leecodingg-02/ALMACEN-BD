@@ -178,7 +178,7 @@ export default function Sucursales() {
         <Modal titulo={modal === 'crear' ? 'Nueva Sucursal' : 'Editar Sucursal'} alCerrar={() => setModal(null)} alGuardar={guardar}>
           <div className="grupo-campo">
             <label>Nombre de la Sucursal *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Sucursal Norte" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Sucursal Norte" maxLength="60" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">
@@ -205,16 +205,16 @@ export default function Sucursales() {
           </div>
           <div className="grupo-campo">
             <label>Dirección</label>
-            <input value={formulario.direccion} onChange={(e) => setFormulario({ ...formulario, direccion: e.target.value })} placeholder="Cra 15 # 93-75" />
+            <input value={formulario.direccion} onChange={(e) => setFormulario({ ...formulario, direccion: e.target.value })} placeholder="Cra 15 # 93-75" maxLength="100" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">
               <label>Teléfono</label>
-              <input value={formulario.telefono} onChange={(e) => setFormulario({ ...formulario, telefono: e.target.value })} placeholder="601-234-5678" />
+              <input value={formulario.telefono} onChange={(e) => setFormulario({ ...formulario, telefono: e.target.value })} placeholder="601-234-5678" maxLength="20" />
             </div>
             <div className="grupo-campo">
               <label>Gerente</label>
-              <input value={formulario.gerente} onChange={(e) => setFormulario({ ...formulario, gerente: e.target.value })} placeholder="Nombre del gerente" />
+              <input value={formulario.gerente} onChange={(e) => setFormulario({ ...formulario, gerente: e.target.value })} placeholder="Nombre del gerente" maxLength="60" />
             </div>
           </div>
           <div className="grupo-campo">

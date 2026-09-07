@@ -231,6 +231,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     value={formData.nombre}
                     onChange={handleChange}
                     placeholder="Ej: Juan"
+                    maxLength="60"
                     required
                   />
                   {errores.nombre && <span className="error-msg">{errores.nombre}</span>}
@@ -247,6 +248,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     value={formData.apellido}
                     onChange={handleChange}
                     placeholder="Ej: Pérez"
+                    maxLength="60"
                     required
                   />
                   {errores.apellido && <span className="error-msg">{errores.apellido}</span>}
@@ -298,6 +300,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     className={`form-input ${errores.documento ? "campo-error" : ""}`}
                     value={formData.documento}
                     onChange={handleChange}
+                    maxLength="20"
                     required
                   />
                   {errores.documento && <span className="error-msg">{errores.documento}</span>}
@@ -317,6 +320,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     className={`form-input ${errores.email ? "campo-error" : ""}`}
                     value={formData.email}
                     onChange={handleChange}
+                    maxLength="100"
                     required
                   />
                   {errores.email && <span className="error-msg">{errores.email}</span>}
@@ -333,7 +337,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                     className={`form-input ${errores.telefono ? "campo-error" : ""}`}
                     value={formData.telefono}
                     onChange={handleChange}
-                    maxLength="10"
+                    maxLength="20"
                     required
                   />
                   {errores.telefono && <span className="error-msg">{errores.telefono}</span>}
@@ -354,6 +358,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                       className={`form-input ${errores.password ? "campo-error" : ""}`}
                       value={formData.password}
                       onChange={handleChange}
+                      maxLength="60"
                       required
                     />
                     <button
@@ -390,6 +395,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                       className={`form-input ${errores.repetirPassword ? "campo-error" : ""}`}
                       value={formData.repetirPassword}
                       onChange={handleChange}
+                      maxLength="60"
                       required
                     />
                   </div>

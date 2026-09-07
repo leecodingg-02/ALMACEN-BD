@@ -720,64 +720,7 @@ function Ayuda() {
               </p>
             </div>
 
-            <div className="contacto-contenedor-grid">
-              {/* Información Directa con Heroicons */}
-              <div className="contacto-info-tarjeta">
-                <h3>Líneas de Atención</h3>
-                <p className="contacto-horario">Lunes a Sábado: 8:00 AM - 7:00 PM</p>
-
-                <div className="contacto-item-linea">
-                  <div className="icono-contacto-svg-box">
-                    <svg className="contacto-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106a1.125 1.125 0 0 0-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>Línea Nacional PBX:</strong>
-                    <span>(601) 690 324 343</span>
-                  </div>
-                </div>
-
-                <div className="contacto-item-linea">
-                  <div className="icono-contacto-svg-box">
-                    <svg className="contacto-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a.75.75 0 0 1-.816-.98c.245-.635.539-1.258.882-1.854C3.896 16.634 3 14.416 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>WhatsApp Soporte:</strong>
-                    <span>+57 300 123 4567</span>
-                  </div>
-                </div>
-
-                <div className="contacto-item-linea">
-                  <div className="icono-contacto-svg-box">
-                    <svg className="contacto-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>Correo Electrónico:</strong>
-                    <span>soporte@novacasa.com</span>
-                  </div>
-                </div>
-
-                <div className="contacto-item-linea">
-                  <div className="icono-contacto-svg-box">
-                    <svg className="contacto-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>Centros de Soporte:</strong>
-                    <Link to="/ubicaciones" className="btn-primario-inicio" style={{ display: 'inline-block', marginTop: '8px' }}>
-                      Ver nuestras {cantidadSucursales} sucursales principales &rarr;
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
+            <div style={{ maxWidth: '750px', margin: '0 auto' }}>
               {/* Formulario Validado */}
               <div className="contacto-formulario-caja">
                 {ticketEnviado ? (
@@ -812,6 +755,7 @@ function Ayuda() {
                           className={erroresForm.nombre ? "input-error" : ""}
                           placeholder="Ej. María Rodríguez"
                           value={formSoporte.nombre}
+                          maxLength="60"
                           onChange={(e) => handleChangeInput("nombre", e.target.value)}
                         />
                         {erroresForm.nombre && (
@@ -826,6 +770,7 @@ function Ayuda() {
                           className={erroresForm.correo ? "input-error" : ""}
                           placeholder="ejemplo@correo.com"
                           value={formSoporte.correo}
+                          maxLength="100"
                           onChange={(e) => handleChangeInput("correo", e.target.value)}
                         />
                         {erroresForm.correo && (
@@ -842,6 +787,7 @@ function Ayuda() {
                           className={erroresForm.telefono ? "input-error" : ""}
                           placeholder="Ej. 300 123 4567"
                           value={formSoporte.telefono}
+                          maxLength="20"
                           onChange={(e) => handleChangeInput("telefono", e.target.value)}
                         />
                         {erroresForm.telefono && (
@@ -880,6 +826,7 @@ function Ayuda() {
                         className={erroresForm.asunto ? "input-error" : ""}
                         placeholder="Ej. Solicitud de cambio por talla o falla"
                         value={formSoporte.asunto}
+                        maxLength="100"
                         onChange={(e) => handleChangeInput("asunto", e.target.value)}
                       />
                       {erroresForm.asunto && (
@@ -894,6 +841,7 @@ function Ayuda() {
                         className={erroresForm.mensaje ? "input-error" : ""}
                         placeholder="Describe detalladamente tu inquietud o número de pedido (mín. 15 caracteres)..."
                         value={formSoporte.mensaje}
+                        maxLength="500"
                         onChange={(e) => handleChangeInput("mensaje", e.target.value)}
                       ></textarea>
                       {erroresForm.mensaje && (

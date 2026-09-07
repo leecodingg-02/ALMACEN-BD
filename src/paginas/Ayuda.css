@@ -699,11 +699,13 @@ html.modo-oscuro .nosotros-tarjeta,
 html.modo-oscuro .contacto-formulario-caja,
 html.modo-oscuro .ayuda-pestanas,
 html.modo-oscuro .faq-item,
+html.modo-oscuro .ayuda-caja-busqueda,
 html.modo-alto-contraste .ayuda-seccion-card,
 html.modo-alto-contraste .nosotros-tarjeta,
 html.modo-alto-contraste .contacto-formulario-caja,
 html.modo-alto-contraste .ayuda-pestanas,
-html.modo-alto-contraste .faq-item {
+html.modo-alto-contraste .faq-item,
+html.modo-alto-contraste .ayuda-caja-busqueda {
   background-color: #161b22 !important;
   border-color: #30363d !important;
   color: #f0f6fc !important;
@@ -793,5 +795,18 @@ html.modo-alto-contraste .btn-faq-cat.activo {
   background-color: #ffc107 !important;
   color: #000000 !important;
   border-color: #ffc107 !important;
+}
+
+html.modo-oscuro .ayuda-caja-busqueda .input-disruptivo,
+html.modo-alto-contraste .ayuda-caja-busqueda .input-disruptivo {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #f0f6fc !important;
+}
+
+html.modo-oscuro .ayuda-caja-busqueda .input-disruptivo:focus,
+html.modo-alto-contraste .ayuda-caja-busqueda .input-disruptivo:focus {
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 

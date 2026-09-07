@@ -214,11 +214,11 @@ export default function Categorias() {
         <Modal titulo={modal === 'crear' ? 'Nueva Categoría' : 'Editar Categoría'} alCerrar={() => setModal(null)} alGuardar={guardar}>
           <div className="grupo-campo">
             <label>Nombre *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Herramientas" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Ej: Herramientas" maxLength="60" />
           </div>
           <div className="grupo-campo">
             <label>Descripción</label>
-            <textarea value={formulario.descripcion} onChange={(e) => setFormulario({ ...formulario, descripcion: e.target.value })} placeholder="Descripción de la categoría..." />
+            <textarea value={formulario.descripcion} onChange={(e) => setFormulario({ ...formulario, descripcion: e.target.value })} placeholder="Descripción de la categoría..." maxLength="255" />
           </div>
           <div className="grupo-campo">
             <label>Estado</label>

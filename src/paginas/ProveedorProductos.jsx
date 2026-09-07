@@ -229,7 +229,7 @@ export default function ProveedorProductos() {
           <div className="fila-campos">
             <div className="grupo-campo">
               <label>SKU / Código Proveedor *</label>
-              <input value={formulario.sku} onChange={(e) => setFormulario({ ...formulario, sku: e.target.value })} placeholder="PROV-001" />
+              <input value={formulario.sku} onChange={(e) => setFormulario({ ...formulario, sku: e.target.value })} placeholder="PROV-001" maxLength="20" />
             </div>
             <div className="grupo-campo">
               <label>Categoría</label>
@@ -242,7 +242,7 @@ export default function ProveedorProductos() {
           </div>
           <div className="grupo-campo">
             <label>Nombre del Producto *</label>
-            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Nombre detallado del artículo" />
+            <input value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} placeholder="Nombre detallado del artículo" maxLength="120" />
           </div>
           <div className="fila-campos">
             <div className="grupo-campo">
@@ -261,7 +261,7 @@ export default function ProveedorProductos() {
             </div>
             <div className="grupo-campo">
               <label>Tiempo Promedio de Entrega</label>
-              <input value={formulario.tiempoEntrega} onChange={(e) => setFormulario({ ...formulario, tiempoEntrega: e.target.value })} placeholder="24 a 48 hrs" />
+              <input value={formulario.tiempoEntrega} onChange={(e) => setFormulario({ ...formulario, tiempoEntrega: e.target.value })} placeholder="24 a 48 hrs" maxLength="50" />
             </div>
           </div>
         </Modal>

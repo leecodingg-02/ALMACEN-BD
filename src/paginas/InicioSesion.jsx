@@ -179,6 +179,7 @@ const InicioSesion = ({ onIniciarSesion }) => {
                   className={`login-input ${errores.email ? "campo-error" : ""}`}
                   placeholder={esProveedor ? 'NIT (Número de Identificación Tributaria)' : 'Correo Electrónico'}
                   value={email}
+                  maxLength="100"
                   onChange={handleChange}
                   required
                 />
@@ -194,6 +195,7 @@ const InicioSesion = ({ onIniciarSesion }) => {
                   className={`login-input ${errores.password ? "campo-error" : ""}`}
                   placeholder="Contraseña"
                   value={password}
+                  maxLength="60"
                   onChange={handleChange}
                   required
                 />

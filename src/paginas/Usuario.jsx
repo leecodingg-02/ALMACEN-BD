@@ -462,6 +462,7 @@ const Usuario = ({
                     setFormPerfil({ ...formPerfil, nombre: e.target.value })
                   }
                   className={erroresPerfil.nombre ? "campo-error" : ""}
+                  maxLength="60"
                 />
                 {erroresPerfil.nombre && (
                   <span className="error-msg">{erroresPerfil.nombre}</span>
@@ -477,6 +478,7 @@ const Usuario = ({
                     setFormPerfil({ ...formPerfil, apellido: e.target.value })
                   }
                   className={erroresPerfil.apellido ? "campo-error" : ""}
+                  maxLength="60"
                 />
                 {erroresPerfil.apellido && (
                   <span className="error-msg">{erroresPerfil.apellido}</span>
@@ -509,6 +511,7 @@ const Usuario = ({
                     setFormPerfil({ ...formPerfil, num_ident: e.target.value })
                   }
                   className={erroresPerfil.num_ident ? "campo-error" : ""}
+                  maxLength="20"
                 />
                 {erroresPerfil.num_ident && (
                   <span className="error-msg">{erroresPerfil.num_ident}</span>
@@ -526,6 +529,7 @@ const Usuario = ({
                     setFormPerfil({ ...formPerfil, telefono: e.target.value })
                   }
                   className={erroresPerfil.telefono ? "campo-error" : ""}
+                  maxLength="20"
                 />
                 {erroresPerfil.telefono && (
                   <span className="error-msg">{erroresPerfil.telefono}</span>
@@ -541,6 +545,7 @@ const Usuario = ({
                     setFormPerfil({ ...formPerfil, correo: e.target.value })
                   }
                   className={erroresPerfil.correo ? "campo-error" : ""}
+                  maxLength="100"
                 />
                 {erroresPerfil.correo && (
                   <span className="error-msg">{erroresPerfil.correo}</span>
@@ -624,6 +629,7 @@ const Usuario = ({
                   }
                   placeholder="Ej: Bogotá"
                   className={erroresDir.ciudad ? "campo-error" : ""}
+                  maxLength="60"
                 />
                 {erroresDir.ciudad && (
                   <span className="error-msg">{erroresDir.ciudad}</span>
@@ -640,6 +646,7 @@ const Usuario = ({
                   }
                   placeholder="Ej: Carrera 15 # 85 - 30"
                   className={erroresDir.direccion ? "campo-error" : ""}
+                  maxLength="100"
                 />
                 {erroresDir.direccion && (
                   <span className="error-msg">{erroresDir.direccion}</span>

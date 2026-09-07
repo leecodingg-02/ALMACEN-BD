@@ -403,7 +403,20 @@ INSERT INTO inventario (id_pro, id_suc, ubicacion_fisica, cantidad, stock_minimo
     ((SELECT id_pro FROM producto WHERE nombre='Espejo Decorativo Redondo'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Pasillo Decora 1', 18, 5),
     ((SELECT id_pro FROM producto WHERE nombre='Sierra Circular 1500W'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Norte'), 'Estante Herram-02', 3, 8),
     ((SELECT id_pro FROM producto WHERE nombre='Silla de Oficina Ergonómica'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Zona Oficina', 0, 5),
-    ((SELECT id_pro FROM producto WHERE nombre='Foco Inteligente LED RGB'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Estante Luces A', 6, 15);
+    ((SELECT id_pro FROM producto WHERE nombre='Foco Inteligente LED RGB'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Estante Luces A', 6, 15),
+    ((SELECT id_pro FROM producto WHERE nombre='Estantería Industrial 5 Niveles'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Zona Muebles A', 15, 5),
+    ((SELECT id_pro FROM producto WHERE nombre='Mesa de Centro Industrial'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Norte'), 'Zona Exhibición 1', 14, 4),
+    ((SELECT id_pro FROM producto WHERE nombre='Silla Nórdica Gris'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Zona Muebles C', 20, 5),
+    ((SELECT id_pro FROM producto WHERE nombre='Lámpara de Pie Cromo'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Estante Luces B', 16, 5),
+    ((SELECT id_pro FROM producto WHERE nombre='Set de Herramientas 50 pzas'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Norte'), 'Estante Herram-05', 35, 10),
+    ((SELECT id_pro FROM producto WHERE nombre='Cuadro Minimalista Botánico'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Pasillo Decora 2', 25, 8),
+    ((SELECT id_pro FROM producto WHERE nombre='Escritorio Minimalista Blanco'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Zona Oficina 2', 10, 4),
+    ((SELECT id_pro FROM producto WHERE nombre='Maceta de Cerámica Nórdica'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Norte'), 'Pasillo Decora 3', 40, 10),
+    ((SELECT id_pro FROM producto WHERE nombre='Martillo de Uña Curva'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Estante Herram-01', 50, 15),
+    ((SELECT id_pro FROM producto WHERE nombre='Lámpara de Escritorio Ajustable'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Estante Luces C', 22, 6),
+    ((SELECT id_pro FROM producto WHERE nombre='Reloj de Pared Vintage'), (SELECT id_suc FROM sucursal WHERE nombre='Sede Principal'), 'Pasillo Decora 1', 15, 5),
+    ((SELECT id_pro FROM producto WHERE nombre='Caja de Herramientas Metálica'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Norte'), 'Estante Herram-03', 18, 5),
+    ((SELECT id_pro FROM producto WHERE nombre='Mueble para TV Moderno'), (SELECT id_suc FROM sucursal WHERE nombre='Sucursal Sur'), 'Zona Muebles TV', 8, 3);
 
 CREATE TRIGGER trg_detalle_venta_after_insert
 AFTER INSERT ON detalle_venta

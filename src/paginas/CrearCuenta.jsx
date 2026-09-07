@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registrarUsuario, rutaPanelSegunRol } from '../servicios/usuario';
+import registroHeroImg from '../imagenes/registro-hero.jpg';
 import './CrearCuenta.css';
 
 const CrearCuenta = ({ onIniciarSesion }) => {
@@ -399,7 +400,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
           <div className="crear-cuenta-img-container">
             {!imgError ? (
               <img
-                src="/src/imagenes/registro-hero.jpg"
+                src={registroHeroImg}
                 alt="Haz de tu hogar tu mejor versión"
                 className="crear-cuenta-hero-img"
                 onError={() => setImgError(true)}

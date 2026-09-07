@@ -227,3 +227,6 @@ html.modo-alto-contraste .pie-inferior-izq p {
   color: #c9d1d9 !important;
 }
 
+
+html.modo-oscuro .pie-enlace:hover, html.modo-alto-contraste .pie-enlace:hover { color: #ffc107 !important; }
+

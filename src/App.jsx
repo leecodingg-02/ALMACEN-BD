@@ -86,6 +86,7 @@ function AppContenido() {
     const config = obtenerConfiguracionUsuario();
     return config?.altoContraste || localStorage.getItem('modo-oscuro') === 'true';
   });
+  const [menuAccesibilidadAbierto, setMenuAccesibilidadAbierto] = useState(false);
 
   /* Cargar favoritos del usuario autenticado directamente desde MySQL */
   useEffect(() => {
@@ -342,6 +343,61 @@ function AppContenido() {
         </Route>
       </Routes>
       {!esPanel && <PiePagina />}
+
+      {/* Menú Flotante de Accesibilidad (Global) */}
+      <div className="contenedor-accesibilidad-flotante">
+        {menuAccesibilidadAbierto && (
+          <div className="menu-accesibilidad-flotante">
+            <h4>Opciones de Accesibilidad</h4>
+            
+            <div className="opcion-accesibilidad">
+              <span>Alto Contraste / Modo Oscuro</span>
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={modoOscuro || false}
+                  onChange={handleAlternarModoOscuro}
+                />
+                <span className="slider-round"></span>
+              </label>
+            </div>
+
+            <div className="opcion-accesibilidad">
+              <span>Tamaño de Fuente</span>
+              <div className="selector-tamano-mini">
+                <button
+                  className={configuracion?.tamanoFuente === "normal" || !configuracion?.tamanoFuente ? "activo" : ""}
+                  onClick={() => handleActualizarConfig({ ...configuracion, tamanoFuente: "normal" })}
+                >
+                  A
+                </button>
+                <button
+                  className={configuracion?.tamanoFuente === "grande" ? "activo" : ""}
+                  onClick={() => handleActualizarConfig({ ...configuracion, tamanoFuente: "grande" })}
+                >
+                  A+
+                </button>
+                <button
+                  className={configuracion?.tamanoFuente === "extra-grande" ? "activo" : ""}
+                  onClick={() => handleActualizarConfig({ ...configuracion, tamanoFuente: "extra-grande" })}
+                >
+                  A++
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        <button
+          className="btn-accesibilidad-flotante"
+          onClick={() => setMenuAccesibilidadAbierto(!menuAccesibilidadAbierto)}
+          title="Opciones de Accesibilidad"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0m-6.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0m-9.75 0h9.75" />
+          </svg>
+        </button>
+      </div>
     </>
   );
 }

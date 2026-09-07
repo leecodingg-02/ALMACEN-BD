@@ -167,3 +167,29 @@ code {
   line-height: 135%;
   padding: 4px 8px;
 }
+
+/* Botón Accesibilidad Flotante */
+.btn-accesibilidad-flotante { position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px; background-color: var(--color-primario, #ffc107); border: none; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 9999; color: #000; transition: transform 0.3s ease, background-color 0.3s ease; }
+.btn-accesibilidad-flotante:hover { transform: scale(1.1); background-color: #e0a800; }
+.btn-accesibilidad-flotante svg { width: 28px; height: 28px; }
+html.modo-oscuro .btn-accesibilidad-flotante { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2); }
+
+
+/* Menu Accesibilidad Flotante */
+.contenedor-accesibilidad-flotante { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.menu-accesibilidad-flotante { background: var(--encabezado-fondo, #fff); border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); width: 250px; }
+.menu-accesibilidad-flotante h4 { margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px; }
+.opcion-accesibilidad { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; font-size: 13px; font-weight: 500; }
+.opcion-accesibilidad:last-child { margin-bottom: 0; }
+.selector-tamano-mini { display: flex; gap: 5px; }
+.selector-tamano-mini button { flex: 1; padding: 6px; border: 1px solid #ddd; background: #fafafa; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: bold; }
+.selector-tamano-mini button:hover { background: #eee; }
+.selector-tamano-mini button.activo { background: var(--primario, #ffc107); border-color: var(--primario, #ffc107); color: #000; }
+.btn-accesibilidad-flotante { position: relative; inset: auto; width: 50px; height: 50px; background-color: var(--color-primario, #ffc107); border: none; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; transition: transform 0.3s ease, background-color 0.3s ease; }
+.btn-accesibilidad-flotante:hover { transform: scale(1.1); background-color: #e0a800; }
+.btn-accesibilidad-flotante svg { width: 28px; height: 28px; }
+html.modo-oscuro .menu-accesibilidad-flotante { background: #1c2128; border-color: #30363d; color: #f0f6fc; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+html.modo-oscuro .menu-accesibilidad-flotante h4 { border-bottom-color: #30363d; }
+html.modo-oscuro .selector-tamano-mini button { background: #0d1117; border-color: #30363d; color: #f0f6fc; }
+html.modo-oscuro .selector-tamano-mini button.activo { background: var(--primario, #ffc107); color: #000; }
+

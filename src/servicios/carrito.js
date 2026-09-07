@@ -17,14 +17,18 @@ export const agregarLineaCarrito = (carrito, producto, cantidad = 1) => {
   const nombre = producto.titulo || producto.nombre || 'Producto';
 
   const lineaExistente = carrito.find((linea) => linea.id_pro === idProducto);
+  const stockDisponible = producto.stock !== undefined ? producto.stock : 10;
+
   if (lineaExistente) {
+    const nuevaCantidad = Math.min(stockDisponible, lineaExistente.cantidad + cantidad);
     return carrito.map((linea) =>
       linea.id_pro === idProducto
         ? {
             ...linea,
-            cantidad: linea.cantidad + cantidad,
+            cantidad: nuevaCantidad,
             imagen: linea.imagen || imagen,
             imagen_url: linea.imagen_url || imagen,
+            stock: stockDisponible,
           }
         : linea,
     );
@@ -39,6 +43,7 @@ export const agregarLineaCarrito = (carrito, producto, cantidad = 1) => {
       imagen,
       imagen_url: imagen,
       cantidad,
+      stock: producto.stock !== undefined ? producto.stock : 10,
     },
   ];
 };

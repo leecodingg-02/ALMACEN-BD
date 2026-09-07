@@ -506,3 +506,7 @@ html.modo-alto-contraste .btn-desplegable-conte a:hover {
     padding-left: 14px;
   }
 }
+
+.navegacion:hover { color: var(--primario); }
+html.modo-oscuro .navegacion:hover, html.modo-alto-contraste .navegacion:hover { color: #ffc107 !important; }
+

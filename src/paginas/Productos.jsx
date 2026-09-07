@@ -612,15 +612,18 @@ export const TarjetaProducto = ({
               </span>
             )}
           </div>
-          <button
-            className='boton-agregar'
-            onClick={(e) => {
-              e.preventDefault();
-              onAgregarCarrito?.(producto, 1);
-            }}
-          >
-            Agregar al carrito
-          </button>
+          <div className='acciones'>
+            <button
+              className='boton-agregar'
+              onClick={(e) => {
+                e.preventDefault();
+                onAgregarCarrito?.(producto, 1);
+              }}
+              disabled={(producto.stock || 0) === 0}
+            >
+              {(producto.stock || 0) === 0 ? "Agotado" : "Agregar al carrito"}
+            </button>
+          </div>
         </div>
       </div>
     </Link>

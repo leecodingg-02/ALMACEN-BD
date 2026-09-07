@@ -821,10 +821,6 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                 <span>Envío a domicilio</span>
                 <span className="envio-gratis-badge">GRATIS</span>
               </div>
-              <div className="fila-total">
-                <span>IVA (19% incluido)</span>
-                <span>{formatearPrecio(Math.round(total * 0.19 / 1.19))}</span>
-              </div>
               <div className="fila-total total-destacado">
                 <span>Total a Pagar</span>
                 <strong>{formatearPrecio(total)}</strong>

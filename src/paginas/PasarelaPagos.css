@@ -865,3 +865,8 @@ html.modo-alto-contraste .icono-bloqueo-candado {
   color: #ffc107;
 }
 
+/* Responsive para modo Accesibilidad A+, A++ */
+html.fuente-grande .pasarela-grilla-principal,
+html.fuente-extra-grande .pasarela-grilla-principal {
+  grid-template-columns: 1fr;
+}

@@ -12,6 +12,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
     tipoDocumento: 'CC',
     documento: '',
     email: '',
+    telefono: '',
     password: '',
     repetirPassword: ''
   });
@@ -57,6 +58,13 @@ const CrearCuenta = ({ onIniciarSesion }) => {
       nuevosErrores.documento = "Solo se permiten dígitos para este tipo de documento.";
     } else if (formData.documento.trim().length < 4) {
       nuevosErrores.documento = "El documento debe tener al menos 4 caracteres.";
+    }
+
+    /* Teléfono — obligatorio, 10 dígitos */
+    if (!formData.telefono.trim()) {
+      nuevosErrores.telefono = "El teléfono es obligatorio.";
+    } else if (!/^\d{10}$/.test(formData.telefono.trim())) {
+      nuevosErrores.telefono = "El teléfono debe tener 10 dígitos.";
     }
 
     /* Email — obligatorio, formato válido */
@@ -116,6 +124,7 @@ const CrearCuenta = ({ onIniciarSesion }) => {
         tipo_doc: formData.tipoDocumento,
         num_ident: formData.documento.trim(),
         correo: formData.email.trim().toLowerCase(),
+        telefono: formData.telefono.trim(),
         contrasena: formData.password,
       };
 
@@ -295,21 +304,40 @@ const CrearCuenta = ({ onIniciarSesion }) => {
                 </div>
               </div>
 
-              {/* Fila 3: Correo electrónico */}
-              <div className="form-group">
-                <label className="form-label">
-                  Correo electrónico <span className="asterisk">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="ejemplo@correo.com"
-                  className={`form-input ${errores.email ? "campo-error" : ""}`}
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-                {errores.email && <span className="error-msg">{errores.email}</span>}
+              {/* Fila 3: Correo electrónico y Teléfono */}
+              <div className="form-row two-columns">
+                <div className="form-group">
+                  <label className="form-label">
+                    Correo electrónico <span className="asterisk">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="ejemplo@correo.com"
+                    className={`form-input ${errores.email ? "campo-error" : ""}`}
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errores.email && <span className="error-msg">{errores.email}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Teléfono Celular <span className="asterisk">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="telefono"
+                    placeholder="Ej: 3001234567"
+                    className={`form-input ${errores.telefono ? "campo-error" : ""}`}
+                    value={formData.telefono}
+                    onChange={handleChange}
+                    maxLength="10"
+                    required
+                  />
+                  {errores.telefono && <span className="error-msg">{errores.telefono}</span>}
+                </div>
               </div>
 
               {/* Fila 4: Contraseña y Repetir Contraseña */}

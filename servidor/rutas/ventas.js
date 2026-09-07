@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
       detalles = []
     } = req.body;
 
-    const metodosPendientes = ['Nequi', 'Daviplata', 'Contra entrega'];
+    const metodosPendientes = ['Nequi', 'Daviplata', 'Contra entrega', 'Efectivo'];
     if (metodosPendientes.some(m => metodo.toLowerCase().includes(m.toLowerCase()))) {
       estado = 'Pendiente';
     }

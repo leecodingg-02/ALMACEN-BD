@@ -140,6 +140,10 @@ function AppContenido() {
       const nuevo = !prev;
       localStorage.setItem('modo-oscuro', nuevo ? 'true' : 'false');
       const nuevaConfig = { ...configuracion, altoContraste: nuevo };
+      if (nuevo) {
+        nuevaConfig.escalaGrises = false;
+        nuevaConfig.modoSepia = false;
+      }
       setConfiguracion(nuevaConfig);
       localStorage.setItem('almacenweb_configuracion', JSON.stringify(nuevaConfig));
       return nuevo;
@@ -156,6 +160,23 @@ function AppContenido() {
 
   /* Agregar línea al carrito */
   const agregarAlCarrito = (producto, cantidad = 1) => {
+    const idProducto = producto.id_pro || producto.id;
+    const stockDisponible = producto.stock !== undefined ? producto.stock : 10;
+    const lineaExistente = carrito.find((linea) => linea.id_pro === idProducto);
+    const cantidadActual = lineaExistente ? lineaExistente.cantidad : 0;
+    
+    if (cantidadActual + cantidad > stockDisponible) {
+      mostrarNotificacion({
+        tipo: 'error',
+        titulo: 'Límite alcanzado',
+        mensaje: 'Ya no puedes agregar mas productos al carrito cuando se llega al limite máximo de productos en inventario',
+        icono: '⚠️'
+      });
+      const cantidadPermitida = stockDisponible - cantidadActual;
+      if (cantidadPermitida <= 0) return;
+      cantidad = cantidadPermitida;
+    }
+
     setCarrito((carritoActual) =>
       agregarLineaCarrito(carritoActual, producto, cantidad),
     );
@@ -176,6 +197,20 @@ function AppContenido() {
 
   /* Actualizar la cantidad de un producto en el carrito */
   const actualizarCantCarrito = (idProducto, nuevaCantidad) => {
+    const linea = carrito.find(l => l.id_pro === idProducto);
+    if (linea) {
+      const stockDisponible = linea.stock !== undefined ? linea.stock : 10;
+      if (nuevaCantidad > stockDisponible) {
+        mostrarNotificacion({
+          tipo: 'error',
+          titulo: 'Límite alcanzado',
+          mensaje: 'Ya no puedes agregar mas productos al carrito cuando se llega al limite máximo de productos en inventario',
+          icono: '⚠️'
+        });
+        return;
+      }
+    }
+
     if (nuevaCantidad < 1) {
       setCarrito((c) => removerLinea(c, idProducto));
       return;
@@ -381,7 +416,15 @@ function AppContenido() {
                 <input
                   type="checkbox"
                   checked={configuracion?.escalaGrises || false}
-                  onChange={(e) => handleActualizarConfig({ ...configuracion, escalaGrises: e.target.checked })}
+                  onChange={(e) => {
+                    const active = e.target.checked;
+                    handleActualizarConfig({ 
+                      ...configuracion, 
+                      escalaGrises: active,
+                      altoContraste: active ? false : configuracion.altoContraste,
+                      modoSepia: active ? false : configuracion.modoSepia
+                    });
+                  }}
                 />
                 <span className="slider-round"></span>
               </label>
@@ -393,7 +436,15 @@ function AppContenido() {
                 <input
                   type="checkbox"
                   checked={configuracion?.modoSepia || false}
-                  onChange={(e) => handleActualizarConfig({ ...configuracion, modoSepia: e.target.checked })}
+                  onChange={(e) => {
+                    const active = e.target.checked;
+                    handleActualizarConfig({ 
+                      ...configuracion, 
+                      modoSepia: active,
+                      altoContraste: active ? false : configuracion.altoContraste,
+                      escalaGrises: active ? false : configuracion.escalaGrises
+                    });
+                  }}
                 />
                 <span className="slider-round"></span>
               </label>

@@ -24,7 +24,7 @@ const pool = mysql.createPool({
 async function probarConexion() {
   try {
     const conexion = await pool.getConnection();
-    console.log(`✅ Conexión exitosa con MySQL — Base de datos: "${process.env.DB_NAME || 'bd_almacen_1'}"`);
+    console.log(`Conexión exitosa con MySQL :D — Base de datos: "${process.env.DB_NAME || 'bd_almacen_1'}"`);
 
     // Asegurar que la tabla proveedor tenga la columna contrasena_hash
     try {
@@ -33,7 +33,7 @@ async function probarConexion() {
         await conexion.query("ALTER TABLE proveedor ADD COLUMN contrasena_hash VARCHAR(255) NULL AFTER direccion");
         const defaultHash = await bcrypt.hash('123456', 10);
         await conexion.query("UPDATE proveedor SET contrasena_hash = ? WHERE contrasena_hash IS NULL OR contrasena_hash = ''", [defaultHash]);
-        console.log('✅ Esquema verificado: Columna contrasena_hash agregada a la tabla proveedor.');
+        console.log(' Esquema verificado: Columna contrasena_hash agregada a la tabla proveedor.');
       }
     } catch {
       // Ignorar si la tabla aún no ha sido creada
@@ -41,7 +41,7 @@ async function probarConexion() {
 
     conexion.release();
   } catch (error) {
-    console.error('❌ Error al conectar con MySQL:', error.message);
+    console.error('X Error al conectar con MySQL:', error.message);
     if (error.code === 'ER_ACCESS_DENIED_ERROR') {
       console.warn('💡 Consejo: Revisa la contraseña en tu archivo .env (campo DB_PASSWORD).');
     } else if (error.code === 'ER_BAD_DB_ERROR') {

@@ -15,7 +15,7 @@ const Carrito = ({ carrito, usuario, onActualizarCant, onRemoverLinea }) => {
   const cantidadTotal = obtenerCantidadTotal(carrito);
 
   /* Navegar al pago pasando el carrito en state si tiene cuenta */
-  const irAlCheckout = () => {
+  const irADatosEnvio = () => {
     if (!usuario) {
       mostrarAvisoSesion("realizar una compra", "carrito");
       return;
@@ -156,7 +156,7 @@ const Carrito = ({ carrito, usuario, onActualizarCant, onRemoverLinea }) => {
 
           <button
             className='boton-carrito boton-comprar'
-            onClick={irAlCheckout}
+            onClick={irADatosEnvio}
           >
             Proceder a la Pasarela de Pago &rarr;
           </button>

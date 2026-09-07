@@ -24,12 +24,21 @@ router.get('/', async (req, res) => {
         p.garantia_dias,
         p.estado,
         COALESCE(SUM(i.cantidad), 10) AS stock,
-        DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha_creacion
+        DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha_creacion,
+        COALESCE(r.calificacion, 0) AS calificacion,
+        COALESCE(r.valoraciones, 0) AS valoraciones
       FROM producto p
       LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
       LEFT JOIN marca m ON p.id_marca = m.id_marca
       LEFT JOIN inventario i ON p.id_pro = i.id_pro
-      GROUP BY p.id_pro, p.nombre, p.descripcion, p.id_categoria, c.nombre, p.id_marca, m.nombre, p.precio, p.imagen_url, p.garantia_dias, p.estado, p.fecha_creacion
+      LEFT JOIN (
+        SELECT id_pro,
+               ROUND(AVG(calificacion), 1) AS calificacion,
+               COUNT(*) AS valoraciones
+        FROM resena
+        GROUP BY id_pro
+      ) r ON p.id_pro = r.id_pro
+      GROUP BY p.id_pro, p.nombre, p.descripcion, p.id_categoria, c.nombre, p.id_marca, m.nombre, p.precio, p.imagen_url, p.garantia_dias, p.estado, p.fecha_creacion, r.calificacion, r.valoraciones
       ORDER BY p.id_pro ASC
     `);
     res.json(productos);

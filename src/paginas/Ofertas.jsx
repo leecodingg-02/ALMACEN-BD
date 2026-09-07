@@ -1,10 +1,34 @@
+import { useEffect, useState } from 'react';
 import './Ofertas.css';
 import { PRODUCTOS_DATA, TarjetaProducto } from './Productos';
 import { Link } from 'react-router-dom';
+import { api } from '../servicios/api';
 
 const Ofertas = () => {
+    const [productosBD, setProductosBD] = useState([]);
+
+    // Cargar reseñas reales desde la base de datos para mostrarlas en las tarjetas
+    useEffect(() => {
+        api.get('/productos').then((res) => {
+            if (Array.isArray(res) && res.length > 0) {
+                setProductosBD(res);
+            }
+        });
+    }, []);
+
+    // Base local que mantiene etiquetas y precios de oferta (demo),
+    // enriquecida con las calificaciones y reseñas reales de la base de datos.
+    const fuente = productosBD.length > 0
+        ? PRODUCTOS_DATA.map((p) => {
+            const bd = productosBD.find((b) => Number(b.id) === Number(p.id));
+            return bd
+                ? { ...p, calificacion: Number(bd.calificacion) || 0, valoraciones: Number(bd.valoraciones) || 0 }
+                : p;
+        })
+        : PRODUCTOS_DATA;
+
     // Filtrar productos que están en oferta o tienen etiqueta relacionada
-    const productosEnOferta = PRODUCTOS_DATA.filter(p => p.precioAnterior || p.etiqueta === 'OFERTA' || p.etiqueta === 'CYBER OFERTA' || p.etiqueta === 'NUEVO');
+    const productosEnOferta = fuente.filter(p => p.precioAnterior || p.etiqueta === 'OFERTA' || p.etiqueta === 'CYBER OFERTA' || p.etiqueta === 'NUEVO');
 
     // Cambiamos manualmente algunas etiquetas a los productos para simular la imagen si no existen las etiquetas exactas
     // (Opcional, en un escenario real se ajustarían los datos de PRODUCTOS_DATA)

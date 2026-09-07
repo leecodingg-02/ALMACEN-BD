@@ -595,10 +595,12 @@ export const TarjetaProducto = ({
         <div className='producto-info'>
           <span className='producto-categoria'>{producto.categoria}</span>
           <h4 className='producto-titulo'>{producto.titulo}</h4>
-          <div className='producto-calificacion'>
-            {renderizarEstrellas(producto.calificacion)}
-            <span>({producto.valoraciones})</span>
-          </div>
+          {producto.valoraciones > 0 && (
+            <div className='producto-calificacion'>
+              {renderizarEstrellas(producto.calificacion)}
+              <span>({producto.valoraciones})</span>
+            </div>
+          )}
           <div className='producto-precios'>
             <span className='precio-actual'>
               {formatearPrecio(producto.precio)}
@@ -684,6 +686,8 @@ const Productos = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavori
             precio: Number(p.precio) || visual.precio,
             imagen: p.imagen || visual.imagen,
             descripcion: p.descripcion || visual.descripcion,
+            calificacion: Number(p.calificacion) || 0,
+            valoraciones: Number(p.valoraciones) || 0,
           };
         });
         setListaProductos(sincronizados);

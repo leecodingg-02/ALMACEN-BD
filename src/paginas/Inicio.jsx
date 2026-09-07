@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Inicio.css';
-import { PRODUCTOS_DATA, TarjetaProducto, formatearPrecio } from './Productos';
+import { PRODUCTOS_DATA, TarjetaProducto } from './Productos';
 import { api } from '../servicios/api';
-import { useAvisoSesion } from '../contextos/AvisoSesionContext';
 
 const IMAGENES_CATEGORIAS_DEF = {
   Herramientas: 'https://ferreterialider.com/wp-content/uploads/2022/08/Herramientas-para-la-casa-C-1-1024x682.jpg',
@@ -14,14 +13,11 @@ const IMAGENES_CATEGORIAS_DEF = {
 };
 
 const Inicio = ({
-  carrito = [],
-  onLimpiarCarrito,
   onAgregarCarrito,
   usuario,
   favoritos = [],
   onAlternarFavorito
 }) => {
-  const { mostrarAvisoSesion } = useAvisoSesion();
   const [categoriasBD, setCategoriasBD] = useState([]);
   const [productosBD, setProductosBD] = useState([]);
 

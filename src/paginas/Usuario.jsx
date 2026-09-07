@@ -448,7 +448,7 @@ const Usuario = ({
         <section className="usuario-seccion">
           <h2>Perfil de Usuario</h2>
           <p className="descripcion-seccion">
-            Administra tus datos personales (preparado para sincronizar con la tabla <code>usuario</code>).
+            Administra tus datos personales (<code>usuario</code>).
           </p>
 
           <form className="form-usuario-perfil" onSubmit={handleGuardarPerfil} noValidate>

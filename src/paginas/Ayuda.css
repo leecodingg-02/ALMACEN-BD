@@ -720,10 +720,78 @@ html.modo-alto-contraste .faq-pregunta-txt {
   color: #f0f6fc !important;
 }
 
+/* Textos de apoyo que quedan oscuros sobre fondo oscuro */
+html.modo-oscuro .seccion-bajada,
+html.modo-oscuro .nosotros-tarjeta p,
+html.modo-oscuro .nosotros-tarjeta ul,
+html.modo-oscuro .bloque-legal p,
+html.modo-oscuro .faq-respuesta-cuerpo,
+html.modo-oscuro .garantia-card p,
+html.modo-oscuro .garantia-card li,
+html.modo-oscuro .pasos-garantia-contenedor,
+html.modo-oscuro .pasos-garantia-contenedor p,
+html.modo-oscuro .pasos-garantia-contenedor li,
+html.modo-oscuro .form-campo label,
+html.modo-oscuro .txt-ticket-info,
+html.modo-alto-contraste .seccion-bajada,
+html.modo-alto-contraste .nosotros-tarjeta p,
+html.modo-alto-contraste .nosotros-tarjeta ul,
+html.modo-alto-contraste .bloque-legal p,
+html.modo-alto-contraste .faq-respuesta-cuerpo,
+html.modo-alto-contraste .garantia-card p,
+html.modo-alto-contraste .garantia-card li,
+html.modo-alto-contraste .pasos-garantia-contenedor,
+html.modo-alto-contraste .pasos-garantia-contenedor p,
+html.modo-alto-contraste .pasos-garantia-contenedor li,
+html.modo-alto-contraste .form-campo label,
+html.modo-alto-contraste .txt-ticket-info {
+  color: #c9d1d9 !important;
+}
+
+/* Contenedores con fondo claro fijo que deben oscurecerse */
+html.modo-oscuro .nosotros-tarjeta,
+html.modo-oscuro .bloque-legal,
+html.modo-oscuro .garantia-card,
+html.modo-oscuro .pasos-garantia-contenedor,
+html.modo-oscuro .destacado-nosotros,
+html.modo-alto-contraste .nosotros-tarjeta,
+html.modo-alto-contraste .bloque-legal,
+html.modo-alto-contraste .garantia-card,
+html.modo-alto-contraste .pasos-garantia-contenedor,
+html.modo-alto-contraste .destacado-nosotros {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+html.modo-oscuro .nosotros-icono-header,
+html.modo-alto-contraste .nosotros-icono-header {
+  background-color: #1c2128 !important;
+  border-color: #30363d !important;
+}
+
+html.modo-oscuro .icono-nosotros-svg,
+html.modo-alto-contraste .icono-nosotros-svg {
+  color: #ffc107 !important;
+}
+
 html.modo-oscuro .ayuda-pestana-btn,
 html.modo-oscuro .btn-faq-cat,
 html.modo-alto-contraste .ayuda-pestana-btn,
 html.modo-alto-contraste .btn-faq-cat {
   color: #8b949e;
+}
+
+html.modo-oscuro .btn-faq-cat,
+html.modo-alto-contraste .btn-faq-cat {
+  background-color: #1c2128 !important;
+  border-color: #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+html.modo-oscuro .btn-faq-cat.activo,
+html.modo-alto-contraste .btn-faq-cat.activo {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+  border-color: #ffc107 !important;
 }
 

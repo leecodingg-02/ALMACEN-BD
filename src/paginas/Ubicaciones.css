@@ -630,3 +630,64 @@ html.modo-alto-contraste .txt-secundario {
   color: #8b949e !important;
 }
 
+/* Servicios y etiquetas dentro de cada tarjeta */
+html.modo-oscuro .servicios-titulo,
+html.modo-alto-contraste .servicios-titulo {
+  color: #8b949e !important;
+}
+
+html.modo-oscuro .tag-servicio,
+html.modo-alto-contraste .tag-servicio {
+  background-color: #1c2128 !important;
+  color: #c9d1d9 !important;
+  border-color: #30363d !important;
+}
+
+/* Contador de tiendas y textos de estado */
+html.modo-oscuro .ubicaciones-contador span,
+html.modo-oscuro .ubicaciones-contador p,
+html.modo-oscuro .txt-secundario,
+html.modo-alto-contraste .ubicaciones-contador span,
+html.modo-alto-contraste .ubicaciones-contador p,
+html.modo-alto-contraste .txt-secundario {
+  color: #8b949e !important;
+}
+
+/* Banner promocional del panel del mapa (fondo claro fijo) */
+html.modo-oscuro .mapa-banner-ayuda,
+html.modo-alto-contraste .mapa-banner-ayuda {
+  background: #161b22 !important;
+  border-top-color: #30363d !important;
+}
+
+html.modo-oscuro .banner-texto h4,
+html.modo-alto-contraste .banner-texto h4 {
+  color: #f0f6fc !important;
+}
+
+html.modo-oscuro .banner-texto p,
+html.modo-alto-contraste .banner-texto p {
+  color: #c9d1d9 !important;
+}
+
+html.modo-oscuro .btn-banner-catalogo,
+html.modo-alto-contraste .btn-banner-catalogo {
+  color: #ffc107 !important;
+}
+
+/* Contenedor sin resultados */
+html.modo-oscuro .ubicaciones-sin-resultados,
+html.modo-alto-contraste .ubicaciones-sin-resultados {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
+}
+
+/* Iconos de cada fila de detalle */
+html.modo-oscuro .item-detalle svg,
+html.modo-oscuro .servicios-titulo svg,
+html.modo-alto-contraste .item-detalle svg,
+html.modo-alto-contraste .servicios-titulo svg {
+  color: #8b949e !important;
+}
+

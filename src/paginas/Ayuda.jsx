@@ -758,7 +758,7 @@ function Ayuda() {
                   </div>
                   <div>
                     <strong>Centros de Soporte:</strong>
-                    <Link to="/ubicaciones" className="link-sucursales-contacto">
+                    <Link to="/ubicaciones" className="btn-primario-inicio" style={{ display: 'inline-block', marginTop: '8px' }}>
                       Ver nuestras 4 sucursales principales &rarr;
                     </Link>
                   </div>

@@ -10,7 +10,7 @@ const datosIniciales = [
   { id: 5, nombre: 'Andrés Castro', correo: 'andres@email.com', rol: 'Supervisor', sucursal: 'Sede Principal', estado: 'Activo', fechaRegistro: '2025-01-18' },
 ];
 
-const formularioVacio = { nombre: '', correo: '', rol: 'Vendedor', sucursal: 'Sede Principal', estado: 'Activo' };
+const formularioVacio = { nombre: '', correo: '', rol: 'Cliente', sucursal: 'Sede Principal', estado: 'Activo' };
 const coloresAvatar = ['#FFC107', '#3b82f6', '#a855f7', '#22c55e', '#f97316'];
 
 export default function Usuarios() {
@@ -40,30 +40,52 @@ export default function Usuarios() {
 
   const guardar = async () => {
     if (!formulario.nombre.trim()) return;
+
+    // Construir payload con nombre/apellido separados correctamente
+    // El campo 'nombre' puede venir como nombre completo de la lista
+    let payload = { ...formulario };
+
+    // Al editar, el objeto del listado trae id_rol/id_suc (IDs anteriores) que harían
+    // que el backend ignore el nuevo "rol"/"sucursal" elegidos. Borramos esos campos para
+    // que el PUT resuelva siempre por nombre y asigne el rol/sucursal recién seleccionados.
+    delete payload.id_rol;
+    delete payload.id_suc;
+
+    // Si el formulario tiene 'apellido' como campo separado en el form, usarlo directo
+    // Si no, separar el nombre completo
+    if (!payload.apellido && payload.nombre.includes(' ')) {
+      const partes = payload.nombre.trim().split(' ');
+      payload.nombre = partes[0];
+      payload.apellido = partes.slice(1).join(' ');
+    }
+
     if (modal === 'crear') {
       try {
-        const nuevo = await api.post('/usuarios', formulario);
+        const nuevo = await api.post('/usuarios', payload);
         setDatos((prev) => [
           ...prev,
-          { ...formulario, id: nuevo.id || Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
+          { ...payload, nombre: `${payload.nombre} ${payload.apellido || ''}`.trim(), id: nuevo.id || Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
         ]);
-      } catch {
-        setDatos((prev) => [
-          ...prev,
-          { ...formulario, id: Date.now(), fechaRegistro: new Date().toISOString().split('T')[0] },
-        ]);
+      } catch (e) {
+        console.error('Error al crear usuario:', e);
+        alert('Error al crear usuario: ' + (e.message || 'Intenta de nuevo.'));
       }
     } else {
       try {
-        await api.put(`/usuarios/${actual.id}`, formulario);
+        await api.put(`/usuarios/${actual.id}`, payload);
+        // Reflejar cambios en la tabla local
+        setDatos((prev) =>
+          prev.map((u) =>
+            u.id === actual.id
+              ? { ...u, ...payload, nombre: `${payload.nombre} ${payload.apellido || ''}`.trim(), id: actual.id, fechaRegistro: actual.fechaRegistro }
+              : u
+          )
+        );
       } catch (e) {
-        console.warn('Fallback local para editar usuario:', e);
+        console.error('Error al actualizar usuario:', e);
+        alert('Error al guardar cambios: ' + (e.message || 'Verifica la conexión con el servidor.'));
+        return;
       }
-      setDatos((prev) =>
-        prev.map((u) =>
-          u.id === actual.id ? { ...formulario, id: actual.id, fechaRegistro: actual.fechaRegistro } : u
-        )
-      );
     }
     setModal(null);
   };
@@ -81,13 +103,6 @@ export default function Usuarios() {
       )
     );
     setModal(null);
-  };
-
-  const estiloRol = {
-    Administrador: { fondo: 'rgba(255, 193, 7, 0.18)', color: '#FFC107' },
-    Vendedor: { fondo: 'rgba(59, 130, 246, 0.18)', color: '#3b82f6' },
-    Bodeguero: { fondo: 'rgba(168, 85, 247, 0.18)', color: '#a855f7' },
-    Supervisor: { fondo: 'rgba(34, 197, 94, 0.18)', color: '#22c55e' },
   };
 
   return (
@@ -141,7 +156,6 @@ export default function Usuarios() {
               </tr>
             ) : (
               filtrados.map((u, i) => {
-                const er = estiloRol[u.rol] || { fondo: '#55557020', color: '#888' };
                 const iniciales = u.nombre.split(' ').map((n) => n[0]).slice(0, 2).join('');
                 const claseRol = u.rol.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 return (
@@ -218,10 +232,9 @@ export default function Usuarios() {
               <label>Rol</label>
               <select value={formulario.rol} onChange={(e) => setFormulario({ ...formulario, rol: e.target.value })}>
                 <option value="">Seleccionar...</option>
-                <option>Administrador</option>
-                <option>Supervisor</option>
-                <option>Vendedor</option>
-                <option>Bodeguero</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Cliente">Cliente</option>
+                <option value="Proveedor">Proveedor</option>
               </select>
             </div>
             <div className="grupo-campo">

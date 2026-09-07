@@ -784,3 +784,84 @@ html.modo-alto-contraste .tab-metodo.activo {
   border-color: #f59e0b;
 }
 
+/* Elementos con fondo claro fijo que en modo oscuro quedaban blancos y,
+   por el color global de texto claro, hacían ilegible el contenido. */
+
+/* Botones de billetera digital */
+html.modo-oscuro .btn-billetera-tipo,
+html.modo-alto-contraste .btn-billetera-tipo {
+  background-color: #1c2128;
+  border-color: #30363d;
+  color: #f0f6fc;
+}
+
+html.modo-oscuro .btn-billetera-tipo.activo,
+html.modo-alto-contraste .btn-billetera-tipo.activo {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #ffc107;
+}
+
+/* Avisos informativos (PSE, billetera, contra entrega) */
+html.modo-oscuro .pse-banner-info,
+html.modo-alto-contraste .pse-banner-info {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+html.modo-oscuro .billetera-instrucciones,
+html.modo-alto-contraste .billetera-instrucciones {
+  background-color: rgba(59, 130, 246, 0.12);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+html.modo-oscuro .contraentrega-alerta,
+html.modo-alto-contraste .contraentrega-alerta {
+  background-color: rgba(245, 158, 11, 0.12);
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+html.modo-oscuro .nota-cambio,
+html.modo-alto-contraste .nota-cambio {
+  color: #fbbf24;
+}
+
+/* Badge de envío gratis en el resumen */
+html.modo-oscuro .envio-gratis-badge,
+html.modo-alto-contraste .envio-gratis-badge {
+  background-color: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+}
+
+/* Fila de total destacada (texto oscuro sobre card oscura) */
+html.modo-oscuro .fila-total.total-destacado,
+html.modo-alto-contraste .fila-total.total-destacado {
+  color: #f0f6fc;
+  border-top-color: #30363d;
+}
+
+html.modo-oscuro .fila-total,
+html.modo-alto-contraste .fila-total {
+  color: #8b949e;
+}
+
+html.modo-oscuro .resumen-totales-tabla,
+html.modo-alto-contraste .resumen-totales-tabla,
+html.modo-oscuro .sellos-confianza-grid,
+html.modo-alto-contraste .sellos-confianza-grid,
+html.modo-oscuro .pasarela-resumen-card h3,
+html.modo-alto-contraste .pasarela-resumen-card h3 {
+  border-color: #30363d;
+}
+
+/* Icono de candado en la tarjeta de bloqueo (sin cuenta) */
+html.modo-oscuro .icono-bloqueo-candado,
+html.modo-alto-contraste .icono-bloqueo-candado {
+  background-color: #1c2128;
+  border-color: #f59e0b;
+  color: #ffc107;
+}
+

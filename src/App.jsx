@@ -99,8 +99,11 @@ function AppContenido() {
   }, [usuario]);
 
   useEffect(() => {
-    localStorage.setItem("almacenweb_carrito", JSON.stringify(carrito));
-  }, [carrito]);
+    if (usuario?.id_usu) {
+      const claveCarrito = `almacenweb_carrito_${usuario.id_usu}`;
+      localStorage.setItem(claveCarrito, JSON.stringify(carrito));
+    }
+  }, [carrito, usuario]);
 
   /* Aplicar preferencias globales (Modo Oscuro, Alto Contraste y Escala Tipográfica) */
   useEffect(() => {
@@ -171,12 +174,28 @@ function AppContenido() {
     setCarrito((c) => removerLinea(c, idProducto));
   };
 
-  /* Cerrar sesión */
+  /* Cerrar sesión y limpiar carrito */
   const handleAlternarSesion = () => {
     const nuevoUsuario = alternarEstadoSesion();
     setUsuario(nuevoUsuario);
     setFavoritos([]);
+    setCarrito([]);
   };
+
+  /* Al cambiar de usuario, cargar su carrito específico */
+  useEffect(() => {
+    if (usuario?.id_usu) {
+      const claveCarrito = `almacenweb_carrito_${usuario.id_usu}`;
+      const guardado = localStorage.getItem(claveCarrito);
+      try {
+        setCarrito(guardado ? JSON.parse(guardado) : []);
+      } catch {
+        setCarrito([]);
+      }
+    } else {
+      setCarrito([]);
+    }
+  }, [usuario?.id_usu]);
 
   /* Alternar un producto en favoritos en MySQL con notificación */
   const handleAlternarFavorito = async (idProducto, nombreProducto) => {

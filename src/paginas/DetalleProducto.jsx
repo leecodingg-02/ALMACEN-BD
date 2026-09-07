@@ -14,6 +14,7 @@ import "./DetalleProducto.css";
 const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternarFavorito }) => {
   const { id } = useParams();
   const producto = PRODUCTOS_DATA.find((p) => p.id === parseInt(id, 10));
+  const { mostrarAvisoSesion } = useAvisoSesion();
 
   const [colorSeleccionado, setColorSeleccionado] = useState(0);
   const [cantidad, setCantidad] = useState(1);
@@ -74,19 +75,29 @@ const DetalleProducto = ({ onAgregarCarrito, usuario, favoritos = [], onAlternar
       return;
     }
 
-    const respuesta = await api.post(`/productos/${producto.id}/resenas`, {
-      id_usu: usuarioSesion.id_usu,
-      calificacion: resenaNueva.calificacion,
-      comentario: resenaNueva.comentario,
-    });
+    if (!resenaNueva.comentario || !resenaNueva.comentario.trim()) {
+      setMensajeResena("Escribe un comentario antes de publicar.");
+      return;
+    }
 
-    if (respuesta?.id_resena) {
-      setResenaNueva({ calificacion: 5, comentario: "" });
-      setMensajeResena("Reseña guardada correctamente.");
-      const actualizadas = await api.get(`/productos/${producto.id}/resenas`, []);
-      setResenas(actualizadas || []);
-    } else {
-      setMensajeResena("No se pudo guardar la reseña.");
+    try {
+      // El backend valida que el usuario haya comprado el producto antes de guardar.
+      const respuesta = await api.post(`/productos/${producto.id}/resenas`, {
+        id_usu: usuarioSesion.id_usu,
+        calificacion: resenaNueva.calificacion,
+        comentario: resenaNueva.comentario.trim(),
+      });
+
+      if (respuesta?.id_resena) {
+        setResenaNueva({ calificacion: 5, comentario: "" });
+        setMensajeResena("Reseña guardada correctamente.");
+        const actualizadas = await api.get(`/productos/${producto.id}/resenas`, []);
+        setResenas(actualizadas || []);
+      }
+    } catch (error) {
+      // Mostrar el mensaje devuelto por el backend (p. ej. "Solo puedes reseñar
+      // productos que hayas comprado").
+      setMensajeResena(error?.message || "No se pudo guardar la reseña.");
     }
   };
 

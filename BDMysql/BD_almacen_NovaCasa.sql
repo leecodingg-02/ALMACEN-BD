@@ -292,6 +292,25 @@ CREATE TABLE movimiento_inventario (
     CONSTRAINT chk_movimiento_cantidad CHECK (cantidad > 0)
 );
 
+CREATE TABLE resena (
+    id_resena INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_pro INT NOT NULL,
+    id_usu INT NOT NULL,
+    calificacion TINYINT NOT NULL,
+    comentario VARCHAR(500) NOT NULL,
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_resena_producto
+        FOREIGN KEY (id_pro) REFERENCES producto(id_pro)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_resena_usuario
+        FOREIGN KEY (id_usu) REFERENCES usuario(id_usu)
+        ON DELETE CASCADE,
+    CONSTRAINT chk_resena_calificacion CHECK (calificacion BETWEEN 1 AND 5),
+    CONSTRAINT uq_resena_usuario_producto UNIQUE (id_pro, id_usu)
+);
+
+CREATE INDEX idx_resena_producto ON resena (id_pro);
+
 CREATE INDEX idx_venta_fecha_estado ON venta (fecha_venta, estado);
 CREATE INDEX idx_compra_fecha_estado ON compra (fecha_compra, estado);
 CREATE INDEX idx_movimiento_inventario_producto_sucursal

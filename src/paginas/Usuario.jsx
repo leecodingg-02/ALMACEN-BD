@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { PRODUCTOS_DATA, formatearPrecio } from "./Productos";
 import {
   actualizarPerfilUsuario,
@@ -33,7 +33,6 @@ const Usuario = ({
   onAlternarSesion,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   /* Pestaña activa basada en la URL ?tab= o por defecto 'pedidos' */
   const tabInicial = searchParams.get("tab") || "pedidos";
@@ -189,6 +188,23 @@ const Usuario = ({
     favoritos.includes(p.id)
   );
 
+  /* Resolver la imagen de un producto del pedido:
+     usa la imagen de la BD y, si está vacía, busca la URL visual
+     en PRODUCTOS_DATA (por id_pro o por coincidencia de título). */
+  const resolverImagenProducto = (detalle) => {
+    if (detalle?.imagen) return detalle.imagen;
+    const local = PRODUCTOS_DATA.find((p) => p.id === Number(detalle?.id_pro));
+    if (local?.imagen) return local.imagen;
+    if (detalle?.nombre_producto) {
+      const porNombre = PRODUCTOS_DATA.find(
+        (p) => (p.titulo || "").toLowerCase() ===
+          String(detalle.nombre_producto).toLowerCase()
+      );
+      if (porNombre?.imagen) return porNombre.imagen;
+    }
+    return PRODUCTOS_DATA[0]?.imagen || "";
+  };
+
   /* Si no está autenticado */
   if (!usuario) {
     return (
@@ -343,9 +359,18 @@ const Usuario = ({
                     <h4>Productos comprados:</h4>
                     <ul>
                       {ord.detalles.map((d, index) => (
-                        <li key={index}>
-                          <span>{d.nombre_producto || `Producto #${d.id_pro}`}</span>
-                          <span>Cantidad: {d.cantidad}</span>
+                        <li key={index} className="pedido-producto">
+                          <img
+                            src={resolverImagenProducto(d)}
+                            alt={d.nombre_producto || `Producto #${d.id_pro}`}
+                            className="pedido-producto-imagen"
+                          />
+                          <div className="pedido-producto-info">
+                            <span>
+                              {d.nombre_producto || `Producto #${d.id_pro}`}
+                            </span>
+                            <span>Cantidad: {d.cantidad}</span>
+                          </div>
                           <strong>{formatearPrecio(d.subtotal)}</strong>
                         </li>
                       ))}

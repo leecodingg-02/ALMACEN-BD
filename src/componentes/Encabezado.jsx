@@ -134,7 +134,7 @@ function Encabezado({
           <div className='barra-sup-regini'>
             {usuario ? (
               <>
-                <Link to='/usuario' className='botones-barra-sup'>
+                <Link to={usuario.rol === 'Administrador' ? '/admin' : usuario.rol === 'Proveedor' ? '/proveedor' : '/usuario'} className='botones-barra-sup'>
                   <svg
                     className='icono-barra-supder'
                     xmlns='http://www.w3.org/2000/svg'
@@ -178,7 +178,10 @@ function Encabezado({
       <div className='contenedor-encabezado-pri'>
         <div className='encabezado-logo'>
           <Link to='/'>
-            <img src='/src/imagenes/logo.png' alt='Logo del almacén' />
+            <img
+              src={modoOscuro ? '/src/imagenes/logo_blanco.png' : '/src/imagenes/logo.png'}
+              alt='Logo del almacén'
+            />
           </Link>
         </div>
 

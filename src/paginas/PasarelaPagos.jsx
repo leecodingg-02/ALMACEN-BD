@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { obtenerTotalCarrito } from '../servicios/carrito';
 import { crearOrden } from '../servicios/ordenes';
+import { obtenerDireccionesUsuario } from '../servicios/usuario';
 import { formatearPrecio } from './Productos';
 import { useAvisoSesion } from '../contextos/AvisoSesionContext';
 import './PasarelaPagos.css';
@@ -100,6 +101,27 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
     tipo: 'Nequi',
     celular: usuario?.telefono || ''
   });
+
+  /* Direcciones guardadas del usuario */
+  const [direccionesGuardadas, setDireccionesGuardadas] = useState([]);
+
+  useEffect(() => {
+    if (usuario?.id_usu) {
+      obtenerDireccionesUsuario(usuario.id_usu).then((dirs) => {
+        setDireccionesGuardadas(dirs || []);
+        // Autocompletar con la dirección principal si existe
+        const principal = (dirs || []).find(d => d.es_principal) || dirs?.[0];
+        if (principal) {
+          setFormEnvio(prev => ({
+            ...prev,
+            departamento: principal.departamento || prev.departamento,
+            ciudad: principal.ciudad || prev.ciudad,
+            direccion: principal.direccion || prev.direccion,
+          }));
+        }
+      });
+    }
+  }, [usuario?.id_usu]);
 
   /* Estados de procesamiento */
   const [procesando, setProcesando] = useState(false);
@@ -203,12 +225,24 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
     setTimeout(async () => {
       setEtapaProceso('3. Registrando orden y actualizando inventario en MySQL...');
       try {
+        // El campo pago.metodo en MySQL es un ENUM que solo admite:
+        // 'Efectivo', 'Tarjeta', 'PSE', 'Nequi', 'Daviplata', 'Transferencia'.
+        // Cualquier otro valor (p. ej. "Tarjeta de Crédito" o "Contra Entrega")
+        // provocaba que el INSERT fallara y la venta hiciera rollback.
+        const metodoBilletera = (formBilletera.tipo || '').trim();
+        const metodoPagoBD =
+          metodoPago === 'tarjeta' ? 'Tarjeta' :
+          metodoPago === 'pse' ? 'PSE' :
+          metodoPago === 'nequi' ? (metodoBilletera === 'Daviplata' ? 'Daviplata' : 'Nequi') :
+          'Efectivo';
+
         const clienteOrden = {
           ...formEnvio,
           id_usu: usuario.id_usu,
           metodoPago: metodoPago === 'tarjeta' ? 'Tarjeta de Crédito' :
                       metodoPago === 'pse' ? `PSE (${formPse.banco})` :
-                      metodoPago === 'nequi' ? formBilletera.tipo : 'Contra Entrega'
+                      metodoPago === 'nequi' ? formBilletera.tipo : 'Contra Entrega',
+          metodoPagoBD
         };
 
         const { idOrden, orden } = await crearOrden({
@@ -428,6 +462,36 @@ export default function PasarelaPagos({ usuario, carrito: carritoProp, onLimpiar
                 />
               </div>
             </div>
+
+            {direccionesGuardadas.length > 0 && (
+              <div className="campo-grupo-pasarela ancho-completo" style={{ marginBottom: '8px' }}>
+                <label>Usar dirección guardada</label>
+                <select
+                  onChange={(e) => {
+                    const idx = e.target.value;
+                    if (idx === '') return;
+                    const dir = direccionesGuardadas[Number(idx)];
+                    if (dir) {
+                      setFormEnvio(prev => ({
+                        ...prev,
+                        departamento: dir.departamento || prev.departamento,
+                        ciudad: dir.ciudad || prev.ciudad,
+                        direccion: dir.direccion || prev.direccion,
+                      }));
+                    }
+                  }}
+                  defaultValue=""
+                  style={{ width: '100%' }}
+                >
+                  <option value="">-- Seleccionar dirección guardada --</option>
+                  {direccionesGuardadas.map((d, i) => (
+                    <option key={d.id_ubi || i} value={i}>
+                      {d.direccion}, {d.ciudad} ({d.departamento}){d.es_principal ? ' ★ Principal' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="campo-grupo-pasarela ancho-completo">
               <label>Dirección de Entrega *</label>

@@ -317,8 +317,38 @@ html.modo-alto-contraste .boton-cerrar-sesion:hover {
 .pedido-detalles li {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   font-size: 0.88rem;
   color: #444;
+}
+
+.pedido-producto-imagen {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--gris-borde);
+  background: #f0f0f0;
+}
+
+.pedido-producto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pedido-producto-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pedido-producto > strong {
+  white-space: nowrap;
 }
 
 .pedido-pie {

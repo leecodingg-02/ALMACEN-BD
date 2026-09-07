@@ -583,6 +583,13 @@ html.modo-alto-contraste .producto-calificacion {
     color: #8b949e;
 }
 
+/* La tarjeta destacada (Herramientas) tiene una regla más específica que la
+   fuerza a negro; en modo oscuro debe volverse blanca para no perderse. */
+html.modo-oscuro .tarjeta-categoria.destacado .categoria-informacion p,
+html.modo-alto-contraste .tarjeta-categoria.destacado .categoria-informacion p {
+    color: #f0f6fc;
+}
+
 html.modo-oscuro .producto-categoria,
 html.modo-alto-contraste .producto-categoria {
     background-color: #1c2128;

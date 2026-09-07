@@ -132,7 +132,7 @@ export const PRODUCTOS_DATA = [
   {
     id: 6,
     categoria: "MUEBLES",
-    imagen: "https://mueblesbaena.com/wp-content/uploads/2021/02/0002530020001-1-full.jpg",
+    imagen: "https://www.elmejordescanso.com/storage/2023/02/Silla-Nordica-Acolchada-Gris-Oscuro-2.jpg",
     subcategoria: "Sillas",
     titulo: "Silla Nórdica Gris",
     precio: 145000,

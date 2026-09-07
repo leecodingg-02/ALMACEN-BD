@@ -6,6 +6,27 @@ import { api } from "./api";
 const CLAVE_USUARIO = "almacenweb_usuario";
 const CLAVE_CONFIGURACION = "almacenweb_configuracion";
 
+// Normaliza nombre y apellido para evitar que el apellido quede duplicado
+// dentro del nombre (p. ej. nombre="Juan Pérez", apellido="Pérez").
+const normalizarNombreApellido = (nombre, apellido) => {
+  let nom = (nombre || '').trim();
+  let ape = (apellido || '').trim();
+
+  // Si el nombre llega con espacios y apellido vacío, separarlo.
+  if (!ape && nom.includes(' ')) {
+    const partes = nom.split(/\s+/);
+    nom = partes[0];
+    ape = partes.slice(1).join(' ');
+  }
+
+  // Si el nombre termina con el apellido completo, quitarlo del nombre.
+  if (nom && ape && nom.toLowerCase().endsWith(ape.toLowerCase())) {
+    nom = nom.slice(0, nom.length - ape.length).trim();
+  }
+
+  return { nombre: nom, apellido: ape };
+};
+
 /* Configuración de accesibilidad por defecto */
 const CONFIG_DEFAULT = {
   altoContraste: false,
@@ -32,9 +53,13 @@ export const obtenerUsuarioSesion = () => {
 export const iniciarSesion = async (correo, contrasena) => {
   const usuario = await api.post("/usuarios/login", { correo, contrasena });
   if (usuario && usuario.id_usu) {
-    sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    // Normaliza nombre/apellido antes de guardar en sesión para no propagar
+    // registros corruptos donde el apellido quedó duplicado en el nombre.
+    const { nombre, apellido } = normalizarNombreApellido(usuario.nombre, usuario.apellido);
+    const usuarioLimpio = { ...usuario, nombre, apellido };
+    sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuarioLimpio));
     localStorage.removeItem(CLAVE_USUARIO);
-    return usuario;
+    return usuarioLimpio;
   }
   throw new Error("Credenciales inválidas");
 };
@@ -51,12 +76,14 @@ export const rutaPanelSegunRol = (usuario) => {
 export const registrarUsuario = async (datos) => {
   const respuesta = await api.post("/usuarios", datos);
   if (respuesta && (respuesta.id_usu || respuesta.id)) {
+    // Normaliza nombre/apellido para no propagar apellidos duplicados.
+    const { nombre, apellido } = normalizarNombreApellido(respuesta.nombre, respuesta.apellido);
     // Guardar el objeto completo devuelto por el backend para no perder campos
     // como fecha_registro, id_suc, estado, etc.
     const usuario = {
       id_usu: respuesta.id_usu || respuesta.id,
-      nombre: respuesta.nombre,
-      apellido: respuesta.apellido,
+      nombre,
+      apellido,
       correo: respuesta.correo,
       telefono: respuesta.telefono,
       tipo_doc: respuesta.tipo_doc,
@@ -93,6 +120,14 @@ export const alternarEstadoSesion = () => {
 export const actualizarPerfilUsuario = async (datosActualizados) => {
   const usuarioActual = obtenerUsuarioSesion() || {};
   const nuevoPerfil = { ...usuarioActual, ...datosActualizados };
+
+  // Normaliza nombre/apellido para evitar duplicar el apellido en el nombre.
+  const { nombre, apellido } = normalizarNombreApellido(
+    nuevoPerfil.nombre,
+    nuevoPerfil.apellido
+  );
+  nuevoPerfil.nombre = nombre;
+  nuevoPerfil.apellido = apellido;
 
   if (nuevoPerfil.id_usu) {
     await api.put(`/usuarios/${nuevoPerfil.id_usu}`, nuevoPerfil);

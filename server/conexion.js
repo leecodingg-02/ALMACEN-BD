@@ -39,6 +39,29 @@ async function probarConexion() {
       // Ignorar si la tabla aún no ha sido creada
     }
 
+    // Asegurar que exista la tabla resena (reseñas de productos)
+    try {
+      await conexion.query(`
+        CREATE TABLE IF NOT EXISTS resena (
+          id_resena INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          id_pro INT NOT NULL,
+          id_usu INT NOT NULL,
+          calificacion TINYINT NOT NULL,
+          comentario VARCHAR(500) NOT NULL,
+          fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT fk_resena_producto
+            FOREIGN KEY (id_pro) REFERENCES producto(id_pro) ON DELETE CASCADE,
+          CONSTRAINT fk_resena_usuario
+            FOREIGN KEY (id_usu) REFERENCES usuario(id_usu) ON DELETE CASCADE,
+          CONSTRAINT chk_resena_calificacion CHECK (calificacion BETWEEN 1 AND 5),
+          CONSTRAINT uq_resena_usuario_producto UNIQUE (id_pro, id_usu)
+        )
+      `);
+      console.log('✅ Esquema verificado: tabla resena disponible.');
+    } catch (e) {
+      console.warn('⚠️ No se pudo crear/verificar la tabla resena:', e.message);
+    }
+
     conexion.release();
   } catch (error) {
     console.error('❌ Error al conectar con MySQL:', error.message);

@@ -17,6 +17,9 @@ const formularioVacio = { nombre: '', categoria: '', marca: '', precio: '', stoc
 export default function Productos() {
   const [datos, setDatos] = useState(datosIniciales);
   const [busqueda, setBusqueda] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('Todos');
+  const [filtroCategoria, setFiltroCategoria] = useState('Todas');
+  const [menuFiltroAbierto, setMenuFiltroAbierto] = useState(false);
   const [modal, setModal] = useState(null);
   const [actual, setActual] = useState(null);
   const [formulario, setFormulario] = useState(formularioVacio);
@@ -71,10 +74,16 @@ export default function Productos() {
   };
 
   const filtrados = datos.filter(
-    (p) =>
-      (p.nombre || p.titulo || '').toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.categoria || '').toLowerCase().includes(busqueda.toLowerCase()) ||
-      (p.marca || '').toLowerCase().includes(busqueda.toLowerCase())
+    (p) => {
+      const coincideBusqueda = (p.nombre || p.titulo || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+        (p.categoria || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+        (p.marca || '').toLowerCase().includes(busqueda.toLowerCase());
+      
+      const coincideEstado = filtroEstado === 'Todos' || p.estado === filtroEstado;
+      const coincideCategoria = filtroCategoria === 'Todas' || p.categoria === filtroCategoria;
+
+      return coincideBusqueda && coincideEstado && coincideCategoria;
+    }
   );
 
   const abrirCrear = () => { setFormulario(formularioVacio); setActual(null); setModal('crear'); };
@@ -175,13 +184,42 @@ export default function Productos() {
             placeholder="Buscar por nombre, categoría, marca..."
           />
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <div className="boton-filtrar">
+        <div style={{ display: 'flex', gap: 8, position: 'relative' }}>
+          <div className="boton-filtrar" onClick={() => setMenuFiltroAbierto(!menuFiltroAbierto)} style={{ cursor: 'pointer', userSelect: 'none' }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
             </svg>
-            Filtrar
+            Filtrar {(filtroEstado !== 'Todos' || filtroCategoria !== 'Todas') && <span style={{ background: 'var(--color-primario)', color: '#000', borderRadius: '50%', padding: '0 5px', fontSize: '11px', marginLeft: '4px' }}>!</span>}
           </div>
+          
+          {menuFiltroAbierto && (
+            <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '8px', background: 'var(--color-neutral)', border: '1px solid var(--color-borde)', borderRadius: '8px', padding: '16px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', width: '220px' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--texto-secundario)' }}>Estado:</label>
+                <select 
+                  value={filtroEstado} 
+                  onChange={(e) => setFiltroEstado(e.target.value)}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid var(--color-borde)', background: 'var(--color-neutral)', color: 'var(--texto-principal)', outline: 'none' }}
+                >
+                  <option value="Todos">Todos</option>
+                  <option value="Activo">Activo</option>
+                  <option value="Agotado">Agotado</option>
+                  <option value="Suspendido">Suspendido</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--texto-secundario)' }}>Categoría:</label>
+                <select 
+                  value={filtroCategoria} 
+                  onChange={(e) => setFiltroCategoria(e.target.value)}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid var(--color-borde)', background: 'var(--color-neutral)', color: 'var(--texto-principal)', outline: 'none' }}
+                >
+                  <option value="Todas">Todas</option>
+                  {categoriasDisponibles.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

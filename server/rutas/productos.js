@@ -168,4 +168,90 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Obtener las reseñas de un producto (con autor y fecha formateada)
+router.get('/:id/resenas', async (req, res) => {
+  try {
+    const [resenas] = await pool.query(`
+      SELECT
+        r.id_resena,
+        r.id_pro,
+        r.id_usu,
+        r.calificacion,
+        r.comentario,
+        CONCAT(u.nombre, ' ', u.apellido) AS autor,
+        DATE_FORMAT(r.fecha, '%d/%m/%Y') AS fecha
+      FROM resena r
+      LEFT JOIN usuario u ON r.id_usu = u.id_usu
+      WHERE r.id_pro = ?
+      ORDER BY r.fecha DESC
+    `, [req.params.id]);
+    res.json(resenas);
+  } catch (error) {
+    console.error('Error al obtener reseñas:', error.message);
+    res.status(500).json({ error: 'No se pudieron cargar las reseñas' });
+  }
+});
+
+// Publicar una reseña de producto (solo si el usuario realmente lo compró)
+router.post('/:id/resenas', async (req, res) => {
+  try {
+    const idPro = req.params.id;
+    const { id_usu, calificacion, comentario = '' } = req.body;
+
+    if (!id_usu) {
+      return res.status(401).json({ error: 'Debes iniciar sesión para publicar una reseña.' });
+    }
+
+    const cal = Number(calificacion);
+    if (!cal || cal < 1 || cal > 5) {
+      return res.status(400).json({ error: 'La calificación debe estar entre 1 y 5 estrellas.' });
+    }
+
+    if (!comentario || !String(comentario).trim()) {
+      return res.status(400).json({ error: 'El comentario no puede estar vacío.' });
+    }
+
+    // Verificar que el usuario haya comprado este producto en alguna venta completada
+    const [compra] = await pool.query(`
+      SELECT dv.id_detventa
+      FROM detalle_venta dv
+      INNER JOIN venta v ON dv.id_venta = v.id_venta
+      WHERE dv.id_pro = ? AND v.id_cli = ? AND v.estado != 'Cancelada'
+      LIMIT 1
+    `, [idPro, id_usu]);
+
+    if (compra.length === 0) {
+      return res.status(403).json({
+        error: 'Solo puedes reseñar productos que hayas comprado.'
+      });
+    }
+
+    // Si ya reseñó, actualizar en lugar de duplicar (protege UNIQUE id_pro + id_usu)
+    const [existente] = await pool.query(
+      'SELECT id_resena FROM resena WHERE id_pro = ? AND id_usu = ? LIMIT 1',
+      [idPro, id_usu]
+    );
+
+    let idResena;
+    if (existente.length > 0) {
+      idResena = existente[0].id_resena;
+      await pool.query(
+        'UPDATE resena SET calificacion = ?, comentario = ?, fecha = NOW() WHERE id_resena = ?',
+        [cal, String(comentario).trim(), idResena]
+      );
+    } else {
+      const [resultado] = await pool.query(
+        'INSERT INTO resena (id_pro, id_usu, calificacion, comentario) VALUES (?, ?, ?, ?)',
+        [idPro, id_usu, cal, String(comentario).trim()]
+      );
+      idResena = resultado.insertId;
+    }
+
+    res.status(201).json({ id_resena: idResena });
+  } catch (error) {
+    console.error('Error al guardar reseña:', error.message);
+    res.status(500).json({ error: 'No se pudo guardar la reseña' });
+  }
+});
+
 export default router;

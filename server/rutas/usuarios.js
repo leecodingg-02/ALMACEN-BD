@@ -60,6 +60,25 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ error: 'Tu cuenta se encuentra suspendida o inactiva' });
     }
 
+    // Auto-reparar registros donde el apellido quedó duplicado dentro del nombre
+    // (p. ej. nombre = "Esteban Chaparro", apellido = "Chaparro"). Se corrige al
+    // normalizar y se persiste para que el dato saneado quede en la base de datos.
+    if (usuario.nombre && usuario.apellido) {
+      const nom = String(usuario.nombre).trim();
+      const ape = String(usuario.apellido).trim();
+      if (nom.toLowerCase().endsWith(ape.toLowerCase())) {
+        const nomLimpio = nom.slice(0, nom.length - ape.length).trim();
+        if (nomLimpio && nomLimpio !== nom) {
+          usuario.nombre = nomLimpio;
+          usuario.apellido = ape;
+          await pool.query(
+            'UPDATE usuario SET nombre = ?, apellido = ? WHERE id_usu = ?',
+            [nomLimpio, ape, usuario.id_usu]
+          );
+        }
+      }
+    }
+
     // No devolver el hash de la contraseña por seguridad
     delete usuario.contrasena_hash;
 
@@ -175,42 +194,6 @@ router.get('/:id/favoritos', async (req, res) => {
   }
 });
 
-// Obtener las órdenes de un usuario específico
-router.get('/:id/pedidos', async (req, res) => {
-  try {
-    const [ventas] = await pool.query(`
-      SELECT 
-        v.id_venta,
-        v.id_venta AS id,
-        CONCAT('ORD-', v.id_venta) AS idOrden,
-        DATE_FORMAT(v.fecha_venta, '%Y-%m-%d %H:%i') AS fecha_venta,
-        v.total,
-        v.estado,
-        COALESCE(pg.metodo, 'Tarjeta') AS metodo
-      FROM venta v
-      LEFT JOIN pago pg ON v.id_venta = pg.id_venta
-      WHERE v.id_cli = ?
-      ORDER BY v.fecha_venta DESC
-    `, [req.params.id]);
-
-    // Obtener detalles de cada venta
-    for (const v of ventas) {
-      const [detalles] = await pool.query(`
-        SELECT dv.id_pro, p.nombre, p.imagen_url AS imagen, dv.cantidad, dv.precio_unitario, dv.subtotal
-        FROM detalle_venta dv
-        LEFT JOIN producto p ON dv.id_pro = p.id_pro
-        WHERE dv.id_venta = ?
-      `, [v.id_venta]);
-      v.detalles = detalles;
-    }
-
-    res.json(ventas);
-  } catch (error) {
-    console.error('Error al obtener pedidos de usuario:', error.message);
-    res.status(500).json({ error: 'Error al obtener pedidos' });
-  }
-});
-
 // Crear un nuevo usuario (Registro de cuenta)
 router.post('/', async (req, res) => {
   try {
@@ -222,10 +205,18 @@ router.post('/', async (req, res) => {
       tipo_doc = 'CC',
       num_ident,
       contrasena = '123456',
-      id_rol = 2, // Por defecto Cliente
+      id_rol,
+      rol,
       id_suc = null,
       estado = 'Activo'
     } = req.body;
+
+    let rolId = id_rol;
+    if (!rolId && rol) {
+      const [r] = await pool.query('SELECT id_rol FROM rol WHERE nombre = ? LIMIT 1', [rol]);
+      if (r.length > 0) rolId = r[0].id_rol;
+    }
+    if (!rolId) rolId = 2; // Por defecto Cliente
 
     if (!nombre || !nombre.trim() || !correo || !correo.trim()) {
       return res.status(400).json({ error: 'El nombre y correo electrónico son obligatorios y no pueden estar vacíos.' });
@@ -261,7 +252,7 @@ router.post('/', async (req, res) => {
     const [resultado] = await pool.query(`
       INSERT INTO usuario (tipo_doc, num_ident, nombre, apellido, correo, telefono, contrasena_hash, id_rol, id_suc, estado)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tipoDocFinal, documentoFinal, nom, ape, correoFinal, telefono, contrasenaHash, id_rol, id_suc, estado]);
+    `, [tipoDocFinal, documentoFinal, nom, ape, correoFinal, telefono, contrasenaHash, rolId, id_suc, estado]);
 
     res.status(201).json({
       id: resultado.insertId,
@@ -272,8 +263,8 @@ router.post('/', async (req, res) => {
       telefono,
       tipo_doc: tipoDocFinal,
       num_ident: documentoFinal,
-      id_rol,
-      rol: 'Cliente',
+      id_rol: rolId,
+      rol: rol || 'Cliente',
       estado,
       fecha_registro: new Date().toISOString()
     });
@@ -289,14 +280,35 @@ router.post('/', async (req, res) => {
 // Actualizar datos de un usuario
 router.put('/:id', async (req, res) => {
   try {
-    const { nombre, apellido, correo, telefono, estado, id_rol, id_suc, alto_contraste, tamano_fuente, notificaciones_email } = req.body;
+    const { nombre, apellido, correo, telefono, estado, id_rol, rol, id_suc, sucursal, alto_contraste, tamano_fuente, notificaciones_email } = req.body;
 
-    let nom = nombre;
-    let ape = apellido;
-    if (nombre && !apellido && nombre.includes(' ')) {
-      const partes = nombre.trim().split(' ');
+    // Separar nombre/apellido si el campo apellido no viene definido
+    let nom = nombre || null;
+    let ape = apellido !== undefined ? apellido : null;
+    if (nom && ape === null && nom.includes(' ')) {
+      const partes = nom.trim().split(' ');
       nom = partes[0];
       ape = partes.slice(1).join(' ');
+    }
+
+    // Evitar duplicar el apellido dentro del nombre.
+    // Ocurre cuando el frontend envía "nombre" ya completo (p. ej. "Juan Pérez")
+    // y además "apellido" por separado ("Pérez"), quedando "Juan Pérez" + "Pérez".
+    if (nom && ape && nom.trim().toLowerCase().endsWith(ape.trim().toLowerCase())) {
+      const nomLimpio = nom.trim();
+      nom = nomLimpio.slice(0, nomLimpio.length - ape.trim().length).trim();
+    }
+    
+    let rolId = id_rol;
+    if (!rolId && rol) {
+      const [r] = await pool.query('SELECT id_rol FROM rol WHERE nombre = ? LIMIT 1', [rol]);
+      if (r.length > 0) rolId = r[0].id_rol;
+    }
+    
+    let sucId = id_suc;
+    if (!sucId && sucursal) {
+      const [s] = await pool.query('SELECT id_suc FROM sucursal WHERE nombre = ? LIMIT 1', [sucursal]);
+      if (s.length > 0) sucId = s[0].id_suc;
     }
 
     await pool.query(`
@@ -312,7 +324,7 @@ router.put('/:id', async (req, res) => {
         tamano_fuente = COALESCE(?, tamano_fuente),
         notificaciones_email = COALESCE(?, notificaciones_email)
       WHERE id_usu = ?
-    `, [nom, ape, correo, telefono, estado, id_rol, id_suc, alto_contraste, tamano_fuente, notificaciones_email, req.params.id]);
+    `, [nom, ape, correo, telefono, estado, rolId, sucId, alto_contraste, tamano_fuente, notificaciones_email, req.params.id]);
 
     res.json({ mensaje: 'Usuario actualizado con éxito', id: Number(req.params.id) });
   } catch (error) {
@@ -408,7 +420,8 @@ router.get('/:id/pedidos', async (req, res) => {
         dv.cantidad,
         dv.precio_unitario,
         dv.subtotal,
-        p.nombre AS nombre_producto
+        p.nombre AS nombre_producto,
+        p.imagen_url AS imagen
       FROM detalle_venta dv
       LEFT JOIN producto p ON dv.id_pro = p.id_pro
       WHERE dv.id_venta IN (?)

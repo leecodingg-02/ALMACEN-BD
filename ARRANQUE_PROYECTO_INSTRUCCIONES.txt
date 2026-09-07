@@ -27,7 +27,7 @@ En este paso hay dos opciones:
 
 // Opción 1: Importar base de datos desde 0 (Base de datos con la información predeterminada) usar comando: 
 
->  npm init-db 
+>  npm run init-db 
 
 // Opcion 2: Importar base de datos con datos agregados por el usuario usar comando:
 

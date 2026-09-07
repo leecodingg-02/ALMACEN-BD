@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import pool from './conexion.js';
 
 async function testProveedorAuth() {
-  console.log('🧪 Iniciando pruebas de autenticación de proveedores...');
+  console.log(' Iniciando pruebas de autenticación de proveedores...');
 
   try {
     // 1. Probar login con proveedor existente (DeWalt Colombia: 900000001-1 / 123456)
@@ -19,12 +19,12 @@ async function testProveedorAuth() {
 
     const prov = filas[0];
     const passwordMatch = await bcrypt.compare('123456', prov.contrasena_hash);
-    console.log(`✅ Contraseña verificada con bcrypt para NIT ${prov.nit}: ${passwordMatch ? 'EXITOSA' : 'FALLIDA'}`);
+    console.log(` Contraseña verificada con bcrypt para NIT ${prov.nit}: ${passwordMatch ? 'EXITOSA' : 'FALLIDA'}`);
 
     // 2. Probar contraseña errónea
     console.log('\n--- Test 2: Login con contraseña errónea ---');
     const wrongMatch = await bcrypt.compare('clave_incorrecta', prov.contrasena_hash);
-    console.log(`✅ Rechazo de contraseña incorrecta: ${!wrongMatch ? 'CORRECTO (Rechazado)' : 'FALLO'}`);
+    console.log(` Rechazo de contraseña incorrecta: ${!wrongMatch ? 'CORRECTO (Rechazado)' : 'FALLO'}`);
 
     // 3. Probar creación de nuevo proveedor con contraseña propia
     console.log('\n--- Test 3: Creación de nuevo proveedor con contraseña propia ---');
@@ -39,21 +39,21 @@ async function testProveedorAuth() {
     );
 
     const newId = ins.insertId;
-    console.log(`✅ Nuevo proveedor insertado con ID: ${newId}`);
+    console.log(` Nuevo proveedor insertado con ID: ${newId}`);
 
     // Verificar login del nuevo proveedor
     const [newFilas] = await pool.query('SELECT contrasena_hash, estado FROM proveedor WHERE id_proveedor = ?', [newId]);
     const validNuevo = await bcrypt.compare(clavePrueba, newFilas[0].contrasena_hash);
-    console.log(`✅ Login con nueva contraseña creada: ${validNuevo ? 'EXITOSO' : 'FALLIDO'}`);
+    console.log(` Login con nueva contraseña creada: ${validNuevo ? 'EXITOSO' : 'FALLIDO'}`);
 
     // Limpiar registro de prueba
     await pool.query('DELETE FROM proveedor WHERE id_proveedor = ?', [newId]);
-    console.log('🧹 Registro de prueba eliminado.');
+    console.log('-- Registro de prueba eliminado.');
 
-    console.log('\n🎉 ¡TODAS LAS PRUEBAS DE AUTENTICACIÓN DE PROVEEDOR PASARON SATISFACTORIAMENTE!');
+    console.log('\n ¡TODAS LAS PRUEBAS DE AUTENTICACIÓN DE PROVEEDOR PASARON SATISFACTORIAMENTE!');
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error en las pruebas:', error);
+    console.error('X Error en las pruebas:', error);
     process.exit(1);
   }
 }

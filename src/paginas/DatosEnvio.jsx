@@ -4,7 +4,7 @@ import { crearOrden } from "../servicios/ordenes";
 import { obtenerTotalCarrito } from "../servicios/carrito";
 import { formatearPrecio } from "./Productos";
 import { useAvisoSesion } from "../contextos/AvisoSesionContext";
-import "./Checkout.css";
+import "./DatosEnvio.css";
 
 /* Lista de departamentos — coincide con el ENUM de la tabla ubicacion */
 const DEPARTAMENTOS = [
@@ -16,7 +16,7 @@ const DEPARTAMENTOS = [
   "Valle del Cauca", "Vaupés", "Vichada",
 ];
 
-const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
+const DatosEnvio = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { mostrarAvisoSesion } = useAvisoSesion();
@@ -28,7 +28,7 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   /* Si no hay usuario autenticado, disparar aviso */
   useEffect(() => {
     if (!usuario) {
-      mostrarAvisoSesion("realizar una compra", "checkout");
+      mostrarAvisoSesion("realizar una compra", "datos-envio");
     }
   }, [usuario, mostrarAvisoSesion]);
 
@@ -150,7 +150,7 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!usuario) {
-      mostrarAvisoSesion("realizar una compra", "checkout");
+      mostrarAvisoSesion("realizar una compra", "datos-envio");
       return;
     }
     if (!validarFormulario()) return;
@@ -187,7 +187,7 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   /* Si no hay productos, redirigir al catálogo */
   if (carrito.length === 0) {
     return (
-      <main className="pagina-checkout checkout-vacio">
+      <main className="pagina-datos-envio datos-envio-vacio">
         <h1>No hay productos en tu carrito</h1>
         <Link to="/productos" className="boton-carrito">
           Ver productos
@@ -197,16 +197,16 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   }
 
   return (
-    <main className="pagina-checkout">
+    <main className="pagina-datos-envio">
       {/* Cabecera */}
-      <div className="checkout-cabecera">
-        <span className="checkout-kicker">CHECKOUT</span>
+      <div className="datos-envio-cabecera">
+        <span className="datos-envio-kicker">DATOS DE ENVÍO</span>
         <h1>Datos de envío</h1>
       </div>
 
-      <div className="checkout-contenido">
+      <div className="datos-envio-contenido">
         {/* Formulario */}
-        <form className="checkout-form" onSubmit={handleSubmit} noValidate>
+        <form className="datos-envio-form" onSubmit={handleSubmit} noValidate>
           {/* Nombre */}
           <div className="campo-grupo">
             <label htmlFor="nombre">Nombre *</label>
@@ -360,22 +360,22 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
         </form>
 
         {/* Resumen del pedido (lateral) */}
-        <aside className="checkout-resumen">
+        <aside className="datos-envio-resumen">
           <h2>Tu pedido</h2>
-          <ul className="checkout-lista-productos">
+          <ul className="datos-envio-lista-productos">
             {carrito.map((linea) => (
               <li key={linea.id_pro}>
-                <div className="checkout-producto-info">
-                  <span className="checkout-producto-nombre">{linea.nombre}</span>
-                  <span className="checkout-producto-cant">× {linea.cantidad}</span>
+                <div className="datos-envio-producto-info">
+                  <span className="datos-envio-producto-nombre">{linea.nombre}</span>
+                  <span className="datos-envio-producto-cant">× {linea.cantidad}</span>
                 </div>
-                <span className="checkout-producto-precio">
+                <span className="datos-envio-producto-precio">
                   {formatearPrecio(linea.precio_unitario * linea.cantidad)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="checkout-total">
+          <div className="datos-envio-total">
             <span>Total</span>
             <strong>{formatearPrecio(total)}</strong>
           </div>
@@ -385,4 +385,4 @@ const Checkout = ({ usuario, carrito: carrritoProp, onLimpiarCarrito }) => {
   );
 };
 
-export default Checkout;
+export default DatosEnvio;

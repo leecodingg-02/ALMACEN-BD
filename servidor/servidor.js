@@ -44,14 +44,14 @@ app.get('/api/estado', async (req, res) => {
     conexion.release();
     res.json({
       estado: 'conectado',
-      mensaje: '✅ Conexión con base de datos MySQL exitosa',
+      mensaje: ' Conexión con base de datos MySQL exitosa :D',
       baseDatos: dbRes[0].bd,
       horaServidor: dbRes[0].fecha
     });
   } catch (error) {
     res.status(503).json({
       estado: 'desconectado',
-      mensaje: '⚠️ El servidor está activo pero no pudo conectar con MySQL',
+      mensaje: ' El servidor está activo pero no pudo conectar con MySQL',
       error: error.message,
       sugerencia: 'Verifica la contraseña (DB_PASSWORD) en tu archivo .env'
     });
@@ -279,7 +279,7 @@ app.use('/api/envios', rutasEnvios);
 
 // Iniciar el servidor backend
 app.listen(PUERTO, () => {
-  console.log(`🚀 Servidor NovaCasa corriendo en http://localhost:${PUERTO}`);
+  console.log(`Servidor de NovaCasa corriendo en http://localhost:${PUERTO}`);
 });
 
 export default app;

@@ -6,7 +6,7 @@ import Inicio from "./paginas/Inicio";
 import Productos from "./paginas/Productos";
 import DetalleProducto from "./paginas/DetalleProducto";
 import Carrito from "./paginas/Carrito";
-import Checkout from "./paginas/Checkout";
+import DatosEnvio from "./paginas/DatosEnvio";
 import Confirmacion from "./paginas/Confirmacion";
 import Usuario from "./paginas/Usuario";
 import Ubicaciones from "./paginas/Ubicaciones";
@@ -284,9 +284,9 @@ function AppContenido() {
           }
         />
         <Route
-          path='/checkout'
+          path='/datos-envio'
           element={
-            <Checkout
+            <DatosEnvio
               usuario={usuario}
               carrito={carrito}
               onLimpiarCarrito={() => setCarrito([])}

@@ -1,0 +1,63 @@
+--- NovaCasa Web Arranque BD y Proyecto ---
+
+--- Instructivo rápido para arrancar el proyecto NovaCasa en cualquier computador, y usar
+
+ la funcionalidad de 'BACKUP' para guardar datos locales. ---
+
+///////////// INSTALACION //////////////
+
+-- Paso 1: 
+
+Para Instalar las dependencias usar el comando:
+
+> npm install 
+
+esto instalará todos los paquetes necesarios para el correcto funcionamiento del proyecto.
+
+-- Paso 2: 
+
+Abrir el archivo .env que se encuentra en la carpeta del proyecto y modificar la linea:
+
+-> DB_PASSWORD= * aquí poner contraseña de MYSQL * 
+!! nota: si no tiene contraseña dejar en blanco !!
+
+-- Paso 3: 
+
+En este paso hay dos opciones:
+
+// Opción 1: Importar base de datos desde 0 (Base de datos con la información predeterminada) usar comando: 
+
+>  npm init-db 
+
+// Opcion 2: Importar base de datos con datos agregados por el usuario usar comando:
+
+> npm run importar-backup
+
+///////// INICIO ////////////
+
+-- Paso 4: 
+
+Para iniciar la base de datos en una terminal usar:
+
+> npm run server
+
+Para iniciar el proyecto react, abrir otra terminal y usar:
+
+> npm run dev
+
+--Paso 5:
+
+Por ultimo abrir la dirección que se ve así en un navegador:
+
+http://localhost:
+
+
+
+
+
+
+
+// Para exportar los datos usar el comando:
+
+> npm run exportar-backup
+

@@ -1,8 +1,8 @@
 /* ================================================ */
-/* Página Checkout — estilos del formulario         */
+/* Página Datos de envío — estilos del formulario         */
 /* ================================================ */
 
-.pagina-checkout {
+.pagina-datos-envio {
   min-height: 100vh;
   padding: 56px 6vw 96px;
   background: #f7f7f5;
@@ -10,7 +10,7 @@
 }
 
 /* Cabecera */
-.checkout-cabecera {
+.datos-envio-cabecera {
   max-width: 1120px;
   margin: 0 auto 32px;
   border-bottom: 1px solid #d9d9d3;
@@ -18,14 +18,14 @@
 }
 
 /* Etiqueta tipo kicker */
-.checkout-kicker {
+.datos-envio-kicker {
   color: #a66021;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
 }
 
-.checkout-cabecera h1 {
+.datos-envio-cabecera h1 {
   margin: 8px 0 0;
   font-size: clamp(1.8rem, 4vw, 3rem);
   color: #171717;
@@ -35,7 +35,7 @@
 /* Layout dos columnas: formulario + resumen        */
 /* ================================================ */
 
-.checkout-contenido {
+.datos-envio-contenido {
   max-width: 1120px;
   margin: 0 auto;
   display: grid;
@@ -48,7 +48,7 @@
 /* Formulario                                        */
 /* ================================================ */
 
-.checkout-form {
+.datos-envio-form {
   background: #fff;
   border: 1px solid #e0e0da;
   padding: 32px;
@@ -113,7 +113,7 @@
 /* Resumen lateral del pedido                        */
 /* ================================================ */
 
-.checkout-resumen {
+.datos-envio-resumen {
   background: #fff;
   border: 1px solid #e0e0da;
   padding: 24px;
@@ -122,20 +122,20 @@
   border-radius: 4px;
 }
 
-.checkout-resumen h2 {
+.datos-envio-resumen h2 {
   margin: 0 0 16px;
   font-size: 1.1rem;
   color: #171717;
 }
 
 /* Lista de productos */
-.checkout-lista-productos {
+.datos-envio-lista-productos {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.checkout-lista-productos li {
+.datos-envio-lista-productos li {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -144,32 +144,32 @@
   font-size: 0.88rem;
 }
 
-.checkout-lista-productos li:last-child {
+.datos-envio-lista-productos li:last-child {
   border-bottom: none;
 }
 
 /* Nombre + cantidad */
-.checkout-producto-info {
+.datos-envio-producto-info {
   display: flex;
   gap: 6px;
 }
 
-.checkout-producto-nombre {
+.datos-envio-producto-nombre {
   color: #171717;
   font-weight: 600;
 }
 
-.checkout-producto-cant {
+.datos-envio-producto-cant {
   color: #888;
 }
 
-.checkout-producto-precio {
+.datos-envio-producto-precio {
   font-weight: 700;
   color: #171717;
 }
 
 /* Total */
-.checkout-total {
+.datos-envio-total {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -178,7 +178,7 @@
   border-top: 1px solid #e8e8e3;
 }
 
-.checkout-total strong {
+.datos-envio-total strong {
   color: #a66021;
   font-size: 1.25rem;
 }
@@ -187,7 +187,7 @@
 /* Estado vacío (sin productos)                      */
 /* ================================================ */
 
-.checkout-vacio {
+.datos-envio-vacio {
   display: grid;
   place-content: center;
   justify-items: center;
@@ -200,20 +200,20 @@
 /* ================================================ */
 
 @media (max-width: 760px) {
-  .pagina-checkout {
+  .pagina-datos-envio {
     padding: 36px 18px 64px;
   }
 
   /* Una sola columna */
-  .checkout-contenido {
+  .datos-envio-contenido {
     grid-template-columns: 1fr;
   }
 
-  .checkout-resumen {
+  .datos-envio-resumen {
     position: static;
   }
 
-  .checkout-form {
+  .datos-envio-form {
     padding: 20px;
   }
 
@@ -224,38 +224,38 @@
 }
 
 /* ================================================ */
-/* MODO OSCURO EN CHECKOUT                          */
+/* MODO OSCURO EN DATOS DE ENVÍO                          */
 /* ================================================ */
-html.modo-oscuro .pagina-checkout,
-html.modo-alto-contraste .pagina-checkout {
+html.modo-oscuro .pagina-datos-envio,
+html.modo-alto-contraste .pagina-datos-envio {
     background-color: #0e1117;
     color: #f0f6fc;
 }
 
-html.modo-oscuro .checkout-form,
-html.modo-oscuro .checkout-resumen,
-html.modo-alto-contraste .checkout-form,
-html.modo-alto-contraste .checkout-resumen {
+html.modo-oscuro .datos-envio-form,
+html.modo-oscuro .datos-envio-resumen,
+html.modo-alto-contraste .datos-envio-form,
+html.modo-alto-contraste .datos-envio-resumen {
     background-color: #161b22;
     border-color: #30363d;
     color: #f0f6fc;
 }
 
-html.modo-oscuro .checkout-cabecera h1,
-html.modo-oscuro .checkout-resumen h2,
-html.modo-oscuro .checkout-producto-nombre,
-html.modo-oscuro .checkout-producto-precio,
+html.modo-oscuro .datos-envio-cabecera h1,
+html.modo-oscuro .datos-envio-resumen h2,
+html.modo-oscuro .datos-envio-producto-nombre,
+html.modo-oscuro .datos-envio-producto-precio,
 html.modo-oscuro .campo-grupo label,
-html.modo-alto-contraste .checkout-cabecera h1,
-html.modo-alto-contraste .checkout-resumen h2,
-html.modo-alto-contraste .checkout-producto-nombre,
-html.modo-alto-contraste .checkout-producto-precio,
+html.modo-alto-contraste .datos-envio-cabecera h1,
+html.modo-alto-contraste .datos-envio-resumen h2,
+html.modo-alto-contraste .datos-envio-producto-nombre,
+html.modo-alto-contraste .datos-envio-producto-precio,
 html.modo-alto-contraste .campo-grupo label {
     color: #f0f6fc;
 }
 
-html.modo-oscuro .checkout-producto-cant,
-html.modo-alto-contraste .checkout-producto-cant {
+html.modo-oscuro .datos-envio-producto-cant,
+html.modo-alto-contraste .datos-envio-producto-cant {
     color: #8b949e;
 }
 
